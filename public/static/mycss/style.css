@@ -1,0 +1,104 @@
+.modal {
+    background-color: rgba(225, 225, 225, 0.15);
+  }
+  
+  .modal-dialog {
+    max-width: 700px;
+    margin: 1.75rem auto;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    border: none;
+  }
+  
+  .modal-header {
+    background-color: #f6f6f6;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .modal-title {
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .modal-body h5 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 1rem;
+  }
+  
+  .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+  }
+  
+  .btn-secondary {
+    background-color: #555657;
+    border-color: #555657;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #aaabab;
+    border-color: #aaabab;
+  }
+  
+  .btn-link {
+    color: #0d6efd;
+  }
+  
+  .btn-link:hover {
+    color: #0d6efd;
+  }
+  
+  .form-control {
+    border: 1px solid #dfe4e8;
+    border-radius: 0.375rem;
+    box-shadow: none;
+  }
+  
+  .form-select {
+    border: 1px solid #dfe4e8;
+    border-radius: 0.375rem;
+    box-shadow: none;
+  }
+  
+
+
+select.form-select {
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  select.form-select:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  

@@ -1,0 +1,108 @@
+/* body{
+    background-color: black;
+} */
+      /* CSS styles for the navbar */
+      .navbar {
+        background-color: #f2f2f2;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+      }
+    
+      .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+    
+      .navbar li {
+        display: inline;
+        margin-right: 10px;
+      }
+      
+      /* CSS styles for the blogs content */
+      .blogs {
+        margin: 20px;
+        padding: 20px;
+        background-color: #eaeaea;
+        text-align: center;
+      }
+    
+      .blog {
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        text-align: left;
+      }
+    
+      .blog h3 {
+        margin-top: 0;
+      }
+      
+      /* CSS styles for the logo */
+      .logo {
+        display: flex;
+        align-items: center;
+      }
+    
+      .logo img {
+        height: 30px;
+        margin-right: 10px;
+      }
+    
+      .logo span {
+        font-weight: bold;
+        font-size: 20px;
+      }
+    
+      /* CSS styles for the form */
+      .form-container {
+        margin: 20px;
+        padding: 20px;
+        background-color: #eaeaea;
+        text-align: center;
+      }
+    
+      .form-container input,
+      .form-container textarea {
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 10px;
+      }
+    
+      .form-container button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+      }
+    
+      /* CSS styles for the about content */
+      .about {
+        margin: 20px;
+        padding: 20px;
+        background-color: #eaeaea;
+        text-align: center;
+      }
+    
+      /* CSS styles for the error page */
+      .error {
+        margin: 20px;
+        padding: 20px;
+        background-color: #eaeaea;
+        text-align: center;
+      }
+      /* CSS styles for the footer */
+      .footer {
+        background-color: #f2f2f2;
+        padding: 10px;
+        text-align: center;
+      }
+  
+      .footer p {
+        margin: 0;
+        font-size: 14px;
+        color: #888;
+      }
+  

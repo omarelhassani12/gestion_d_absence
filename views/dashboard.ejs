@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('partials/header') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <!-- <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="./images/TABIBI.png" alt="TABIBI" height="200" width="200">
+  </div> -->
+  <!-- <div class="preloader flex-column justify-content-center align-items-center">
+    <h1>Loading...</h1>
+  </div> -->
+
+
+  <!-- Navbar -->
+  <%- include('partials/navbar') %>
+
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <%- include('partials/aside') %>
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Dashboard</h1>
+          </div>
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>150</h3>
+
+                <p>Doctors</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>44</h3>
+
+                <p>Appointments</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                <p>Patients</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-procedures"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>65</h3>
+                <p>Urgence</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <!-- ./col -->
+        </div>
+
+        <!-- /.row (main row) -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">To day appointments</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>Number of Attendees</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Engine version</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  <tr>
+                    <td>Misc</td>
+                    <td>Dillo 0.8</td>
+                    <td>Embedded devices</td>
+                    <td>-</td>
+                    <td>X</td>
+                  </tr>
+                  <tr>
+                    <td>Misc</td>
+                    <td>Links</td>
+                    <td>Text only</td>
+                    <td>-</td>
+                    <td>X</td>
+                  </tr>
+                  <tr>
+                    <td>Misc</td>
+                    <td>Lynx</td>
+                    <td>Text only</td>
+                    <td>-</td>
+                    <td>X</td>
+                  </tr>
+                  <tr>
+                    <td>Misc</td>
+                    <td>IE Mobile</td>
+                    <td>Windows Mobile 6</td>
+                    <td>-</td>
+                    <td>C</td>
+                  </tr>
+                  <tr>
+                    <td>Misc</td>
+                    <td>PSP browser</td>
+                    <td>PSP</td>
+                    <td>-</td>
+                    <td>C</td>
+                  </tr>
+                  <tr>
+                    <td>Other browsers</td>
+                    <td>All others</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>U</td>
+                  </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th>Number of Attendees</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Engine version</th>
+                      <th>Action</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+          <!-- /.col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- <footer class="main-footer">
+    <strong>Copyright &copy; 2023 <a href="http://elhassaniomar.c1.biz">elhassaniomar.c1.biz</a>.</strong>
+    All rights reserved.
+  </footer> -->
+
+
+</div>
+<!-- ./wrapper -->
+<%- include('partials/script') %>
+</body>
+</html>
+
+
