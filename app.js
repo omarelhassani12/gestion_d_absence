@@ -1,12 +1,18 @@
 const express = require('express');
 const config = require('./config/config');
 const userRoutes = require('./routes/userRoutes');
+const multer = require('multer');
+
 const app = express();
+const upload = multer({ dest: 'uploads/' });
+
 
 const path = require('path');
 const serviceRoutes = require('./routes/serviceRoutes');
 const StagaireRoutes = require('./routes/stagaireRoutes');
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // Serve static files from the 'public' folder
 app.use(express.static('public'));
 // Set the views directory

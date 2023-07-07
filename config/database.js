@@ -8,4 +8,12 @@ const connection = mysql.createConnection({
   database: 'gestion_absence_nodejs'
 });
 
+connection.connect((error) => {
+  if (error) {
+    console.error('Error connecting to the database:', error);
+  } else {
+    console.log('Connected to the database');
+  }
+});
+
 module.exports = connection;
