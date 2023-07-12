@@ -27,6 +27,8 @@ const StagiaireModel = {
 
   create(stagiaire) {
     return new Promise((resolve, reject) => {
+      // Logic to create a new stagiaire in the database
+      db.query('INSERT INTO stagiaires SET ?', stagiaire, (error, results) => {
       if (!stagiaire) {
         reject(new Error('Stagiaire object is null or undefined'));
         return;
@@ -36,7 +38,26 @@ const StagiaireModel = {
         if (error) {
           reject(error);
         } else {
+          resolve(results);
           resolve(results.insertId);
+        }
+      });
+    });
+  },
+  )},
+
+  update(id, updatedData) {
+    return new Promise((resolve, reject) => {
+      if (!updatedData) {
+        reject(new Error('Updated data is null or undefined'));
+        return;
+      }
+
+      db.query('UPDATE stagiaires SET ? WHERE id = ?', [updatedData, id], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.affectedRows > 0);
         }
       });
     });

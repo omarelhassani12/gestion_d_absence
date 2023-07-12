@@ -1,87 +1,29 @@
-const StagaireModel = require('../models/StagaireModel');
+// StagiaireService.js
+const StagiaireModel = require('../models/stagaireModel');
 
 const StagaireService = {
-  async getAllStagiaires() {
-    try {
-      const stagiaires = await StagaireModel.findAll();
-      return stagiaires;
-    } catch (error) {
-      console.error('An error occurred while fetching the stagiaires:', error);
-      throw new Error('An error occurred while fetching the stagiaires');
-    }
+  getAllStagiaires() {
+    return StagiaireModel.findAll();
   },
 
-  async createStagaire(stagiaireData) {
-    try {
-      if (!stagiaireData) {
-        throw new Error('Stagiaire data is null or undefined');
-      }
-      const createdStagiaire = await StagaireModel.create(stagiaireData);
-      return createdStagiaire;
-    } catch (error) {
-      console.error('An error occurred while creating the stagiaire:', error);
-      throw new Error('An error occurred while creating the stagiaire');
-    }
+  getStagiaireById(id) {
+    return StagiaireModel.findById(id);
   },
 
-  async getStagiaireById(stagiaireId) {
-    try {
-      const stagiaire = await StagaireModel.findById(stagiaireId);
-      return stagiaire;
-    } catch (error) {
-      console.error('An error occurred while fetching the stagiaire:', error);
-      throw new Error('An error occurred while fetching the stagiaire');
-    }
+  createStagiaire(stagiaireData) {
+    return StagiaireModel.create(stagiaireData);
   },
 
-  async updateStagiaire(stagiaireId, updatedStagiaireData) {
-    try {
-      if (!updatedStagiaireData) {
-        throw new Error('Updated stagiaire data is null or undefined');
-      }
-      // Fetch the existing stagiaire data from the database
-      const existingStagiaireData = await StagaireModel.findById(stagiaireId);
-      if (!existingStagiaireData) {
-        throw new Error('Stagiaire not found');
-      }
-
-      // Merge the existing stagiaire data with the updated data
-      const mergedStagiaireData = {
-        ...existingStagiaireData,
-        ...updatedStagiaireData,
-      };
-
-      // Update the stagiaire in the database
-      const isUpdated = await StagaireModel.update(stagiaireId, mergedStagiaireData);
-      return isUpdated;
-    } catch (error) {
-      console.error('An error occurred while updating the stagiaire:', error);
-      throw new Error('An error occurred while updating the stagiaire');
-    }
+  updateStagiaire(stagiaireId, updatedStagiaireData) {
+    return StagiaireModel.update(stagiaireId, updatedStagiaireData);
   },
 
-  async deleteStagiaire(stagiaireId) {
-    try {
-      const isDeleted = await StagaireModel.delete(stagiaireId);
-      return isDeleted;
-    } catch (error) {
-      console.error('An error occurred while deleting the stagiaire:', error);
-      throw new Error('An error occurred while deleting the stagiaire');
-    }
+  deleteStagiaire(stagiaireId) {
+    return StagiaireModel.delete(stagiaireId);
   },
 
-  async insertStagiaireList(stagiaireList) {
-    try {
-      if (!stagiaireList || stagiaireList.length === 0) {
-        throw new Error('Stagiaire list is null or empty');
-      }
-
-      const insertCount = await StagaireModel.insertList(stagiaireList);
-      return insertCount;
-    } catch (error) {
-      console.error('An error occurred while inserting the stagiaire list:', error);
-      throw new Error('An error occurred while inserting the stagiaire list');
-    }
+  insertStagiaireList(stagiaireList) {
+    return StagiaireModel.insertList(stagiaireList);
   },
 };
 

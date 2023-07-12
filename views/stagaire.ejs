@@ -74,7 +74,7 @@
                                                   <td>
                                                     <a href="#" class="btn btn-success update-btn" data-bs-toggle="modal" data-bs-target="#modal-update" data-id="<%= stagiaire.id %>">
                                                         <i class="fas fa-edit"></i>
-                                                    </a>
+                                                      </a>
                                                     <form id="delete-form-<%= stagiaire.id %>" action="/stagiaires/<%= stagiaire.id %>" method="POST" style="display: inline;">
                                                         <input type="hidden" name="_method" value="DELETE">
                                                         <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= stagiaire.id %>')">
@@ -150,22 +150,22 @@
                 </div>
                 <div class="modal-body">
                     <form id="update-form">
-                        <input type="hidden" id="update-stagiaire-id" value="<%= stagiaire.id %>" />
+                        <input type="hidden" id="update-stagiaire-id" />
                         <div class="mb-3">
                             <label for="update-cfe" class="form-label">CFE</label>
-                            <input type="text" class="form-control" id="update-cfe" value="<%= stagiaire.CFE %>" required>
+                            <input type="text" class="form-control" id="update-cfe" required>
                         </div>
                         <div class="mb-3">
                             <label for="update-firstname" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="update-firstname" value="<%= stagiaire.firstName %>" required>
+                            <input type="text" class="form-control" id="update-firstname" required>
                         </div>
                         <div class="mb-3">
                             <label for="update-lastname" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="update-lastname" value="<%= stagiaire.lastName %>" required>
+                            <input type="text" class="form-control" id="update-lastname" required>
                         </div>
                         <div class="mb-3">
                             <label for="update-groupid" class="form-label">Group ID</label>
-                            <input type="text" class="form-control" id="update-groupid" value="<%= stagiaire.groupId %>" required>
+                            <input type="text" class="form-control" id="update-groupid" required>
                         </div>
                     </form>
                 </div>
@@ -230,65 +230,72 @@
 <!-- JavaScript code -->
 <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // When the "New Stagiaire" button is clicked, show the modal
-        document.getElementById('new-stagiaire-button').addEventListener('click', function () {
-            const modal = new bootstrap.Modal(document.getElementById('modal-report'));
-            modal.show();
-        });
+document.addEventListener('DOMContentLoaded', function () {
+    // When the "New Stagiaire" button is clicked, show the modal
+    document.getElementById('new-stagiaire-button').addEventListener('click', function () {
+        const modal = new bootstrap.Modal(document.getElementById('modal-report'));
+        modal.show();
+    });
 
-        // Handle form submission
-        document.getElementById('create-stagiaire-form').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the form from submitting
+    // Handle form submission
+    document.getElementById('create-stagiaire-form').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent the form from submitting
 
+        try {
             // Get the form data
             const form = document.getElementById('create-stagiaire-form');
             const formData = new FormData(form);
 
+            // Convert FormData to JSON
+            const jsonObject = {};
+            formData.forEach(function (value, key) {
+                jsonObject[key] = value;
+            });
+
             // Send the form data via AJAX
-            fetch('/stagaire/create', {
+            const response = await fetch('/stagaire/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json' // Add the Content-Type header
                 },
-                body: JSON.stringify(Object.fromEntries(formData)) // Convert FormData to JSON
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Rest of the code remains the same
-                    if (data.success) {
-                        // Stagiaire created successfully
-                        alert('Stagiaire created successfully');
-                        window.location.href = window.location.href; // Reload the page
-                    } else {
-                        // Error creating stagiaire
-                        console.error('An error occurred while creating the stagiaire: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    console.error('An error occurred while creating the stagiaire');
-                })
-                .finally(() => {
-                    const modalBackdrop = document.getElementsByClassName('modal-backdrop');
-                    const modalContainer = document.getElementsByClassName('modal');
+                body: JSON.stringify(jsonObject)
+            });
 
-                    if (modalBackdrop.length > 0) {
-                        modalBackdrop[0].parentNode.removeChild(modalBackdrop[0]); // Remove the modal backdrop from the DOM
-                    }
+            const data = await response.json();
 
-                    if (modalContainer.length > 0) {
-                        modalContainer[0].parentNode.removeChild(modalContainer[0]); // Remove the modal container from the DOM
-                    }
-                });
-        });
+            // Handle the response
+            if (response.ok && data.success) {
+                // Stagiaire created successfully
+                alert('Stagiaire created successfully');
+                window.location.reload(); // Reload the page
+            } else {
+                // Error creating stagiaire
+                console.error('An error occurred while creating the stagiaire: ' + data.error);
+            }
+        } catch (error) {
+            console.error(error);
+            console.error('An error occurred while creating the stagiaire');
+        } finally {
+            // Remove the modal backdrop and container
+            const modalBackdrop = document.querySelector('.modal-backdrop');
+            const modalContainer = document.querySelector('.modal');
 
-        // When the modal is hidden, reset the form
-        document.getElementById('modal-report').addEventListener('hidden.bs.modal', function () {
-            document.getElementById('create-stagiaire-form').reset();
-        });
-        
+            if (modalBackdrop) {
+                modalBackdrop.parentNode.removeChild(modalBackdrop);
+            }
+
+            if (modalContainer) {
+                modalContainer.parentNode.removeChild(modalContainer);
+            }
+        }
     });
+
+    // When the modal is hidden, reset the form
+    document.getElementById('modal-report').addEventListener('hidden.bs.modal', function () {
+        document.getElementById('create-stagiaire-form').reset();
+    });
+});
+
 
 
 
@@ -384,29 +391,19 @@ function updateStagiaire() {
 }
 </script> -->
 <script>
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     // Add click event listener to all update buttons
-    //     var updateButtons = document.getElementsByClassName('update-btn');
-    //     Array.from(updateButtons).forEach(function (button) {
-    //         button.addEventListener('click', function () {
-    //             var stagiaireId = button.getAttribute('data-id');
-    //             document.getElementById('update-stagiaire-id').value = stagiaireId;
-    //         });
-    //     });
-    // });
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     // Add click event listener to all update buttons
     var updateButtons = document.getElementsByClassName('update-btn');
     Array.from(updateButtons).forEach(function (button) {
         button.addEventListener('click', function () {
             var stagiaireId = button.getAttribute('data-id');
-            document.getElementById('update-stagiaire-id').value = stagiaireId;
 
             // Fetch the stagiaire data using the ID
             fetch('/stagaire/' + stagiaireId)
                 .then(response => response.json())
                 .then(data => {
                     // Populate the modal inputs with the fetched data
+                    document.getElementById('update-stagiaire-id').value = data.id;
                     document.getElementById('update-cfe').value = data.CFE;
                     document.getElementById('update-firstname').value = data.firstName;
                     document.getElementById('update-lastname').value = data.lastName;

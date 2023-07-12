@@ -1,3 +1,4 @@
+// StagiaireController.js
 const xlsx = require('xlsx');
 const StagaireService = require('../services/StagaireService');
 const debug = require('debug')('app:controller');
@@ -29,18 +30,15 @@ const StagaireController = {
       console.error('An error occurred while fetching the stagiaire:', error);
       res.status(500).send('An error occurred while fetching the stagiaire');
     }
-  }
-  ,
+  },
   
-  
-
   async createStagaire(req, res) {
     try {
       const stagiaireData = req.body;
       if (!stagiaireData) {
         throw new Error('Stagiaire data is null or undefined');
       }
-      const createdStagiaire = await StagaireService.createStagaire(stagiaireData);
+      const createdStagiaire = await StagaireService.createStagiaire(stagiaireData);
       res.status(200).send('Stagiaire created successfully');
     } catch (error) {
       console.error('An error occurred while creating the stagiaire:', error);
