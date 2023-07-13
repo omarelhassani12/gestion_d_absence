@@ -1,13 +1,17 @@
-// Routes for user-related endpoints
-
+// UserRoutes.js
 const express = require('express');
-const userController = require('../controllers/userController');
+const UserController = require('../controllers/UserController');
 
-const router = express.Router();
+const UserRoutes = express.Router();
 
-router.get('/users', userController.getAllUsers);
-router.post('/users', userController.createUser);
+UserRoutes.get('/', UserController.getAllUsers);
+UserRoutes.get('/:id', UserController.getUserById);
+UserRoutes.post('/', UserController.createUser);
+UserRoutes.post('/update/:id', UserController.updateUser); // Updated route definition
+UserRoutes.get('/update/:id', UserController.getUserById); // Add this line
+UserRoutes.delete('/:id', UserController.deleteUser);
 
-// Other routes for user-related endpoints
+module.exports = UserRoutes;
 
-module.exports = router;
+
+

@@ -1,6 +1,6 @@
 const express = require('express');
 const config = require('./config/config');
-const userRoutes = require('./routes/userRoutes');
+const UserRoutes = require('./routes/userRoutes');
 const multer = require('multer');
 
 const app = express();
@@ -10,6 +10,7 @@ const upload = multer({ dest: 'uploads/' });
 const path = require('path');
 const serviceRoutes = require('./routes/serviceRoutes');
 const StagaireRoutes = require('./routes/stagaireRoutes');
+const GroupRoutes = require('./routes/groupRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,8 +29,9 @@ app.locals.asset = function (assetPath) {
 
 // Routes
 app.use('/', serviceRoutes);
-app.use('/user', userRoutes);
+app.use('/user', UserRoutes);
 app.use('/stagaire', StagaireRoutes);
+app.use('/group', GroupRoutes);
 
 // Start the server
 app.listen(config.port, () => {

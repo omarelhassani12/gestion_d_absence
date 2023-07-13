@@ -52,40 +52,43 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>CFE</th>
-                                                <th>Nom</th>
-                                                <th>Prénom</th>
-                                                <th>N de Groupe</th>
-                                                <th>Action</th>
+                                                <th class="text-center">CEF</th>
+                                                <th class="text-center">Nom</th>
+                                                <th class="text-center">Prénom</th>
+                                                <th class="text-center">N de Groupe</th>
+                                                <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
+                                        
                                         <tbody>
-                                            <% if (stagiaires.length === 0) { %>
-                                              <tr>
+                                            <% if (!stagiaires || stagiaires.length === 0) { %>
+                                            <tr>
                                                 <td colspan="5" style="text-align:center">No stagiaire records found.</td>
-                                              </tr>
+                                            </tr>
                                             <% } else { %>
-                                              <% stagiaires.forEach((stagiaire) => { %>
+                                            <% stagiaires.forEach((stagiaire) => { %>
                                                 <tr>
-                                                  <td><%= stagiaire.CFE %></td>
-                                                  <td><%= stagiaire.lastName %></td>
-                                                  <td><%= stagiaire.firstName %></td>
-                                                  <td><%= stagiaire.groupId != null ? 'group ' + stagiaire.groupId : 'No group' %></td>
-                                                  <td>
-                                                    <a href="#" class="btn btn-success update-btn" data-bs-toggle="modal" data-bs-target="#modal-update" data-id="<%= stagiaire.id %>">
-                                                        <i class="fas fa-edit"></i>
-                                                      </a>
-                                                    <form id="delete-form-<%= stagiaire.id %>" action="/stagiaires/<%= stagiaire.id %>" method="POST" style="display: inline;">
-                                                        <input type="hidden" name="_method" value="DELETE">
-                                                        <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= stagiaire.id %>')">
-                                                            <i class="fas fa-trash-alt"></i>
+                                                    <td class="text-center"><%= stagiaire.CEF %></td>
+                                                    <td class="text-center"><%= stagiaire.lastName %></td>
+                                                    <td class="text-center"><%= stagiaire.firstName %></td>
+                                                    <td class="text-center"><%= stagiaire.groupId != null && stagiaire.groupId != 0 ? 'group ' + stagiaire.groupId : 'No group' %></td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= stagiaire.id %>')">
+                                                            <i class="fas fa-edit"></i>
                                                         </button>
-                                                    </form>
-                                                  </td>
+                                                        <form id="delete-form-<%= stagiaire.id %>" action="/stagiaires/<%= stagiaire.id %>" method="POST" style="display: inline;">
+                                                            <input type="hidden" name="_method" value="DELETE">
+                                                            <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= stagiaire.id %>')" id="delete-button-<%= stagiaire.id %>">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
-                                              <% }) %>
+                                            <% }) %>
                                             <% } %>
-                                          </tbody>
+                                        </tbody>
+                                        
+  
                                     </table>
                                 </div>
                                 <!-- /.card-body -->
@@ -105,6 +108,7 @@
         <%- include('partials/script') %>
     </div>
     <!-- ./wrapper -->
+    <!-- Modal insert -->
     <div class="modal fade" id="modal-report" tabindex="-1" role="dialog" aria-labelledby="modal-report" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -112,11 +116,11 @@
                     <h5 class="modal-title" id="modal-title">Nouveau Stagiaire</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="create-stagiaire-form" action="/stagiaires" method="POST">
+                <form id="create-stagiaire-form" action="/stagaire/create" method="POST">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">CFE</label>
-                            <input type="text" class="form-control" name="CFE" placeholder="CFE">
+                            <label class="form-label">CEF</label>
+                            <input type="text" class="form-control" name="CEF" placeholder="CEF">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Prénom</label>
@@ -140,46 +144,7 @@
         </div>
     </div>
 
-    <!-- Modal update -->
-    <div class="modal fade" id="modal-update" tabindex="-1" aria-labelledby="modal-update-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-update-label">Update Stagiaire</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="update-form">
-                        <input type="hidden" id="update-stagiaire-id" />
-                        <div class="mb-3">
-                            <label for="update-cfe" class="form-label">CFE</label>
-                            <input type="text" class="form-control" id="update-cfe" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="update-firstname" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="update-firstname" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="update-lastname" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="update-lastname" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="update-groupid" class="form-label">Group ID</label>
-                            <input type="text" class="form-control" id="update-groupid" required>
-                        </div>
-                    </form>
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="update-stagiaire-btn" onclick="updateStagiaire()">Update</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    
-    <!-- Modal -->
+    <!-- Modal delete -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -200,106 +165,108 @@
         </div>
     </div>
 
-    <!-- pour les listes des stgrs -->
-    <script>
-        document.getElementById('excel-file').addEventListener('change', handleFileUpload);
 
-        function handleFileUpload(event) {
-          const file = event.target.files[0];
-          const formData = new FormData();
-          formData.append('file', file);
 
-          fetch('/stagaire/upload', {
-            method: 'POST',
-            body: formData
-          })
-            .then(response => {
-              if (response.ok) {
-                alert('Stagiaire list uploaded successfully');
-                // Refresh the page or perform any additional actions
-              } else {
-                throw new Error('Stagiaire list upload failed');
-              }
-            })
-            .catch(error => {
-              console.error('An error occurred while uploading the stagiaire list:', error);
-              alert('An error occurred while uploading the stagiaire list : '+error.message);
-            });
-        }
-    </script>
-<!-- JavaScript code -->
+
+<!-- pour les listes des stgrs -->
 <script>
+    document.getElementById('excel-file').addEventListener('change', handleFileUpload);
 
-document.addEventListener('DOMContentLoaded', function () {
-    // When the "New Stagiaire" button is clicked, show the modal
-    document.getElementById('new-stagiaire-button').addEventListener('click', function () {
-        const modal = new bootstrap.Modal(document.getElementById('modal-report'));
-        modal.show();
-    });
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
 
-    // Handle form submission
-    document.getElementById('create-stagiaire-form').addEventListener('submit', async function (event) {
-        event.preventDefault(); // Prevent the form from submitting
+      fetch('/stagaire/upload', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => {
+          if (response.ok) {
+            alert('Stagiaire list uploaded successfully');
+            // Refresh the page or perform any additional actions
+          } else {
+            throw new Error('Stagiaire list upload failed');
+          }
+        })
+        .catch(error => {
+          console.error('An error occurred while uploading the stagiaire list:', error);
+          alert('An error occurred while uploading the stagiaire list : '+error.message);
+        });
+    }
+</script>
 
-        try {
-            // Get the form data
-            const form = document.getElementById('create-stagiaire-form');
-            const formData = new FormData(form);
 
-            // Convert FormData to JSON
-            const jsonObject = {};
-            formData.forEach(function (value, key) {
-                jsonObject[key] = value;
-            });
+<!-- //add new stagiaire -->
+<script>
+$('#create-stagiaire-form').on('submit', function(event) {
+    event.preventDefault();
 
-            // Send the form data via AJAX
-            const response = await fetch('/stagaire/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' // Add the Content-Type header
-                },
-                body: JSON.stringify(jsonObject)
-            });
+    var form = $(this);
+    var url = form.attr('action');
+    var formData = form.serialize();
 
-            const data = await response.json();
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+            console.log('Stagiaire created successfully');
 
-            // Handle the response
-            if (response.ok && data.success) {
-                // Stagiaire created successfully
-                alert('Stagiaire created successfully');
-                window.location.reload(); // Reload the page
-            } else {
-                // Error creating stagiaire
-                console.error('An error occurred while creating the stagiaire: ' + data.error);
-            }
-        } catch (error) {
-            console.error(error);
-            console.error('An error occurred while creating the stagiaire');
-        } finally {
-            // Remove the modal backdrop and container
-            const modalBackdrop = document.querySelector('.modal-backdrop');
-            const modalContainer = document.querySelector('.modal');
+            // Close the modal
+            $('#modal-report').modal('hide');
 
-            if (modalBackdrop) {
-                modalBackdrop.parentNode.removeChild(modalBackdrop);
-            }
+            // Get the created stagiaire data
+            var createdStagiaire = response.stagiaire;
 
-            if (modalContainer) {
-                modalContainer.parentNode.removeChild(modalContainer);
-            }
+            // Append the new stagiaire data to the table
+            var tableBody = $('#example1 tbody');
+            var newRow = '<tr>' +
+                '<td>' + createdStagiaire.CEF + '</td>' +
+                '<td>' + createdStagiaire.lastName + '</td>' +
+                '<td>' + createdStagiaire.firstName + '</td>' +
+                '<td>' + (createdStagiaire.groupId !== 0 ? 'group ' + createdStagiaire.groupId : 'No group') + '</td>' +
+                '<td>' +
+                '<button class="btn btn-success update-btn" onclick="goToUpdatePage(' + createdStagiaire.id + ')">' +
+                '<i class="fas fa-edit"></i>' +
+                '</button>' +
+                '<form id="delete-form-' + createdStagiaire.id + '" action="/stagiaires/' + createdStagiaire.id + '" method="POST" style="display: inline;">' +
+                '<input type="hidden" name="_method" value="DELETE">' +
+                '<button class="btn btn-danger delete-btn" onclick="confirmDelete(event, \'' + createdStagiaire.id + '\')" id="delete-button-' + createdStagiaire.id + '">' +
+                '<i class="fas fa-trash-alt"></i>' +
+                '</button>' +
+                '</form>' +
+                '</td>' +
+                '</tr>';
+
+            tableBody.append(newRow);
+
+            // Reset the form
+            form[0].reset();
+
+            // Show the newly created stagiaire data temporarily
+            var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                'Stagiaire created successfully!' +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                '</div>');
+
+            $('.content-header').after(alertDiv);
+
+            // Auto-hide the alert after 3 seconds
+            setTimeout(function() {
+                alertDiv.alert('close');
+            }, 3000);
+        },
+        error: function(xhr, status, error) {
+            console.error('An error occurred while creating the stagiaire:', error);
         }
-    });
-
-    // When the modal is hidden, reset the form
-    document.getElementById('modal-report').addEventListener('hidden.bs.modal', function () {
-        document.getElementById('create-stagiaire-form').reset();
     });
 });
+</script>
 
-
-
-
-//delete function
+<!-- //delete stagiaire -->
+<script>
+    //delete function
     function confirmDelete(event, stagiaireId) {
         event.preventDefault(); // Prevent form submission
 
@@ -346,79 +313,17 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
+
 </script>
 
-<!-- <script>
-function updateStagiaire() {
-  // Get the stagiaire ID from the hidden input field
-  var stagiaireId = document.getElementById('update-stagiaire-id').value;
-  
-  // Get the updated data from the form fields
-  var cfe = document.getElementById('update-cfe').value;
-  var firstName = document.getElementById('update-firstname').value;
-  var lastName = document.getElementById('update-lastname').value;
-  var groupId = document.getElementById('update-groupid').value;
-  
-  // Create an object with the updated stagiaire data
-  var updatedStagiaireData = {
-    cfe: cfe,
-    firstName: firstName,
-    lastName: lastName,
-    groupId: groupId
-  };
-
-  // Send the updated stagiaire data to the server
-  fetch('/stagaire/' + stagiaireId, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(updatedStagiaireData)
-  })
-    .then(response => {
-      if (response.ok) {
-        // Stagiaire updated successfully
-        console.log('Stagiaire updated successfully');
-        // Perform any additional actions or UI updates as needed
-      } else {
-        // Stagiaire not found or other error occurred
-        console.error('Error updating the stagiaire:', response.statusText);
-      }
-    })
-    .catch(error => {
-      console.error('Error updating the stagiaire:', error);
-    });
-}
-</script> -->
+<!-- //update stagiaire -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Add click event listener to all update buttons
-    var updateButtons = document.getElementsByClassName('update-btn');
-    Array.from(updateButtons).forEach(function (button) {
-        button.addEventListener('click', function () {
-            var stagiaireId = button.getAttribute('data-id');
-
-            // Fetch the stagiaire data using the ID
-            fetch('/stagaire/' + stagiaireId)
-                .then(response => response.json())
-                .then(data => {
-                    // Populate the modal inputs with the fetched data
-                    document.getElementById('update-stagiaire-id').value = data.id;
-                    document.getElementById('update-cfe').value = data.CFE;
-                    document.getElementById('update-firstname').value = data.firstName;
-                    document.getElementById('update-lastname').value = data.lastName;
-                    document.getElementById('update-groupid').value = data.groupId;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        });
-    });
-});
-
+        function goToUpdatePage(stagiaireId) {
+            window.location.href = `/stagaire/stagiaire-update/${stagiaireId}`;
+        }
 </script>
 
-  
+    
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

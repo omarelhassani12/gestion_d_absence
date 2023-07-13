@@ -1,13 +1,13 @@
-// Service for authentication logic
+// // Service for authentication logic
 
-const AuthService = {
-    login(username, password) {
-      // Logic for user login
-      // Return promise with the authentication result
-    },
+// const AuthService = {
+//     login(username, password) {
+//       // Logic for user login
+//       // Return promise with the authentication result
+//     },
   
-    // Other authentication-related service methods
-  };
+//     // Other authentication-related service methods
+//   };
   
-  module.exports = AuthService;
+//   module.exports = AuthService;
   

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include('partials/navbar') %>
+        <%- include('partials/aside') %>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Groupes</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                                <li class="breadcrumb-item active">Groupes</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form id="update-form" action="/group/update/<%= group.id %>" method="POST">
+                                      <div class="mb-3">
+                                        <label class="form-label">Nom</label>
+                                        <input type="text" class="form-control"  id="name" name="name" placeholder="Nom" >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Actuel formateur</label>
+                                        <input type="text" class="form-control" id="formateur" name="formateur" >
+                                        
+                                        <label class="form-label">Nouveau formateur</label>
+                                          <select class="form-control" name="formateur" >
+                                              <% users.forEach(function(user) { %>
+                                                  <% if (user.role === 1) { %>
+                                                      <option value="<%= user.id %>"><%= user.nom_complete %></option>
+                                                  <% } %>
+                                              <% }) %>
+                                          </select>
+                                      </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                          <button type="submit" class="btn btn-primary" id="update-group-btn">Update</button>
+                                        </div>
+                                      </form>
+                                      
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <%- include('partials/script') %>
+    </div>
+    <!-- ./wrapper -->
+
+    <script>
+        // Function to open the update modal with current data
+        function openUpdateModal(groupId) {
+          // Send a GET request to the server endpoint
+          fetch(`/group/${groupId}`)
+            .then(response => response.json())
+            .then(group => {
+              // group data received from the server
+              console.log('group:', group);
+              // Set the form inputs with the group data
+              document.getElementById('name').value = group.name;
+              document.getElementById('formateur').value = group.formateur;
+              // Update the select options for formateur
+              const selectFormateur = document.querySelector('select[name="formateur"]');
+              selectFormateur.innerHTML = '';
+              group.users.forEach(function(user) {
+                if (user.role === 1) {
+                  const option = document.createElement('option');
+                  option.value = user.id;
+                  option.textContent = user.nom_complete;
+                  selectFormateur.appendChild(option);
+                }
+              });
+              selectFormateur.value = group.formateur;
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
