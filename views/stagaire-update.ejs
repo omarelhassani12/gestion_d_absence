@@ -44,9 +44,15 @@
                                           <input type="text" class="form-control" id="update-lastname" name="lastName" value="<%= stagiaire.lastName %>" >
                                         </div>
                                         <div class="mb-3">
-                                          <label for="update-groupid" class="form-label">Group ID</label>
-                                          <input type="text" class="form-control" id="update-groupid" name="groupId" value="<%= stagiaire.groupId %>" >
+                                          <label class="form-label">Sélectionner un groupe</label>
+                                          <select class="form-control" name="groupId" id="group-select">
+                                            <option value="" disabled selected>Select a group</option>
+                                            <% groups.forEach((group) => { %>
+                                            <option value="<%= group.id %>" <%= group.id === stagiaire.groupId ? 'selected' : '' %>><%= group.name %></option>
+                                            <% }); %>
+                                          </select>
                                         </div>
+                                        
                                         <div class="modal-footer">
                                           <a href="/stagaire" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
                                           <button type="submit" class="btn btn-primary" id="update-stagiaire-btn">Update</button>

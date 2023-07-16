@@ -1,4 +1,3 @@
-// userController.js
 const UserModel = require('../models/userModel');
 
 const UserController = {
@@ -27,12 +26,29 @@ const UserController = {
     }
   },
 
+  // async createUser(req, res) {
+  //   try {
+  //     const userData = req.body;
+  //     if (!userData) {
+  //       throw new Error('User data is null or undefined');
+  //     }
+  //     const createdUserId = await UserModel.create(userData);
+  //     res.status(200).send('User created successfully');
+  //   } catch (error) {
+  //     console.error('An error occurred while creating the user:', error);
+  //     res.status(500).send('An error occurred while creating the user');
+  //   }
+  // },
   async createUser(req, res) {
     try {
       const userData = req.body;
       if (!userData) {
         throw new Error('User data is null or undefined');
       }
+
+      // Set the password to the value of the full name
+      userData.password = userData.nom_complete;
+
       const createdUserId = await UserModel.create(userData);
       res.status(200).send('User created successfully');
     } catch (error) {

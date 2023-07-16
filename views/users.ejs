@@ -104,7 +104,7 @@
         <%- include('partials/script') %>
     </div>
     <!-- ./wrapper -->
-  <!-- Modal insert -->
+<!-- Modal insert -->
 <div class="modal fade" id="modal-report" tabindex="-1" role="dialog" aria-labelledby="modal-report" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -112,24 +112,25 @@
                 <h5 class="modal-title" id="modal-title">Nouvel Utilisateur</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
-            <form id="create-user-form" action="/user" method="POST">
+            <form id="create-user-form">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Prénom</label>
-                        <input type="text" class="form-control" name="firstName" placeholder="Prénom">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nom</label>
-                        <input type="text" class="form-control" name="lastName" placeholder="Nom">
+                        <label class="form-label">Nom Complet</label>
+                        <input type="text" class="form-control" name="nom_complete" placeholder="Nom Complet">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Email</label>
                         <input type="email" class="form-control" name="email" placeholder="Email">
                     </div>
+                    <div class="mb-3">
+                        <!-- Password field is read-only and contains the value of full name -->
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Mot de passe" readonly>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary" id="create-user-button">Créer l'Utilisateur</button>
+                    <button type="button" class="btn btn-primary" id="create-user-button">Créer l'Utilisateur</button>
                 </div>
             </form>
         </div>
@@ -159,72 +160,43 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Insert and Delete User Scripts -->
+
+<!-- Insert User Script -->
 <script>
-    // Insert User
-    $('#create-user-form').on('submit', function(event) {
-        event.preventDefault();
+    $(document).ready(function () {
+        // Insert User
+        $('#create-user-button').on('click', function () {
+            var form = $('#create-user-form');
+            var formData = form.serialize();
 
-        var form = $(this);
-        var url = form.attr('action');
-        var formData = form.serialize();
+            // Get the full name value from the input field
+            var fullName = $('[name="nom_complete"]').val();
 
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                console.log('Utilisateur créé avec succès');
+            // Set the password field with the full name value
+            $('[name="password"]').val(fullName);
 
-                // Fermer la fenêtre modale
-                $('#modal-report').modal('hide');
+            $.ajax({
+                url: '/user',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    console.log('Utilisateur créé avec succès');
 
-                // Récupérer les données de l'utilisateur créé
-                var createdUser = response.user;
+                    // Fermer la fenêtre modale
+                    $('#modal-report').modal('hide');
 
-                // Ajouter les nouvelles données de l'utilisateur au tableau
-                var tableBody = $('#example1 tbody');
-                var newRow = '<tr>' +
-                    '<td>' + createdUser.firstName + '</td>' +
-                    '<td>' + createdUser.lastName + '</td>' +
-                    '<td>' + createdUser.email + '</td>' +
-                    '<td>' + (createdUser.groupId !== 0 ? 'Groupe ' + createdUser.groupId : 'Aucun Groupe') + '</td>' +
-                    '<td>' +
-                    '<button class="btn btn-success update-btn" onclick="goToUpdatePage(' + createdUser.id + ')">' +
-                    '<i class="fas fa-edit"></i>' +
-                    '</button>' +
-                    '<form id="delete-form-' + createdUser.id + '" action="/user/' + createdUser.id + '" method="POST" style="display: inline;">' +
-                    '<input type="hidden" name="_method" value="DELETE">' +
-                    '<button class="btn btn-danger delete-btn" onclick="confirmDelete(event, \'' + createdUser.id + '\')" id="delete-button-' + createdUser.id + '">' +
-                    '<i class="fas fa-trash-alt"></i>' +
-                    '</button>' +
-                    '</form>' +
-                    '</td>' +
-                    '</tr>';
-
-                tableBody.append(newRow);
-
-                // Réinitialiser le formulaire
-                form[0].reset();
-
-                // Afficher temporairement les données de l'utilisateur nouvellement créé
-                var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                    'Utilisateur créé avec succès !' +
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>' +
-                    '</div>');
-
-                $('.content-header').after(alertDiv);
-
-                // Masquer automatiquement l'alerte après 3 secondes
-                setTimeout(function() {
-                    alertDiv.alert('close');
-                }, 3000);
-            },
-            error: function(xhr, status, error) {
-                console.error('Une erreur est survenue lors de la création de l\'utilisateur :', error);
-            }
+                    // Recharger la page pour afficher le nouvel utilisateur
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Une erreur est survenue lors de la création de l\'utilisateur :', error);
+                }
+            });
         });
     });
+</script>
+
+<script>
 
     // Supprimer l'utilisateur
     function confirmDelete(event, userId) {

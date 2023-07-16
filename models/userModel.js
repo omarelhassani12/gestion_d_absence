@@ -51,6 +51,23 @@ const UserModel = {
     });
   },
 
+  // create(user) {
+  //   return new Promise((resolve, reject) => {
+  //     if (!user) {
+  //       reject(new Error('User object is null or undefined'));
+  //       return;
+  //     }
+
+  //     db.query('INSERT INTO users SET ?', [user], (error, results) => {
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         resolve(results.insertId);
+  //       }
+  //     });
+  //   });
+  // },
+
   create(user) {
     return new Promise((resolve, reject) => {
       if (!user) {
@@ -58,7 +75,12 @@ const UserModel = {
         return;
       }
 
-      db.query('INSERT INTO users SET ?', [user], (error, results) => {
+      const newUser = {
+        ...user,
+        password: user.nom_complete,
+      };
+
+      db.query('INSERT INTO users SET ?', [newUser], (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -67,7 +89,6 @@ const UserModel = {
       });
     });
   },
-
   update(id, updatedData) {
     return new Promise((resolve, reject) => {
       if (!updatedData) {
