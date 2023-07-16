@@ -51,23 +51,6 @@ const UserModel = {
     });
   },
 
-  // create(user) {
-  //   return new Promise((resolve, reject) => {
-  //     if (!user) {
-  //       reject(new Error('User object is null or undefined'));
-  //       return;
-  //     }
-
-  //     db.query('INSERT INTO users SET ?', [user], (error, results) => {
-  //       if (error) {
-  //         reject(error);
-  //       } else {
-  //         resolve(results.insertId);
-  //       }
-  //     });
-  //   });
-  // },
-
   create(user) {
     return new Promise((resolve, reject) => {
       if (!user) {
@@ -113,6 +96,40 @@ const UserModel = {
           reject(error);
         } else {
           resolve(results.affectedRows > 0);
+        }
+      });
+    });
+  },
+
+  findByEmailAndPassword(email, password) {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results[0]);
+        }
+      });
+    });
+  },
+
+  createUserWithRole(user) {
+    return new Promise((resolve, reject) => {
+      if (!user) {
+        reject(new Error('User object is null or undefined'));
+        return;
+      }
+
+      const newUser = {
+        ...user,
+        password: user.password, 
+      };
+
+      db.query('INSERT INTO users SET ?', [newUser], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.insertId);
         }
       });
     });

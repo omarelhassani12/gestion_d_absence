@@ -7,8 +7,8 @@ const UserRoutes = express.Router();
 UserRoutes.get('/', UserController.getAllUsers);
 UserRoutes.get('/:id', UserController.getUserById);
 UserRoutes.post('/', UserController.createUser);
-UserRoutes.post('/update/:id', UserController.updateUser); // Updated route definition
-UserRoutes.get('/update/:id', UserController.getUserById); // Add this line
+UserRoutes.post('/update/:id', UserController.updateUser); 
+UserRoutes.get('/update/:id', UserController.getUserById); 
 UserRoutes.delete('/:id', UserController.deleteUser);
 
 module.exports = UserRoutes;

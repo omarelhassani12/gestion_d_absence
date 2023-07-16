@@ -11,9 +11,19 @@
             <div class="image">
                 <img src="./dist/img/avatar2.png" class="img-circle elevation-2" alt="Image Utilisateur">
             </div>
+            <!-- <div class="info">
+                <a href="#" class="d-block">Welcome  <%=// user.name %></a>
+            </div> -->
+            <!-- dashboard.ejs -->
             <div class="info">
-                <a href="#" class="d-block">Ahmed</a>
-            </div>
+                <%// const userEmail = cookies.userEmail %>
+                <% //if (userEmail) { %>
+                  <a href="#" class="d-block"><%= //userEmail %></a>
+                <% //} else { %>
+                  <a href="/sign-in" class="d-block">Sign In</a>
+                <% //} %>
+              </div>
+  
         </div>
   
         <!-- Formulaire de recherche dans la barre latérale -->

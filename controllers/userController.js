@@ -26,19 +26,7 @@ const UserController = {
     }
   },
 
-  // async createUser(req, res) {
-  //   try {
-  //     const userData = req.body;
-  //     if (!userData) {
-  //       throw new Error('User data is null or undefined');
-  //     }
-  //     const createdUserId = await UserModel.create(userData);
-  //     res.status(200).send('User created successfully');
-  //   } catch (error) {
-  //     console.error('An error occurred while creating the user:', error);
-  //     res.status(500).send('An error occurred while creating the user');
-  //   }
-  // },
+
   async createUser(req, res) {
     try {
       const userData = req.body;
@@ -90,6 +78,88 @@ const UserController = {
       res.status(500).send('An error occurred while deleting the user');
     }
   },
+
+  async register(req, res) {
+    try {
+      const userData = req.body;
+      if (!userData) {
+        throw new Error('User data is null or undefined');
+      }
+
+      // Create a new user with role 1 (Formateur)
+      const newUser = {
+        ...userData,
+      };
+
+      const createdUserId = await UserModel.createUserWithRole(newUser);
+      res.status(200).send('User registered successfully');
+    } catch (error) {
+      console.error('An error occurred while registering the user:', error);
+      res.status(500).send('An error occurred while registering the user');
+    }
+  },
+
+ 
+  async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        throw new Error('Email or password is missing');
+      }
+  
+      console.log('Received login request:', email, password);
+  
+      const user = await UserModel.findByEmailAndPassword(email, password);
+      console.log('Found user:', user);
+  
+      if (user) {
+        // Create a session and store user data in it
+        req.session.user = {
+          name: user.nom_complete,
+          email: user.email,
+        };
+
+         // Set a cookie with the user's email
+      res.cookie('userEmail', user.email);
+      // Store the cookies object in res.locals
+      res.locals.cookies = req.cookies;
+
+  
+        res.status(200).json(user); // Send the user data back as a response
+      } else {
+        res.status(401).send('Invalid username or password');
+      }
+    } catch (error) {
+      console.error('An error occurred while logging in:', error);
+      res.status(500).send('An error occurred while logging in');
+    }
+    },
+
+
+  // async login(req, res) {
+  //   try {
+  //     const { email, password } = req.body;
+  //     if (!email || !password) {
+  //       throw new Error('Email or password is missing');
+  //     }
+  
+  //     console.log('Received login request:', email, password);
+  
+  //     const user = await UserModel.findByEmailAndPassword(email, password);
+  //     console.log('Found user:', user);
+  
+  //     if (user) {
+  //       // You can use sessions or tokens to manage user authentication after login
+  //       res.status(200).json(user); // Send the user data back as a response
+  //     } else {
+  //       res.status(401).send('Invalid username or password');
+  //     }
+  //   } catch (error) {
+  //     console.error('An error occurred while logging in:', error);
+  //     res.status(500).send('An error occurred while logging in');
+  //   }
+  // },
+  
 };
 
 module.exports = UserController;
