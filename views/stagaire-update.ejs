@@ -48,7 +48,7 @@
                                           <input type="text" class="form-control" id="update-groupid" name="groupId" value="<%= stagiaire.groupId %>" >
                                         </div>
                                         <div class="modal-footer">
-                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                          <a href="/stagaire" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
                                           <button type="submit" class="btn btn-primary" id="update-stagiaire-btn">Update</button>
                                         </div>
                                       </form>
@@ -63,31 +63,33 @@
 
         <%- include('partials/script') %>
     </div>
-    <!-- ./wrapper -->
+   
+
+
 
     <script>
-        // Function to open the update modal with current data
-        function openUpdateModal(stagiaireId) {
-          // Send a GET request to the server endpoint
-          fetch(`/stagaire/${stagiaireId}`)
-            .then(response => response.json())
-            .then(stagiaire => {
-              // Stagiaire data received from the server
-              console.log('Stagiaire:', stagiaire);
-              // Set the form inputs with the stagiaire data
-              document.getElementById('update-cef').value = stagiaire.CEF;
-              document.getElementById('update-firstname').value = stagiaire.firstName;
-              document.getElementById('update-lastname').value = stagiaire.lastName;
-              document.getElementById('update-groupid').value = stagiaire.groupId;
-            })
-            .catch(error => {
-              console.error('Error:', error);
-            });
-        }
-      
+      // Function to open the update modal with current data
+      function openUpdateModal(stagiaireId) {
+        // Send a GET request to the server endpoint
+        fetch(`/stagaire/${stagiaireId}`)
+          .then(response => response.json())
+          .then(stagiaire => {
+            // Stagiaire data received from the server
+            console.log('Stagiaire:', stagiaire);
+            // Set the form inputs with the stagiaire data
+            document.getElementById('update-cef').value = stagiaire.CEF;
+            document.getElementById('update-firstname').value = stagiaire.firstName;
+            document.getElementById('update-lastname').value = stagiaire.lastName;
+            document.getElementById('update-groupid').value = stagiaire.groupId;
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+    
+    </script>
+    
 
-      </script>
-      
 
 </body>
 

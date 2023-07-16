@@ -131,9 +131,15 @@
                             <input type="text" class="form-control" name="lastName" placeholder="Nom">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ID du Groupe</label>
-                            <input type="text" class="form-control" name="groupId" placeholder="ID du Groupe">
+                            <label class="form-label">Sélectionner un groupe</label>
+                            <select class="form-control" name="groupId" id="group-select">
+                                <option value="" disabled selected>Select a group</option>
+                                <% groups.forEach((group) => { %>
+                                <option value="<%= group.id %>"><%= group.name %></option>
+                                <% }); %>
+                            </select>
                         </div>
+                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -143,6 +149,7 @@
             </div>
         </div>
     </div>
+    
 
     <!-- Modal delete -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -164,7 +171,6 @@
             </div>
         </div>
     </div>
-
 
 
 
@@ -217,7 +223,8 @@ $('#create-stagiaire-form').on('submit', function(event) {
             $('#modal-report').modal('hide');
 
             // Get the created stagiaire data
-            var createdStagiaire = response.stagiaire;
+            // var createdStagiaire = response.stagiaire;
+            var createdStagiaire = response;
 
             // Append the new stagiaire data to the table
             var tableBody = $('#example1 tbody');
@@ -264,6 +271,7 @@ $('#create-stagiaire-form').on('submit', function(event) {
 });
 </script>
 
+
 <!-- //delete stagiaire -->
 <script>
     //delete function
@@ -287,7 +295,18 @@ $('#create-stagiaire-form').on('submit', function(event) {
                 .then(data => {
                     if (data.success) {
                         // Stagiaire deleted successfully
-                        alert('Stagiaire deleted successfully');
+                        var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                            'Stagiaire deleted successfully!' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                            '</div>');
+
+                        $('.content-header').after(alertDiv);
+
+                        // Auto-hide the alert after 3 seconds
+                        setTimeout(function() {
+                            alertDiv.alert('close');
+                        }, 3000);
+
                         window.location.href = window.location.href; // Reload the page
                     } else {
                         // Error deleting stagiaire
@@ -312,8 +331,6 @@ $('#create-stagiaire-form').on('submit', function(event) {
             $(modal).modal('hide');
         };
     }
-
-
 </script>
 
 <!-- //update stagiaire -->
@@ -323,6 +340,33 @@ $('#create-stagiaire-form').on('submit', function(event) {
         }
 </script>
 
+<!-- Place this script tag at the end of your HTML file, just before the closing </body> tag -->
+<script>
+    // Function to parse URL query parameters
+    function parseQueryParams() {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      return Object.fromEntries(urlParams.entries());
+    }
+  
+    // Check for the updateSuccess query parameter in the URL
+    const queryParams = parseQueryParams();
+    if (queryParams.updateSuccess === 'true') {
+      // Show the success alert
+      var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+        'Stagiaire updated successfully!' +
+        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+        '</div>');
+  
+      $('.content-header').after(alertDiv);
+  
+      // Auto-hide the alert after 3 seconds
+      setTimeout(function() {
+        alertDiv.alert('close');
+      }, 3000);
+    }
+  </script>
+  
     
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
