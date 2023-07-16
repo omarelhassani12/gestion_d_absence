@@ -56,7 +56,6 @@
                                                 <th class="text-center">Nom Complete</th>
                                                 <th class="text-center">Email</th>
                                                 <th class="text-center">Password</th>
-                                                <th class="text-center">N° du Groupe</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -71,7 +70,6 @@
                                                     <td class="text-center"><%= user.nom_complete %></td>
                                                     <td class="text-center"><%= user.email %></td>
                                                     <td class="text-center"><%= user.password %></td>
-                                                    <td class="text-center"><%= //user.groupId != null && user.groupId != 0 ? 'Groupe ' + user.groupId : 'Aucun Groupe' %></td>
                                                     <td class="text-center">
                                                         <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= user.id %>')">
                                                             <i class="fas fa-edit"></i>
@@ -127,10 +125,6 @@
                     <div class="mb-3">
                         <label class="form-label">Email</label>
                         <input type="email" class="form-control" name="email" placeholder="Email">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">ID du Groupe</label>
-                        <input type="text" class="form-control" name="groupId" placeholder="ID du Groupe">
                     </div>
                 </div>
                 <div class="modal-footer">

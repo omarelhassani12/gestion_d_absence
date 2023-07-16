@@ -69,7 +69,7 @@
                                                 <% groups.forEach((group) => { %>
                                                     <tr>
                                                         <td class="text-center"><%= group.name %></td>
-                                                        <td class="text-center"><%= group.user_id %></td>
+                                                        <td class="text-center"><%= group.user_name  %></td>
                                                         <td class="text-center"><%= new Date(group.created_at).toLocaleString() %></td>
                                                         <td class="text-center"><%= new Date(group.updated_at).toLocaleString() %></td>
                                                         <td class="text-center">
@@ -112,7 +112,7 @@
                     <h5 class="modal-title" id="modal-title">Nouveau Groupe</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="create-group-form" action="/group/create" method="POST">
+                <form id="create-group-form" action="/group" method="POST">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Nom</label>
@@ -120,7 +120,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Formateur</label>
-                            <select class="form-control" name="formateur" required>
+                            <select class="form-control" name="user_id" required> <!-- Change 'formateur' to 'user_id' -->
                                 <% users.forEach(function(user) { %>
                                     <% if (user.role === 1) { %>
                                         <option value="<%= user.id %>"><%= user.nom_complete %></option>
@@ -128,8 +128,8 @@
                                 <% }) %>
                             </select>
                         </div>
-                        
                     </div>
+                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary" id="create-group-button">Créer Groupe</button>
@@ -160,8 +160,14 @@
         </div>
     </div>
 
+
     <!-- Ajouter un nouveau groupe -->
     <script>
+
+    $('#modal-report').on('hidden.bs.modal', function() {
+        $('#create-group-form')[0].reset();
+    });
+
         $('#create-group-form').on('submit', function(event) {
             event.preventDefault();
 
@@ -174,57 +180,55 @@
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    console.log('Groupe créé avec succès');
+        console.log('Groupe créé avec succès');
 
-                    // Fermer la modal
-                    $('#modal-report').modal('hide');
+        // Obtenir les données du groupe créé
+        var createdGroup = response.group;
 
-                    // Obtenir les données du groupe créé
-                    var createdGroup = response.group;
+        // Ajouter les données du nouveau groupe au tableau
+        var tableBody = $('#example1 tbody');
+        var newRow = '<tr>' +
+            '<td class="text-center">' + createdGroup.name + '</td>' +
+            '<td class="text-center">' + createdGroup.user_name + '</td>' +
+            '<td class="text-center">' + new Date(createdGroup.created_at).toLocaleString() + '</td>' +
+            '<td class="text-center">' + new Date(createdGroup.updated_at).toLocaleString() + '</td>' +
+            '<td class="text-center">' +
+            '<button class="btn btn-success update-btn" onclick="goToUpdatePage(' + createdGroup.id + ')">' +
+            '<i class="fas fa-edit"></i>' +
+            '</button>' +
+            '<form id="delete-form-' + createdGroup.id + '" action="/group/' + createdGroup.id + '" method="POST" style="display: inline;">' +
+            '<input type="hidden" name="_method" value="DELETE">' +
+            '<button class="btn btn-danger delete-btn" onclick="confirmDelete(event, \'' + createdGroup.id + '\')" id="delete-button-' + createdGroup.id + '">' +
+            '<i class="fas fa-trash-alt"></i>' +
+            '</button>' +
+            '</form>' +
+            '</td>' +
+            '</tr>';
 
-                    // Ajouter les données du nouveau groupe au tableau
-                    var tableBody = $('#example1 tbody');
-                    var newRow = '<tr>' +
-                        '<td>' + createdGroup.id + '</td>' +
-                        '<td>' + createdGroup.name + '</td>' +
-                        '<td>' + createdGroup.formateur + '</td>' +
-                        '<td>' + new Date(createdGroup.created_at).toLocaleString() + '</td>' +
-                        '<td>' + new Date(createdGroup.updated_at).toLocaleString() + '</td>' +
-                        '<td>' +
-                        '<button class="btn btn-success update-btn" onclick="goToUpdatePage(' + createdGroup.id + ')">' +
-                        '<i class="fas fa-edit"></i>' +
-                        '</button>' +
-                        '<form id="delete-form-' + createdGroup.id + '" action="/group/' + createdGroup.id + '" method="POST" style="display: inline;">' +
-                        '<input type="hidden" name="_method" value="DELETE">' +
-                        '<button class="btn btn-danger delete-btn" onclick="confirmDelete(event, \'' + createdGroup.id + '\')" id="delete-button-' + createdGroup.id + '">' +
-                        '<i class="fas fa-trash-alt"></i>' +
-                        '</button>' +
-                        '</form>' +
-                        '</td>' +
-                        '</tr>';
+        tableBody.append(newRow);
 
-                    tableBody.append(newRow);
+        // Fermer la modal
+        $('#modal-report').modal('hide');
 
+        // Refresh the page
+        location.reload();
+    },
+    error: function(xhr, status, error) {
+                    console.error('Une erreur s\'est produite lors de la création du groupe :', error);
+                },
+                complete: function() {
                     // Réinitialiser le formulaire
                     form[0].reset();
 
-                    // Afficher temporairement les données du groupe nouvellement créé
-                    var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                        'Groupe créé avec succès !' +
-                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-                        '</div>');
-
-                    $('.content-header').after(alertDiv);
-
-                    // Masquer automatiquement l'alerte après 3 secondes
-                    setTimeout(function() {
-                        alertDiv.alert('close');
-                    }, 3000);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Une erreur s\'est produite lors de la création du groupe :', error);
+                    // Fermer la modal
+                    $('#modal-report').modal('hide');
                 }
             });
+        });
+
+        // Clear the form when the modal is completely hidden
+        $('#modal-report').on('hidden.bs.modal', function() {
+            $('#create-group-form')[0].reset();
         });
     </script>
     <!-- Supprimer un groupe -->
