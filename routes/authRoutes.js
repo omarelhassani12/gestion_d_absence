@@ -10,4 +10,7 @@ authRoutes.post('/register', UserController.register);
 // Route for user login
 authRoutes.post('/login', UserController.login);
 
+// Route for user logout
+authRoutes.get('/logout', UserController.logout);
+
 module.exports = authRoutes;

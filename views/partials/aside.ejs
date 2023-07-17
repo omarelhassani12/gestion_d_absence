@@ -45,7 +45,7 @@
                 data-accordion="false">
   
                 <li class="nav-item">
-                    <a href="/" class="nav-link {{ Request::is('/') ? 'active' : '' }}">
+                    <a href="/" class="nav-link <%= activeRoute === 'dashboard' ? 'active' : '' %>">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Tableau de bord
@@ -53,7 +53,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/stagaire" class="nav-link {{ Request::is('stagaire*') ? 'active' : '' }}">
+                    <a href="/stagaire" class="nav-link <%= activeRoute === 'stagaire' ? 'active' : '' %>">
                         <i class="nav-icon fas fa-user-graduate"></i>
                         <p>
                             Stagiaires
@@ -61,8 +61,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="./pages/sub_urgance/index.html"
-                        class="nav-link {{ Request::is('pages/sub_urgance/*') ? 'active' : '' }}">
+                    <a href="/absence"
+                        class="nav-link {{ Request::is('/absence') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-calendar-times"></i>
                         <p>
                             Liste des absences
@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/user" class="nav-link {{ Request::is('staff*') ? 'active' : '' }}">
+                    <a href="/user" class="nav-link <%= activeRoute === 'users' ? 'active' : '' %>">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
                             Les formateurs
@@ -78,13 +78,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/group" class="nav-link {{ Request::is('stagiaireGroups*') ? 'active' : '' }}">
+                    <a href="/group" class="nav-link <%= activeRoute === 'groups' ? 'active' : '' %>">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
                             Les groupes
                         </p>
                     </a>
                 </li>
+
+                
   <!-- 
                 <li class="nav-item">
                     <a href="#" class="nav-link">

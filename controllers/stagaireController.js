@@ -12,7 +12,7 @@ const StagaireController = {
     try {
       const stagiaires = await StagiaireModel.findAll();
       const groups = await GroupModel.findAll();
-      res.render('stagaire', { stagiaires, groups }); 
+      res.render('stagaire', { stagiaires, groups , activeRoute: 'stagaire' }); 
     } catch (error) {
       console.error('An error occurred while fetching the stagiaires:', error);
       res.status(500).send('An error occurred while fetching the stagiaires');
@@ -25,7 +25,7 @@ const StagaireController = {
       const stagiaire = await StagiaireModel.findById(stagiaireId);
       const groups = await GroupModel.findAll();
       if (stagiaire) {
-        res.render('stagaire-update', { stagiaire: stagiaire, groups : groups  });
+        res.render('stagaire-update', { stagiaire: stagiaire, groups : groups, activeRoute: 'stagaire'  });
       } else {
         res.status(404).send('Stagiaire not found');
       }

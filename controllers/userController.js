@@ -4,7 +4,7 @@ const UserController = {
   async getAllUsers(req, res) {
     try {
       const users = await UserModel.findAll();
-      res.render('users', { users: users });
+      res.render('users', { users: users, activeRoute: 'users' });
     } catch (error) {
       console.error('An error occurred while fetching the users:', error);
       res.status(500).send('An error occurred while fetching the users');
@@ -16,7 +16,7 @@ const UserController = {
       const userId = req.params.id;
       const user = await UserModel.findById(userId);
       if (user) {
-        res.render('user-update', { user: user });
+        res.render('user-update', { user: user , activeRoute: 'users'});
       } else {
         res.status(404).send('User not found');
       }
@@ -54,7 +54,7 @@ const UserController = {
       }
       const isUpdated = await UserModel.update(userId, updatedUserData);
       if (isUpdated) {
-        res.redirect('/user'); // Redirect to the "users" view
+        res.redirect('/user'); 
       } else {
         res.status(404).send('User not found');
       }
@@ -118,6 +118,7 @@ const UserController = {
           name: user.nom_complete,
           email: user.email,
         };
+        // req.session.user = user;
 
          // Set a cookie with the user's email
       res.cookie('userEmail', user.email);
@@ -135,31 +136,28 @@ const UserController = {
     }
     },
 
+    async logout(req, res) {
+      try {
+        // Destroy the session to log the user out
+        req.session.destroy((err) => {
+          if (err) {
+            console.error('Error while destroying the session:', err);
+            return res.status(500).json({ error: 'An error occurred while logging out' });
+          }
 
-  // async login(req, res) {
-  //   try {
-  //     const { email, password } = req.body;
-  //     if (!email || !password) {
-  //       throw new Error('Email or password is missing');
-  //     }
-  
-  //     console.log('Received login request:', email, password);
-  
-  //     const user = await UserModel.findByEmailAndPassword(email, password);
-  //     console.log('Found user:', user);
-  
-  //     if (user) {
-  //       // You can use sessions or tokens to manage user authentication after login
-  //       res.status(200).json(user); // Send the user data back as a response
-  //     } else {
-  //       res.status(401).send('Invalid username or password');
-  //     }
-  //   } catch (error) {
-  //     console.error('An error occurred while logging in:', error);
-  //     res.status(500).send('An error occurred while logging in');
-  //   }
-  // },
-  
+          // Clear the user email cookie
+          res.clearCookie('userEmail');
+
+          // Redirect the user to the login page after successful logout
+          res.redirect('/sign-in'); 
+        });
+      } catch (error) {
+        console.error('An error occurred while logging out:', error);
+        res.status(500).json({ error: 'An error occurred while logging out' });
+      }
+    },
+
+
 };
 
 module.exports = UserController;
