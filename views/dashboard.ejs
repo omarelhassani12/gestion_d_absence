@@ -1,19 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <%- include('partials/header') %>
 
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-
-  <!-- Preloader -->
-  <!-- <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="./images/TABIBI.png" alt="TABIBI" height="200" width="200">
-  </div> -->
-  <!-- <div class="preloader flex-column justify-content-center align-items-center">
-    <h1>Loading...</h1>
-  </div> -->
-
 
   <!-- Navbar -->
   <%- include('partials/navbar') %>
@@ -31,7 +22,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Dashboard</h1>
+            <h1 class="m-0">Gestion des Absences</h1>
           </div>
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -49,12 +40,12 @@
               <div class="inner">
                 <h3>150</h3>
 
-                <p>Doctors</p>
+                <p>Stagiaires</p>
               </div>
               <div class="icon">
-                <i class="fas fa-user-md"></i>
+                <i class="fas fa-user-graduate"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
 
@@ -65,12 +56,12 @@
               <div class="inner">
                 <h3>44</h3>
 
-                <p>Appointments</p>
+                <p>Absences</p>
               </div>
               <div class="icon">
-                <i class="fas fa-calendar-alt"></i>
+                <i class="fas fa-calendar-times"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -78,32 +69,31 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                <p>Patients</p>
+                <h3>53</h3>
+                <p>Utilisateur</p>
               </div>
               <div class="icon">
-                <i class="fas fa-procedures"></i>
+                <i class="fas fa-user-check"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
-
+          
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
                 <h3>65</h3>
-                <p>Urgence</p>
+                <p>Absences Planifiées</p>
               </div>
               <div class="icon">
-                <i class="fas fa-exclamation-triangle"></i>
+                <i class="fas fa-calendar-check"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-
+          
           <!-- ./col -->
         </div>
 
@@ -112,88 +102,58 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">To day appointments</h3>
+                <h3 class="card-title">Absences du jour</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
-                  <tr>
-                    <th>Number of Attendees</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Engine version</th>
-                    <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-
-                  <tr>
-                    <td>Misc</td>
-                    <td>Dillo 0.8</td>
-                    <td>Embedded devices</td>
-                    <td>-</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>Links</td>
-                    <td>Text only</td>
-                    <td>-</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>Lynx</td>
-                    <td>Text only</td>
-                    <td>-</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>IE Mobile</td>
-                    <td>Windows Mobile 6</td>
-                    <td>-</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>PSP browser</td>
-                    <td>PSP</td>
-                    <td>-</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>Other browsers</td>
-                    <td>All others</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>U</td>
-                  </tr>
-                  </tbody>
-                  <tfoot>
                     <tr>
-                      <th>Number of Attendees</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Engine version</th>
+                      <th>Prénom</th>
+                      <th>Nom</th>
+                      <th>Nombre d'heures d'absence</th>
+                      <th>Motif</th>
                       <th>Action</th>
                     </tr>
-                  </tfoot>
+                  </thead>
+                  <tbody>
+                
+                    <tr>
+                      <td>John</td>
+                      <td>Doe</td>
+                      <td>8</td>
+                      <td>Maladie</td>
+                      <td>
+                        <a href="#">Voir détails</a>
+                      </td>
+                    </tr>
+                
+                    <tr>
+                      <td>Jane</td>
+                      <td>Smith</td>
+                      <td>5</td>
+                      <td>Personnel</td>
+                      <td>
+                        <a href="#">Voir détails</a>
+                      </td>
+                    </tr>
+                
+                    <tr>
+                      <td>Mike</td>
+                      <td>Johnson</td>
+                      <td>16</td>
+                      <td>Autre</td>
+                      <td>
+                        <a href="#">Voir détails</a>
+                      </td>
+                    </tr>
+                                
+                  </tbody>
                 </table>
               </div>
               <!-- /.card-body -->
             </div>
           </div>
-
-
-
-
-
-
-
-
-
           <!-- /.col -->
         </div>
       </div><!-- /.container-fluid -->
@@ -212,5 +172,3 @@
 <%- include('partials/script') %>
 </body>
 </html>
-
-

@@ -4,7 +4,8 @@ const UserController = {
   async getAllUsers(req, res) {
     try {
       const users = await UserModel.findAll();
-      res.render('users', { users: users, activeRoute: 'users' });
+      const user = req.session.user || null;
+      res.render('users', { users: users, activeRoute: 'users',user });
     } catch (error) {
       console.error('An error occurred while fetching the users:', error);
       res.status(500).send('An error occurred while fetching the users');
@@ -14,9 +15,10 @@ const UserController = {
   async getUserById(req, res) {
     try {
       const userId = req.params.id;
-      const user = await UserModel.findById(userId);
-      if (user) {
-        res.render('user-update', { user: user , activeRoute: 'users'});
+      const users = await UserModel.findById(userId);
+      const user = req.session.user || null;
+      if (users) {
+        res.render('user-update', { users: users , activeRoute: 'users', user });
       } else {
         res.status(404).send('User not found');
       }

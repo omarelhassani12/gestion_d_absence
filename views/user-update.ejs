@@ -29,23 +29,23 @@
                       <div class="col-12">
                           <div class="card">
                               <div class="card-body">
-                                  <form id="update-form" action="/user/update/<%= user.id %>" method="POST">
+                                  <form id="update-form" action="/user/update/<%= users.id %>" method="POST">
                                     <div class="mb-3">
                                       <label for="update-name" class="form-label">Nom</label>
-                                      <input type="text" class="form-control" id="update-name" name="nom_complete" value="<%= user.nom_complete %>" >
+                                      <input type="text" class="form-control" id="update-name" name="nom_complete" value="<%= users.nom_complete %>" >
                                     </div>
                                     
                                     <div class="mb-3">
                                       <label for="update-email" class="form-label">Email</label>
-                                      <input type="email" class="form-control" id="update-email" name="email" value="<%= user.email %>" >
+                                      <input type="email" class="form-control" id="update-email" name="email" value="<%= users.email %>" >
                                     </div>
                                     <div class="mb-3">
                                       <label for="update-password" class="form-label">Mot de passe</label>
-                                      <input type="password" class="form-control" id="update-password" name="password" value="<%= user.password %>" >
+                                      <input type="password" class="form-control" id="update-password" name="password" value="<%= users.password %>" >
                                     </div>
                                     <div class="mb-3">
                                       <label for="update-role" class="form-label">Rôle</label>
-                                      <input type="text" class="form-control" id="update-role" name="role" value="<%= user.role %>" >
+                                      <input type="text" class="form-control" id="update-role" name="role" disabled value="<%= users.role ? '' : 'Formateur' %>" >
                                     </div>
                                     <div class="modal-footer">
                                       <a href="/user" class="btn btn-secondary">Fermer</a href="/user">

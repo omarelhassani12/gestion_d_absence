@@ -5,7 +5,8 @@ const GroupController = {
   getAllGroups(req, res, next) {
     Promise.all([GroupModel.findAll(), UserModel.findByRole(1)])
       .then(([groups, users]) => {
-        res.render('groups', { groups, users, activeRoute: 'groups' });
+        const user = req.session.user || null;
+        res.render('groups', { groups, users, activeRoute: 'groups',user });
       })
       .catch(error => {
         console.error('Error retrieving groups:', error);
@@ -18,11 +19,12 @@ const GroupController = {
 
     Promise.all([GroupModel.findById(id), UserModel.findByRole(1)])
       .then(([group, users]) => {
-        // Add the formateur_name property to the group object
-        const formateur = users.find((user) => user.id === group.user_id);
+        const user = req.session.user || null;
+        
+      const formateur = users.find((user) => user.id === group.user_id);
         group.formateur_name = formateur ? formateur.nom_complete : 'N/A';
 
-        res.render('groups-update', { group, users , activeRoute: 'groups' });
+        res.render('groups-update', { group, users , activeRoute: 'groups',user });
       })
       .catch((error) => {
         console.error('Error retrieving group by ID:', error);

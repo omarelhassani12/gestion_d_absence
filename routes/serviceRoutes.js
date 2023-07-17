@@ -11,7 +11,8 @@ serviceRoutes.get('/', (req, res) => {
   });
 //for the formateur 
 serviceRoutes.get('/dashboard', (req, res) => {
-    res.render('formateur/dashboard' ,req);
+  const user = req.session.user || null;
+    res.render('formateur/dashboard' ,user, req);
   });
 serviceRoutes.get('/sign-in', (req, res) => {
     res.render('login');
