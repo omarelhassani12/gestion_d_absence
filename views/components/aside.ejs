@@ -9,11 +9,13 @@
         <!-- Panneau utilisateur de la barre latérale (facultatif) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="./dist/img/avatar2.png" class="img-circle elevation-2" alt="Image Utilisateur">
+                <img src="./dist/img/avatar5.png" class="img-circle elevation-2" alt="Image Utilisateur">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Formateur 1</a>
+                <a href="#" class="d-block">M.<%= user.name %></a>
             </div>
+            
+  
         </div>
   
         <!-- Formulaire de recherche dans la barre latérale -->
@@ -35,7 +37,7 @@
                 data-accordion="false">
   
                 <li class="nav-item">
-                    <a href="/" class="nav-link {{ Request::is('/') ? 'active' : '' }}">
+                    <a href="/" class="nav-link <%= activeRoute === 'dashboard' ? 'active' : '' %>">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Tableau de bord
@@ -43,7 +45,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/stagaire" class="nav-link {{ Request::is('stagaire*') ? 'active' : '' }}">
+                    <a href="/stagaire" class="nav-link <%= activeRoute === 'stagaire' ? 'active' : '' %>">
                         <i class="nav-icon fas fa-user-graduate"></i>
                         <p>
                             Stagiaires
@@ -51,14 +53,95 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="./pages/sub_urgance/index.html"
-                        class="nav-link {{ Request::is('pages/sub_urgance/*') ? 'active' : '' }}">
+                    <a href="/absence"
+                        class="nav-link {{ Request::is('/absence') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-calendar-times"></i>
                         <p>
                             Liste des absences
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="/user" class="nav-link <%= activeRoute === 'users' ? 'active' : '' %>">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Les formateurs
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/group" class="nav-link <%= activeRoute === 'groups' ? 'active' : '' %>">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Les groupes
+                        </p>
+                    </a>
+                </li>
+
+                
+  <!-- 
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-table"></i>
+                        <p>
+                            utilisateurs
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="./pages/users/index.html" class="nav-link">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>
+                                    Tous les utilisateurs
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./pages/doctors/index.html" class="nav-link">
+                                <i class="nav-icon fas fa-user-md"></i>
+                                <p>
+                                    Médecins
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./pages/patients/index.html" class="nav-link">
+                                <i class="nav-icon fas fa-procedures"></i>
+                                <p>
+                                    Patients
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./pages/patients/data.html" class="nav-link">
+                                <i class="nav-icon fas fa-user-shield"></i>
+                                <p>
+                                    Administrateurs
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./pages/patients/data.html" class="nav-link">
+                                <i class="nav-icon fas fa-user-tie"></i>
+                                <p>
+                                    Assistant
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li> -->
+  
+                <!-- <li class="nav-header">EXEMPLES</li>
+                <li class="nav-item">
+                    <a href="calendar.html" class="nav-link">
+                        <i class="nav-icon far fa-calendar-alt"></i>
+                        <p>
+                            Rendez-vous
+                            <span class="badge badge-info right">2</span>
+                        </p>
+                    </a>
+                </li> -->
             </ul>
         </nav>
     </div>

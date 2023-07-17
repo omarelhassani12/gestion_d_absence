@@ -1,0 +1,177 @@
+<!-- absence.ejs -->
+<!DOCTYPE html>
+<html lang="fr">
+<%- include('partials/header') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include('partials/navbar') %>
+        <%- include('partials/aside') %>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Absences des Stagiaires</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                                <li class="breadcrumb-item active">Absences</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div id="success-alert" class="alert alert-success" role="alert" style="display: none;">
+                                        Absence enregistrée avec succès
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                                    </div>
+                                    <div id="delete-success-alert" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+                                        Absence supprimée avec succès
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-12 text-right">
+                                            <div class="col-auto ms-auto d-print-none">
+                                                <div class="d-flex justify-content-end">
+                                        
+                                                    <!-- The "Nouvelle Absence" button -->
+                                                    <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-add-absence" id="new-absence-button">
+                                                        Nouvelle Absence
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Stagiaire</th>
+                                                <th class="text-center">Date d'Observation</th>
+                                                <th class="text-center">Type d'Absence</th>
+                                                <th class="text-center">Total d'Heures Manquées</th>
+                                                <th class="text-center">Justifiée</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Replace the below dummy data with actual data from the database -->
+                                            <% absences.forEach(absence => { %>
+                                                <tr>
+                                                    <td class="text-center"><%= absence.stagiaire_id %></td>
+                                                    <td class="text-center"><%= absence.observation_date %></td>
+                                                    <td class="text-center"><%= absence.absence_type %></td>
+                                                    <td class="text-center"><%= absence.total_hours_missed %></td>
+                                                    <td class="text-center"><%= absence.is_justified ? 'Oui' : 'Non' %></td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= absence.observation_id %>')">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <form id="delete-form-<%= absence.observation_id %>" action="/absence/<%= absence.observation_id %>" method="POST" style="display: inline;">
+                                                            <input type="hidden" name="_method" value="DELETE">
+                                                            <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= absence.observation_id %>')" id="delete-button-<%= absence.observation_id %>">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <%- include('partials/script') %>
+    </div>
+    <!-- ./wrapper -->
+
+<!--  Modals for Insert and Delete -->
+<!-- modal-add-absence.ejs -->
+<div class="modal fade" id="modal-add-absence" tabindex="-1" role="dialog" aria-labelledby="modal-add-absence" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Nouvelle Absence</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <form id="create-absence-form" action="/absences" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Stagiaire ID</label>
+                        <input type="number" class="form-control" name="stagiaire_id" placeholder="Stagiaire ID" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date d'observation</label>
+                        <input type="date" class="form-control" name="observation_date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type d'absence</label>
+                        <input type="text" class="form-control" name="absence_type" placeholder="Type d'absence" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Decision</label>
+                        <input type="text" class="form-control" name="decision" placeholder="Decision">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observation N1</label>
+                        <textarea class="form-control" name="observation_n1" placeholder="Observation N1"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observation N2</label>
+                        <textarea class="form-control" name="observation_n2" placeholder="Observation N2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total d'heures manquées</label>
+                        <input type="number" step="0.01" class="form-control" name="total_hours_missed" placeholder="Total d'heures manquées">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Absence justifiée</label>
+                        <input type="checkbox" class="form-check-input" name="is_justified" value="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter l'absence</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Mettre à jour l'absence
+function goToUpdatePage(observationId) {
+    window.location.href = `/absence/update/${observationId}`;
+}
+</script>
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery -->
+</body>
+</html>

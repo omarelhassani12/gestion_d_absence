@@ -54,7 +54,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="/absence"
-                        class="nav-link {{ Request::is('/absence') ? 'active' : '' }}">
+                        class="nav-link <%= activeRoute === 'absences' ? 'active' : '' %>">
                         <i class="nav-icon fas fa-calendar-times"></i>
                         <p>
                             Liste des absences

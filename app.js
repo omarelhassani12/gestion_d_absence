@@ -15,6 +15,7 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const StagaireRoutes = require('./routes/stagaireRoutes');
 const GroupRoutes = require('./routes/groupRoutes');
 const authRoutes = require('./routes/authRoutes');
+const AbsenceRoutes = require('./routes/absenceRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -94,6 +95,7 @@ app.use('/', serviceRoutes);
 app.use('/user', UserRoutes);
 app.use('/stagaire', StagaireRoutes);
 app.use('/group', GroupRoutes);
+app.use('/absence', AbsenceRoutes);
 
 // Start the server
 app.listen(config.port, () => {
