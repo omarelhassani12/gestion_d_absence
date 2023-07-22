@@ -32,6 +32,57 @@
         </div>
   
         <!-- Menu de la barre latérale -->
+        <% if (user.role == 0) { %>
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="false">
+      
+                    <li class="nav-item">
+                        <a href="/" class="nav-link <%= activeRoute === 'dashboard' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Tableau de bord
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/stagaire" class="nav-link <%= activeRoute === 'stagaire' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-user-graduate"></i>
+                            <p>
+                                Stagiaires
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/absence"
+                            class="nav-link <%= activeRoute === 'absences' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-calendar-times"></i>
+                            <p>
+                                Liste des absences
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/user" class="nav-link <%= activeRoute === 'users' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>
+                                Les formateurs
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/group" class="nav-link <%= activeRoute === 'groups' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>
+                                Les groupes
+                            </p>
+                        </a>
+                    </li>
+    
+     
+                </ul>
+            </nav>
+        <% } else if (user.role == 1) { %>
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
@@ -61,89 +112,13 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="/user" class="nav-link <%= activeRoute === 'users' ? 'active' : '' %>">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>
-                            Les formateurs
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/group" class="nav-link <%= activeRoute === 'groups' ? 'active' : '' %>">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>
-                            Les groupes
-                        </p>
-                    </a>
-                </li>
+               
 
-                
-  <!-- 
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-table"></i>
-                        <p>
-                            utilisateurs
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="./pages/users/index.html" class="nav-link">
-                                <i class="nav-icon fas fa-user"></i>
-                                <p>
-                                    Tous les utilisateurs
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./pages/doctors/index.html" class="nav-link">
-                                <i class="nav-icon fas fa-user-md"></i>
-                                <p>
-                                    Médecins
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./pages/patients/index.html" class="nav-link">
-                                <i class="nav-icon fas fa-procedures"></i>
-                                <p>
-                                    Patients
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./pages/patients/data.html" class="nav-link">
-                                <i class="nav-icon fas fa-user-shield"></i>
-                                <p>
-                                    Administrateurs
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./pages/patients/data.html" class="nav-link">
-                                <i class="nav-icon fas fa-user-tie"></i>
-                                <p>
-                                    Assistant
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </li> -->
-  
-                <!-- <li class="nav-header">EXEMPLES</li>
-                <li class="nav-item">
-                    <a href="calendar.html" class="nav-link">
-                        <i class="nav-icon far fa-calendar-alt"></i>
-                        <p>
-                            Rendez-vous
-                            <span class="badge badge-info right">2</span>
-                        </p>
-                    </a>
-                </li> -->
+ 
             </ul>
         </nav>
+        <% } %>
+
     </div>
   </aside>
   

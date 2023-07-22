@@ -119,11 +119,12 @@ const UserController = {
         req.session.user = {
           name: user.nom_complete,
           email: user.email,
+          role: user.role,
         };
         // req.session.user = user;
 
          // Set a cookie with the user's email
-      res.cookie('userEmail', user.email);
+      res.cookie('userEmail', user.email, 'userRole', user.role);
       // Store the cookies object in res.locals
       res.locals.cookies = req.cookies;
 
