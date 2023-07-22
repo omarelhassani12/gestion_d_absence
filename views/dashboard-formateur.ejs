@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<%- include('partials/header') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <%- include('partials/navbar') %>
+
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <%- include('partials/aside') %>
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Gestion des Absences</h1>
+          </div>
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>150</h3>
+
+                <p>Stagiaires</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-user-graduate"></i>
+              </div>
+              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>44</h3>
+
+                <p>Absences</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-calendar-times"></i>
+              </div>
+              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>53</h3>
+                <p>Utilisateur</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-user-check"></i>
+              </div>
+              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>65</h3>
+                <p>Absences Planifiées</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          
+          <!-- ./col -->
+        </div>
+
+        <!-- /.row (main row) -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Absences du jour</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Prénom</th>
+                      <th>Nom</th>
+                      <th>Nombre d'heures d'absence</th>
+                      <th>Motif</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                
+                    <tr>
+                      <td>John</td>
+                      <td>Doe</td>
+                      <td>8</td>
+                      <td>Maladie</td>
+                      <td>
+                        <a href="#" class="btn btn-info btn-sm" title="Détails">
+                          <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
+                          <i class="fas fa-trash-alt"></i>
+                        </a>
+                      </td>
+                    </tr>
+                
+                    <tr>
+                      <td>Jane</td>
+                      <td>Smith</td>
+                      <td>5</td>
+                      <td>Personnel</td>
+                     <td>
+                      <a href="#" class="btn btn-info btn-sm" title="Détails">
+                        <i class="fas fa-info-circle"></i>
+                      </a>
+                      <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
+                        <i class="fas fa-trash-alt"></i>
+                      </a>
+                    </td>
+                    </tr>
+                
+                    <tr>
+                      <td>Mike</td>
+                      <td>Johnson</td>
+                      <td>16</td>
+                      <td>Autre</td>
+                      <td>
+                        <a href="#" class="btn btn-info btn-sm" title="Détails">
+                          <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
+                          <i class="fas fa-trash-alt"></i>
+                        </a>
+                      </td>
+                    </tr>
+                                
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- /.col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- <footer class="main-footer">
+    <strong>Copyright &copy; 2023 <a href="http://elhassaniomar.c1.biz">elhassaniomar.c1.biz</a>.</strong>
+    All rights reserved.
+  </footer> -->
+
+
+</div>
+<!-- ./wrapper -->
+<%- include('partials/script') %>
+</body>
+</html>
