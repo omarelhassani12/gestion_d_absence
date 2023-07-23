@@ -36,7 +36,6 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
-      
                     <li class="nav-item">
                         <a href="/" class="nav-link <%= activeRoute === 'dashboard' ? 'active' : '' %>">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -78,8 +77,6 @@
                             </p>
                         </a>
                     </li>
-    
-     
                 </ul>
             </nav>
         <% } else if (user.role == 1) { %>
@@ -111,14 +108,10 @@
                             Liste des absences
                         </p>
                     </a>
-                </li>
-               
-
- 
+                </li>   
             </ul>
         </nav>
         <% } %>
-
     </div>
-  </aside>
+</aside>
   
