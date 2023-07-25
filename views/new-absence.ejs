@@ -56,10 +56,16 @@
                                             <hr>                                        
                                             <div class="row">
                                                 <% if(user.role == 0) { %>
-                                                <div class="col-md-6">
+                                                <div class="col-md-3">
                                                     <div class="mb-3">
-                                                        <label class="form-label">Date d'observation</label>
-                                                        <input type="date" class="form-control" name="observation_date" id="observationDate" disabled  required>
+                                                        <label class="form-label">Date de debut d'absence</label>
+                                                        <input type="date" class="form-control" name="observation_date" id="observationDate"   required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Date de fin d'absence</label>
+                                                        <input type="date" class="form-control" name="observation_date" id="observationDate"   required>
                                                     </div>
                                                 </div>
                                                 <% }else if(user.role == 1){ %>
@@ -83,7 +89,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+                                            <% if(user.role == 0) { %>
                                             <div class="mb-3">
                                                 <label class="form-label">Décision</label>
                                                 <select class="form-control" name="decision" >
@@ -94,6 +100,7 @@
                                                     <option value="Excusé">Excusé</option>
                                                 </select>
                                             </div>
+                                            <% } %>
                                             <!-- <div class="row mb-3">
                                                 <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                                                   <label class="form-label">Observation N1</label>
