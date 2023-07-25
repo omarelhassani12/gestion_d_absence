@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<%- include('partials/header') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include('partials/navbar') %>
+        <%- include('partials/aside') %>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Nouvelle Absence</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                                <li class="breadcrumb-item"><a href="/absence">Absences</a></li>
+                                <li class="breadcrumb-item active">Nouvelle Absence</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form id="create-absence-form" action="/absences" method="POST">
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Stagiaire CEF</label>
+                                                        <input type="text" class="form-control" value="<%= stagiaire.CEF %>" disabled name="stagiaire_id" placeholder="ID du Stagiaire" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Prénom du Stagiaire</label>
+                                                        <input type="text" class="form-control" value="<%= stagiaire.firstName %>" disabled name="stagiaire_id" placeholder="Prénom du Stagiaire" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Nom du Stagiaire</label>
+                                                        <input type="text" class="form-control" value="<%= stagiaire.lastName %>" disabled name="stagiaire_id" placeholder="Nom du Stagiaire" required>
+                                                    </div>
+                                                </div>
+                                            </div>    
+                                            <hr>                                        
+                                            <div class="row">
+                                                <% if(user.role == 0) { %>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Date d'observation</label>
+                                                        <input type="date" class="form-control" name="observation_date" id="observationDate" disabled  required>
+                                                    </div>
+                                                </div>
+                                                <% }else if(user.role == 1){ %>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Date d'observation</label>
+                                                            <input type="date" class="form-control" name="observation_date" id="observationDate" disabled required>
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Type d'absence</label>
+                                                        <select class="form-control" name="absence_type" required>
+                                                            <option value="" selected disabled>Choisir le type d'absence</option>
+                                                            <option value="Retard">Retard</option>
+                                                            <option value="Maladie">Maladie</option>
+                                                            <option value="Rendez-vous médical">Rendez-vous médical</option>
+                                                            <option value="Autre">Autre</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Décision</label>
+                                                <select class="form-control" name="decision" >
+                                                    <option value="" selected disabled>Choisir la décision</option>
+                                                    <option value="Approuvé">Approuvé</option>
+                                                    <option value="Rejeté">Rejeté</option>
+                                                    <option value="En attente">En attente</option>
+                                                    <option value="Excusé">Excusé</option>
+                                                </select>
+                                            </div>
+                                            <!-- <div class="row mb-3">
+                                                <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                                                  <label class="form-label">Observation N1</label>
+                                                  <textarea class="form-control" name="observation_n1" placeholder="Observation N1"></textarea>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                                  <label class="form-label">Observation N2</label>
+                                                  <textarea class="form-control" name="observation_n2" placeholder="Observation N2"></textarea>
+                                                </div>
+                                            </div> -->
+                                            <hr>
+                                            <div class="row d-flex justify-content-between">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p>Matin</p>
+                                                        <div class="mb-3">
+                                                            <label class="form-label mr-5">1ère séance</label>
+                                                            <input type="checkbox" class="form-check-input" name="is_justified" value="1" onchange="updateTotalHoursMissed()">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label mr-5">2ème séance</label>
+                                                            <input type="checkbox" class="form-check-input" name="is_justified" value="1" onchange="updateTotalHoursMissed()">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p>Après-midi</p>
+                                                        <div class="mb-3">
+                                                            <label class="form-label mr-5">3ème séance</label>
+                                                            <input type="checkbox" class="form-check-input" name="is_justified" value="1" onchange="updateTotalHoursMissed()">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label mr-5">4ème séance</label>
+                                                            <input type="checkbox" class="form-check-input" name="is_justified" value="1" onchange="updateTotalHoursMissed()">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Total d'heures manquées</label>
+                                                        <input type="number" step="2.5" class="form-control" disabled id="totalHoursMissed" placeholder="Total d'heures manquées">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label mr-4 mb-0">Absence justifiée</label>
+                                                <input type="checkbox" class="form-check-input" name="is_justified" value="1"><br>
+                                                <small class="description">Cochez cette case si l'absence est justifiée.</small>
+                                            </div>                    
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-between">
+                                            <a href="/stagaire/" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</a>
+                                            <button type="submit" class="btn btn-primary">Ajouter l'absence</button>
+                                        </div>
+                                    </form>
+                                      
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <%- include('partials/script') %>
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- //seances caluc -->
+<script>
+    function updateTotalHoursMissed() {
+        const checkboxes = document.querySelectorAll('input[name="is_justified"]:checked');
+        const totalHoursMissedInput = document.getElementById('totalHoursMissed');
+        const hoursMissed = checkboxes.length * 2.5;
+        totalHoursMissedInput.value = hoursMissed;
+    }
+</script>
+<!-- //for the to day date  -->
+<script>
+    // Get the current date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Set the value of the input to today's date
+    document.getElementById('observationDate').value = today;
+</script>
+      
+</body>
+</html>

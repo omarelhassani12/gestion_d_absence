@@ -73,6 +73,9 @@
                                                     <td class="text-center"><%= stagiaire.firstName %></td>
                                                     <td class="text-center"><%= stagiaire.groupId != null && stagiaire.groupId != 0 ? 'group ' + stagiaire.groupId : 'No group' %></td>
                                                     <td class="text-center">
+                                                        <button class="btn btn-warning absent-btn" onclick="goToAbsentPage('<%= stagiaire.id %>')">
+                                                            <i class="fas fa-calendar-times"></i>
+                                                        </button>
                                                         <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= stagiaire.id %>')">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
@@ -82,6 +85,7 @@
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         </form>
+
                                                     </td>
                                                 </tr>
                                             <% }) %>
@@ -141,7 +145,7 @@
                         </div>
                         
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary" id="create-stagiaire-button">Créer Stagiaire</button>
                     </div>
@@ -337,6 +341,12 @@ $('#create-stagiaire-form').on('submit', function(event) {
 <script>
         function goToUpdatePage(stagiaireId) {
             window.location.href = `/stagaire/stagiaire-update/${stagiaireId}`;
+        }
+</script>
+<!-- //update stagiaire -->
+<script>
+        function goToAbsentPage(stagiaireId) {
+            window.location.href = `/absence/new-absence/${stagiaireId}`;
         }
 </script>
 

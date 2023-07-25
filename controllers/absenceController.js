@@ -1,4 +1,5 @@
 const AbsenceModel = require('../models/absenceModel');
+const StagiaireModel = require('../models/stagaireModel');
 
 const AbsenceController = {
   getAllAbsences(req, res, next) {
@@ -11,6 +12,23 @@ const AbsenceController = {
         console.error('Error retrieving absences:', error);
         next(error);
       });
+  },
+
+  async getStagiaireById(req, res) {
+    try {
+      const stagiaireId = req.params.id;
+      const stagiaire = await StagiaireModel.findById(stagiaireId);
+      // const groups = await GroupModel.findAll();
+      const user = req.session.user || null;
+      if (stagiaire) {
+        res.render('new-absence', { stagiaire: stagiaire, activeRoute: 'absences' ,user });
+      } else {
+        res.status(404).send('Stagiaire not found');
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching the stagiaire:', error);
+      res.status(500).send('An error occurred while fetching the stagiaire');
+    }
   },
 
   getAbsenceById(req, res, next) {
