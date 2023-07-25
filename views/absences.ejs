@@ -127,14 +127,14 @@
                         <input type="number" class="form-control" name="stagiaire_id" placeholder="Stagiaire ID" required>
                     </div>
                     <div class="row">
-                        <% if(user.role == 1) { %>
+                        <% if(user.role == 0) { %>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Date d'observation</label>
                                 <input type="date" class="form-control" name="observation_date" id="observationDate" required>
                             </div>
                         </div>
-                        <% }else if(user.role == 0){ %>
+                        <% }else if(user.role == 1){ %>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Date d'observation</label>
