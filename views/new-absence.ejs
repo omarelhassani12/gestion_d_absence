@@ -56,18 +56,31 @@
                                             <hr>                                        
                                             <div class="row">
                                                 <% if(user.role == 0) { %>
-                                                <div class="col-md-3">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Date de debut d'absence</label>
-                                                        <input type="date" class="form-control" name="observation_date" id="observationDate"   required>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Type d'absence</label>
+                                                            <select class="form-control" name="absence_type" id="absenceType" required>
+                                                                <option value="" selected disabled>Choisir le type d'absence</option>
+                                                                <option value="Retard">Retard</option>
+                                                                <option value="Maladie">Maladie</option>
+                                                                <option value="Rendez-vous médical">Rendez-vous médical</option>
+                                                                <option value="Autre">Autre</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Date de fin d'absence</label>
-                                                        <input type="date" class="form-control" name="observation_date" id="observationDate"   required>
+                                                    <div class="col-md-3">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Date d'absence</label>
+                                                            <input type="date" class="form-control" name="start_date" id="startDate" required>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                    <div class="col-md-3" id="endDateContainer" style="display: none;">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Date de fin d'absence</label>
+                                                            <input type="date" class="form-control" name="end_date" id="endDate" required>
+                                                        </div>
+                                                    </div>
+                                                
                                                 <% }else if(user.role == 1){ %>
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
@@ -75,42 +88,38 @@
                                                             <input type="date" class="form-control" name="observation_date" id="observationDate" disabled required>
                                                         </div>
                                                     </div>
-                                                    <% } %>
-                                                <div class="col-md-6">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Type d'absence</label>
+                                                            <select class="form-control" name="absence_type" required>
+                                                                <option value="Retard" selected >Retard</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                <% } %>
+                                            </div>
+                                            <% if(user.role == 0) { %>
+                                            <div class="row">
+                                                <div class="col-md-6">        
                                                     <div class="mb-3">
-                                                        <label class="form-label">Type d'absence</label>
-                                                        <select class="form-control" name="absence_type" required>
-                                                            <option value="" selected disabled>Choisir le type d'absence</option>
-                                                            <option value="Retard">Retard</option>
-                                                            <option value="Maladie">Maladie</option>
-                                                            <option value="Rendez-vous médical">Rendez-vous médical</option>
-                                                            <option value="Autre">Autre</option>
+                                                        <label class="form-label">Décision</label>
+                                                        <select class="form-control" name="decision" >
+                                                            <option value="" selected disabled>Choisir la décision</option>
+                                                            <option value="Approuvé">Approuvé</option>
+                                                            <option value="Rejeté">Rejeté</option>
+                                                            <option value="En attente">En attente</option>
+                                                            <option value="Excusé">Excusé</option>
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <% if(user.role == 0) { %>
-                                            <div class="mb-3">
-                                                <label class="form-label">Décision</label>
-                                                <select class="form-control" name="decision" >
-                                                    <option value="" selected disabled>Choisir la décision</option>
-                                                    <option value="Approuvé">Approuvé</option>
-                                                    <option value="Rejeté">Rejeté</option>
-                                                    <option value="En attente">En attente</option>
-                                                    <option value="Excusé">Excusé</option>
-                                                </select>
+                                                <div class="col-md-6">        
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Date de Décision</label>
+                                                        <input type="date" class="form-control" name="observation_date" id="DecisionDate" >
+                                                    </div>
+                                                </div>
                                             </div>
                                             <% } %>
-                                            <!-- <div class="row mb-3">
-                                                <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-                                                  <label class="form-label">Observation N1</label>
-                                                  <textarea class="form-control" name="observation_n1" placeholder="Observation N1"></textarea>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                                  <label class="form-label">Observation N2</label>
-                                                  <textarea class="form-control" name="observation_n2" placeholder="Observation N2"></textarea>
-                                                </div>
-                                            </div> -->
                                             <hr>
                                             <div class="row d-flex justify-content-between">
                                                 <div class="row">
@@ -171,6 +180,27 @@
     </div>
     <!-- ./wrapper -->
 
+    <!-- //case retared or maladie  -->
+    <script>
+        // Get references to the input elements and the select element
+        const startDateInput = document.getElementById('startDate');
+        const endDateContainer = document.getElementById('endDateContainer');
+        const endDateInput = document.getElementById('endDate');
+        const absenceTypeSelect = document.getElementById('absenceType');
+    
+        // Event listener for the select element
+        absenceTypeSelect.addEventListener('change', function () {
+            if (absenceTypeSelect.value === 'Maladie') {
+                // If 'Maladie' is selected, display the end date input
+                endDateContainer.style.display = 'block';
+            } else {
+                // For other options, hide the end date input and set it to the same date as the start date
+                endDateContainer.style.display = 'none';
+                endDateInput.value = startDateInput.value;
+            }
+        });
+    </script>
+    
     <!-- //seances caluc -->
 <script>
     function updateTotalHoursMissed() {
@@ -183,11 +213,16 @@
 <!-- //for the to day date  -->
 <script>
     // Get the current date in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0];
+    const startDate = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').value = startDate;
+    const endDate = new Date().toISOString().split('T')[0];
+    document.getElementById('endDate').value = endDate;
+    const DecisionDate = new Date().toISOString().split('T')[0];
+    document.getElementById('DecisionDate').value = DecisionDate;
+    const observationDate = new Date().toISOString().split('T')[0];
+    document.getElementById('observationDate').value = observationDate;
     
-    // Set the value of the input to today's date
-    document.getElementById('observationDate').value = today;
 </script>
-      
+
 </body>
 </html>
