@@ -127,22 +127,22 @@
                                                         <p>Matin</p>
                                                         <div class="mb-3">
                                                             <label class="form-label mr-5">1ère séance</label>
-                                                            <input type="checkbox" class="form-check-input" name="is_justified" value="1" onchange="updateTotalHoursMissed()">
+                                                            <input type="checkbox" class="form-check-input" name="is_justified_abs_s" value="1" onchange="updateTotalHoursMissed()">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label mr-5">2ème séance</label>
-                                                            <input type="checkbox" class="form-check-input" name="is_justified" value="1" onchange="updateTotalHoursMissed()">
+                                                            <input type="checkbox" class="form-check-input" name="is_justified_abs_s" value="1" onchange="updateTotalHoursMissed()">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <p>Après-midi</p>
                                                         <div class="mb-3">
                                                             <label class="form-label mr-5">3ème séance</label>
-                                                            <input type="checkbox" class="form-check-input" name="is_justified" value="1" onchange="updateTotalHoursMissed()">
+                                                            <input type="checkbox" class="form-check-input" name="is_justified_abs_s" value="1" onchange="updateTotalHoursMissed()">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label mr-5">4ème séance</label>
-                                                            <input type="checkbox" class="form-check-input" name="is_justified" value="1" onchange="updateTotalHoursMissed()">
+                                                            <input type="checkbox" class="form-check-input" name="is_justified_abs_s" value="1" onchange="updateTotalHoursMissed()">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -181,30 +181,34 @@
     <!-- ./wrapper -->
 
     <!-- //case retared or maladie  -->
-    <script>
-        // Get references to the input elements and the select element
-        const startDateInput = document.getElementById('startDate');
-        const endDateContainer = document.getElementById('endDateContainer');
-        const endDateInput = document.getElementById('endDate');
-        const absenceTypeSelect = document.getElementById('absenceType');
-    
-        // Event listener for the select element
-        absenceTypeSelect.addEventListener('change', function () {
-            if (absenceTypeSelect.value === 'Maladie') {
-                // If 'Maladie' is selected, display the end date input
-                endDateContainer.style.display = 'block';
-            } else {
-                // For other options, hide the end date input and set it to the same date as the start date
-                endDateContainer.style.display = 'none';
-                endDateInput.value = startDateInput.value;
-            }
-        });
-    </script>
-    
+<!-- //case retared or maladie  -->
+<script>
+    // Get references to the input elements and the select element
+    const startDateInput = document.getElementById('startDate');
+    const endDateContainer = document.getElementById('endDateContainer');
+    const endDateInput = document.getElementById('endDate');
+    const absenceTypeSelect = document.getElementById('absenceType');
+    const absenceJustifiedCheckbox = document.querySelector('input[name="is_justified"]');
+
+    // Event listener for the select element
+    absenceTypeSelect.addEventListener('change', function () {
+        if (absenceTypeSelect.value === 'Maladie') {
+            // If 'Maladie' is selected, display the end date input and check the justified checkbox
+            endDateContainer.style.display = 'block';
+            absenceJustifiedCheckbox.checked = true;
+        } else {
+            // For other options, hide the end date input and uncheck the justified checkbox
+            endDateContainer.style.display = 'none';
+            endDateInput.value = startDateInput.value;
+            absenceJustifiedCheckbox.checked = false;
+        }
+    });
+</script>
+
     <!-- //seances caluc -->
 <script>
     function updateTotalHoursMissed() {
-        const checkboxes = document.querySelectorAll('input[name="is_justified"]:checked');
+        const checkboxes = document.querySelectorAll('input[name="is_justified_abs_s"]:checked');
         const totalHoursMissedInput = document.getElementById('totalHoursMissed');
         const hoursMissed = checkboxes.length * 2.5;
         totalHoursMissedInput.value = hoursMissed;
