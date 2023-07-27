@@ -31,9 +31,10 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form id="create-absence-form" action="/absences" method="POST">
+                                    <form id="create-absence-form" action="/absence/<%= stagiaire.id %>" method="POST">
                                         <div class="modal-body">
                                             <div class="row">
+                                                <input type="hidden" class="form-control" value="<%= stagiaire.id %>" name="stagiaire_id" placeholder="ID du Stagiaire" required>
                                                 <div class="col-md-4">
                                                     <div class="mb-3">
                                                         <label class="form-label">Stagiaire CEF</label>
@@ -85,7 +86,7 @@
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <label class="form-label">Date d'observation</label>
-                                                            <input type="date" class="form-control" name="observation_date" id="observationDate" disabled required>
+                                                            <input type="date" class="form-control" name="start_date" id="observationDate" disabled required>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -115,57 +116,57 @@
                                                 <div class="col-md-6">        
                                                     <div class="mb-3">
                                                         <label class="form-label">Date de Décision</label>
-                                                        <input type="date" class="form-control" name="observation_date" id="DecisionDate" >
+                                                        <input type="date" class="form-control" name="decision_date" id="DecisionDate" >
                                                     </div>
                                                 </div>
                                             </div>
                                             <% } %>
                                             <hr>
                                             <div class="row d-flex justify-content-between">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <p>Matin</p>
-                                                        <div class="mb-3">
-                                                            <label class="form-label mr-5">1ère séance</label>
-                                                            <input type="checkbox" class="form-check-input" name="is_justified_abs_s" value="1" onchange="updateTotalHoursMissed()">
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label mr-5">2ème séance</label>
-                                                            <input type="checkbox" class="form-check-input" name="is_justified_abs_s" value="1" onchange="updateTotalHoursMissed()">
-                                                        </div>
+                                             <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <p>Matin</p>
+                                                    <div class="mb-3">
+                                                        <label class="form-label mr-5">1ère séance</label>
+                                                        <input type="checkbox" class="form-check-input" name="matin_1ere_seance" value="1" onchange="updateTotalHoursMissed()">
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <p>Après-midi</p>
-                                                        <div class="mb-3">
-                                                            <label class="form-label mr-5">3ème séance</label>
-                                                            <input type="checkbox" class="form-check-input" name="is_justified_abs_s" value="1" onchange="updateTotalHoursMissed()">
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label mr-5">4ème séance</label>
-                                                            <input type="checkbox" class="form-check-input" name="is_justified_abs_s" value="1" onchange="updateTotalHoursMissed()">
-                                                        </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label mr-5">2ème séance</label>
+                                                        <input type="checkbox" class="form-check-input" name="matin_2eme_seance" value="1" onchange="updateTotalHoursMissed()">
                                                     </div>
                                                 </div>
-                                                
+                                                <div class="col-md-6">
+                                                    <p>Après-midi</p>
+                                                    <div class="mb-3">
+                                                        <label class="form-label mr-5">3ème séance</label>
+                                                        <input type="checkbox" class="form-check-input" name="apres_midi_3eme_seance" value="1" onchange="updateTotalHoursMissed()">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label mr-5">4ème séance</label>
+                                                        <input type="checkbox" class="form-check-input" name="apres_midi_4eme_seance" value="1" onchange="updateTotalHoursMissed()">
+                                                    </div>
+                                                </div>
+                                                </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
                                                         <label class="form-label">Total d'heures manquées</label>
-                                                        <input type="number" step="2.5" class="form-control" disabled id="totalHoursMissed" placeholder="Total d'heures manquées">
+                                                        <input type="number" step="2.5" class="form-control" name="total_heures_manquees" readonly id="totalHoursMissed" placeholder="Total d'heures manquées">
                                                     </div>
                                                 </div>
-                                            </div>
+                                              </div>
                                             <hr>
                                             
                                             <div class="mb-3">
                                                 <label class="form-label mr-4 mb-0">Absence justifiée</label>
-                                                <input type="checkbox" class="form-check-input" name="is_justified" value="1"><br>
+                                                <input type="checkbox" class="form-check-input" name="absence_justifiee" value="1"><br>
                                                 <small class="description">Cochez cette case si l'absence est justifiée.</small>
                                             </div>                    
                                         </div>
                                         <div class="modal-footer d-flex justify-content-between">
                                             <a href="/stagaire/" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</a>
                                             <button type="submit" class="btn btn-primary">Ajouter l'absence</button>
-                                        </div>
+                                          </div>
                                     </form>
                                       
                                 </div>
@@ -188,7 +189,7 @@
     const endDateContainer = document.getElementById('endDateContainer');
     const endDateInput = document.getElementById('endDate');
     const absenceTypeSelect = document.getElementById('absenceType');
-    const absenceJustifiedCheckbox = document.querySelector('input[name="is_justified"]');
+    const absenceJustifiedCheckbox = document.querySelector('input[name="absence_justifiee"]');
 
     // Event listener for the select element
     absenceTypeSelect.addEventListener('change', function () {
@@ -206,14 +207,30 @@
 </script>
 
     <!-- //seances caluc -->
-<script>
-    function updateTotalHoursMissed() {
-        const checkboxes = document.querySelectorAll('input[name="is_justified_abs_s"]:checked');
-        const totalHoursMissedInput = document.getElementById('totalHoursMissed');
-        const hoursMissed = checkboxes.length * 2.5;
-        totalHoursMissedInput.value = hoursMissed;
-    }
-</script>
+    <script>
+        function updateTotalHoursMissed() {
+            // Get references to the input elements for morning and afternoon sessions
+            const matin1ereSeanceCheckbox = document.querySelector('input[name="matin_1ere_seance"]:checked');
+            const matin2emeSeanceCheckbox = document.querySelector('input[name="matin_2eme_seance"]:checked');
+            const apresMidi3emeSeanceCheckbox = document.querySelector('input[name="apres_midi_3eme_seance"]:checked');
+            const apresMidi4emeSeanceCheckbox = document.querySelector('input[name="apres_midi_4eme_seance"]:checked');
+            
+            // Get reference to the total hours missed input field
+            const totalHoursMissedInput = document.getElementById('totalHoursMissed');
+            
+            // Calculate the total hours missed based on the checked checkboxes
+            let totalHoursMissed = 0;
+            
+            if (matin1ereSeanceCheckbox) totalHoursMissed += 2.5;
+            if (matin2emeSeanceCheckbox) totalHoursMissed += 2.5;
+            if (apresMidi3emeSeanceCheckbox) totalHoursMissed += 2.5;
+            if (apresMidi4emeSeanceCheckbox) totalHoursMissed += 2.5;
+            
+            totalHoursMissedInput.value = totalHoursMissed;
+        }
+    </script>
+    
+    
 <!-- //for the to day date  -->
 <script>
     // Get the current date in YYYY-MM-DD format

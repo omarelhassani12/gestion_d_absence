@@ -69,28 +69,53 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- Replace the below dummy data with actual data from the database -->
-                                            <% absences.forEach(absence => { %>
+                                            <% absences.forEach(absence => {
+                                                // Find the corresponding stagiaire based on stagiaire_id
+                                                const stagiaire = stagiaires.find(st => st.id === absence.stagiaire_id);
+                                                const totalHeuresManquees = absence.total_heures_manquees;
+
+                                              %>
                                                 <tr>
-                                                    <td class="text-center"><%= absence.stagiaire_id %></td>
-                                                    <td class="text-center"><%= absence.observation_date %></td>
-                                                    <td class="text-center"><%= absence.absence_type %></td>
-                                                    <td class="text-center"><%= absence.total_hours_missed %></td>
-                                                    <td class="text-center"><%= absence.is_justified ? 'Oui' : 'Non' %></td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= absence.observation_id %>')">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        <form id="delete-form-<%= absence.observation_id %>" action="/absence/<%= absence.observation_id %>" method="POST" style="display: inline;">
-                                                            <input type="hidden" name="_method" value="DELETE">
-                                                            <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= absence.observation_id %>')" id="delete-button-<%= absence.observation_id %>">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
+                                                <td class="text-center"><%= stagiaire ? `${stagiaire.firstName} ${stagiaire.lastName}` : 'Unknown Stagiaire' %></td>
+                                                <td class="text-center">
+                                                    <% if (totalHeuresManquees >= 2.5 && totalHeuresManquees < 7.5) { %>
+                                                    1 er M.G
+                                                    <% } else if (totalHeuresManquees >= 7.5 && totalHeuresManquees < 15.5){ %>
+                                                    2 eme M.G    
+                                                    <% } else if (totalHeuresManquees >= 15.5 && totalHeuresManquees < 17.5){ %>
+                                                    1 er Aver   
+                                                    <% } else if (totalHeuresManquees >= 17.5 && totalHeuresManquees < 22.5){ %>
+                                                    2 eme Aver    
+                                                    <% } else if (totalHeuresManquees >= 22.5 && totalHeuresManquees < 25.5){ %>
+                                                    Blame    
+                                                    <% } else if (totalHeuresManquees >= 27.5 && totalHeuresManquees < 32.5){ %>
+                                                    2 eme M.G    
+                                                    <% } else if (totalHeuresManquees >= 32.5 && totalHeuresManquees < 35.5){ %>
+                                                    Exclusion
+                                                    <% } else if (totalHeuresManquees > 52.5){ %>
+                                                    Urgent    
+                                                    <% } %>
+                                                </td>        
+                                                <td class="text-center"><%= absence.absence_type %></td>
+                                                <td class="text-center"><%= absence.total_heures_manquees %></td>
+                                                <td class="text-center"><%= absence.is_justified ? 'Oui' : 'Non' %></td>
+                                                <td class="text-center">
+                                                  <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= absence.observation_id %>')">
+                                                    <i class="fas fa-edit"></i>
+                                                  </button>
+                                                  <form id="delete-form-<%= absence.observation_id %>" action="/absence/<%= absence.observation_id %>" method="POST" style="display: inline;">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= absence.observation_id %>')" id="delete-button-<%= absence.observation_id %>">
+                                                      <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                  </form>
+                                                </td>
+                                              </tr>
                                             <% }); %>
-                                        </tbody>
+                                          </tbody>
+                                          
+                                          
+                                        
                                     </table>
                                 </div>
                                 <!-- /.card-body -->
@@ -113,7 +138,7 @@
 
 <!--  Modals for Insert and Delete -->
 <!-- modal-add-absence.ejs -->
-<div class="modal fade" id="modal-add-absence" tabindex="-1" role="dialog" aria-labelledby="modal-add-absence" aria-hidden="true">
+<!-- <div class="modal fade" id="modal-add-absence" tabindex="-1" role="dialog" aria-labelledby="modal-add-absence" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -226,7 +251,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> -->
 
 
 

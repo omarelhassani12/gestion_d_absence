@@ -2,26 +2,32 @@ const AbsenceModel = require('../models/absenceModel');
 const StagiaireModel = require('../models/stagaireModel');
 
 const AbsenceController = {
-  getAllAbsences(req, res, next) {
-    AbsenceModel.findAll()
-      .then(absences => {
-        const user = req.session.user || null;
-        res.render('absences', { absences, activeRoute: 'absences',user });
-      })
-      .catch(error => {
-        console.error('Error retrieving absences:', error);
-        next(error);
-      });
+  async getAllAbsences(req, res, next) {
+    try {
+      const absences = await AbsenceModel.findAll();
+      
+      // Fetch the stagiaire information for each absence
+      for (const absence of absences) {
+        const stagiaire = await StagiaireModel.findById(absence.stagiaireId);
+        absence.stagiaire = stagiaire;
+      }
+  
+      const user = req.session.user || null;
+      const stagiaires = await StagiaireModel.findAll(); // Fetch all stagiaires separately
+      res.render('absences', { absences, activeRoute: 'absences', user, stagiaires });
+    } catch (error) {
+      console.error('Error retrieving absences:', error);
+      next(error);
+    }
   },
-
+  
   async getStagiaireById(req, res) {
     try {
       const stagiaireId = req.params.id;
       const stagiaire = await StagiaireModel.findById(stagiaireId);
-      // const groups = await GroupModel.findAll();
       const user = req.session.user || null;
       if (stagiaire) {
-        res.render('new-absence', { stagiaire: stagiaire, activeRoute: 'absences' ,user });
+        res.render('new-absence', { stagiaire, activeRoute: 'absences', user }); // Pass activeRoute and user to the template
       } else {
         res.status(404).send('Stagiaire not found');
       }
@@ -30,6 +36,7 @@ const AbsenceController = {
       res.status(500).send('An error occurred while fetching the stagiaire');
     }
   },
+  
 
   getAbsenceById(req, res, next) {
     const { id } = req.params;
@@ -44,44 +51,68 @@ const AbsenceController = {
       });
   },
 
-  createAbsence(req, res, next) {
-    const { stagiaire_id, observation_date, absence_type, decision, observation_n1, observation_n2, total_hours_missed, is_justified } = req.body;
 
-    const absence = {
-      stagiaire_id,
-      observation_date,
-      absence_type,
-      decision,
-      observation_n1,
-      observation_n2,
-      total_hours_missed,
-      is_justified,
-    };
 
-    AbsenceModel.create(absence)
-      .then(observation_id => {
-        console.log('Absence created successfully with ID:', observation_id);
-        res.redirect('/absences');
-      })
-      .catch(error => {
-        console.error('Error creating absence:', error);
-        next(error);
+  async createAbsence(req, res, next) {
+    try {
+      // Get the form data from the request body
+      const {
+        stagiaire_id,
+        absence_type,
+        start_date,
+        end_date,
+        decision,
+        decision_date,
+        matin_1ere_seance,
+        matin_2eme_seance,
+        apres_midi_3eme_seance,
+        apres_midi_4eme_seance,
+        total_heures_manquees,
+        absence_justifiee,
+      } = req.body;
+  
+      // Create the absence in the database using the AbsenceModel
+      const newAbsence = await AbsenceModel.createAbsence({
+        stagiaire_id,
+        absence_type,
+        start_date,
+        end_date,
+        decision,
+        decision_date,
+        matin_1ere_seance,
+        matin_2eme_seance,
+        apres_midi_3eme_seance,
+        apres_midi_4eme_seance,
+        total_heures_manquees,
+        absence_justifiee,
       });
+  
+      // Optionally, you can send a response back to the frontend indicating success or redirect to a different page
+      res.redirect('/absence');    
+     } catch (error) {
+      console.error('Error creating absence:', error);
+      next(error);
+    }
   },
+  
 
   updateAbsence(req, res, next) {
     const { id } = req.params;
-    const { stagiaire_id, observation_date, absence_type, decision, observation_n1, observation_n2, total_hours_missed, is_justified } = req.body;
+    const { stagiaire_id, absence_type, start_date, end_date, decision, decision_date, matin_1ere_seance, matin_2eme_seance, apres_midi_3eme_seance, apres_midi_4eme_seance, total_heures_manquees, absence_justifiee } = req.body;
 
     const updatedData = {
       stagiaire_id,
-      observation_date,
       absence_type,
+      start_date,
+      end_date,
       decision,
-      observation_n1,
-      observation_n2,
-      total_hours_missed,
-      is_justified,
+      decision_date,
+      matin_1ere_seance,
+      matin_2eme_seance,
+      apres_midi_3eme_seance,
+      apres_midi_4eme_seance,
+      total_heures_manquees,
+      absence_justifiee,
     };
 
     AbsenceModel.update(id, updatedData)
