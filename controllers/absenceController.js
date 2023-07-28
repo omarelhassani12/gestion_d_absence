@@ -133,22 +133,23 @@ const AbsenceController = {
 
   deleteAbsence(req, res, next) {
     const { id } = req.params;
-
+  
     AbsenceModel.delete(id)
-      .then(success => {
-        if (success) {
-          console.log('Absence deleted successfully');
-          res.redirect('/absences');
-        } else {
-          console.error('Absence not found or not deleted');
-          next(new Error('Absence not found or not deleted'));
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting absence:', error);
-        next(error);
-      });
+        .then(success => {
+            if (success) {
+                console.log('Absence deleted successfully');
+                res.redirect('/absences'); 
+            } else {
+                console.error('Absence not found or not deleted');
+                next(new Error('Absence not found or not deleted'));
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting absence:', error);
+            next(error);
+        });
   },
+  
 };
 
 module.exports = AbsenceController;
