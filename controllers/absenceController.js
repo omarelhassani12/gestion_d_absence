@@ -7,17 +7,18 @@ const path = require('path');
 const bidi = require('bidi');
 
 const AbsenceController = {
+
   // async getAllAbsences(req, res, next) {
   //   try {
   //     const absences = await AbsenceModel.findAll();
   //     const groups = await GroupModel.findAll();
-
+  
   //     // Fetch the stagiaire information for each absence
   //     for (const absence of absences) {
   //       const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
   //       absence.stagiaire = stagiaire;
   //     }
-
+  
   //     const user = req.session.user || null;
   //     const stagiaires = await StagiaireModel.findAll(); // Fetch all stagiaires separately
   //     res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups }); // Include "groups" here
@@ -25,7 +26,51 @@ const AbsenceController = {
   //     console.error('Error retrieving absences:', error);
   //     next(error);
   //   }
-  // },
+  // },  
+  
+  
+  // async getAllAbsences(req, res, next) {
+  //   try {
+  //     const absences = await AbsenceModel.findAll();
+  //     const groups = await GroupModel.findAll();
+  
+  //     // Fetch the stagiaire information for each absence
+  //     for (const absence of absences) {
+  //       const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
+  //       absence.stagiaire = stagiaire;
+  //     }
+  
+  //     const user = req.session.user || null;
+  //     const stagiaires = await StagiaireModel.findAll(); // Fetch all stagiaires separately
+  
+  //     // Get the selected date and period from the request query parameters
+  //     const selectedDate = req.query.date;
+  //     const selectedPeriod = req.query.period;
+  
+  //     // If both selectedDate and selectedPeriod are present, filter the absences based on date and period
+  //     if (selectedDate && selectedPeriod) {
+  //       const absencesByDateAndPeriod = absences.filter(
+  //         (absence) => absence.date === selectedDate && absence.period === selectedPeriod
+  //       );
+  
+  //       res.render('absences', {
+  //         absences: absencesByDateAndPeriod,
+  //         activeRoute: 'absences',
+  //         user,
+  //         stagiaires,
+  //         groups,
+  //       });
+  //     } else {
+  //       // If not, render the view with all absences
+  //       res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error retrieving absences:', error);
+  //     next(error);
+  //   }
+  // },  
+  
+
   async getAllAbsences(req, res, next) {
     try {
       const absences = await AbsenceModel.findAll();
@@ -39,13 +84,33 @@ const AbsenceController = {
   
       const user = req.session.user || null;
       const stagiaires = await StagiaireModel.findAll(); // Fetch all stagiaires separately
-      res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups }); // Include "groups" here
+  
+      // Get the selected date and period from the request query parameters
+      const selectedDate = req.query.date;
+      const selectedPeriod = req.query.period;
+  
+      // If both selectedDate and selectedPeriod are present, filter the absences based on date and period
+      if (selectedDate && selectedPeriod) {
+        const absencesByDateAndPeriod = absences.filter(
+          (absence) => absence.date === selectedDate && absence.period === selectedPeriod
+        );
+  
+        res.render('absences', {
+          absences: absencesByDateAndPeriod,
+          activeRoute: 'absences',
+          user,
+          stagiaires,
+          groups,
+        });
+      } else {
+        // If not, render the view with all absences
+        res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups });
+      }
     } catch (error) {
       console.error('Error retrieving absences:', error);
       next(error);
     }
-  },  
-
+  },
   async downloadPDF(req, res, next) {
     try {
       const stagiaireId = req.params.stagiaireId;
@@ -202,10 +267,7 @@ const AbsenceController = {
       await AbsenceModel.createAbsence(absenceDataArray);
   
       // Send a response back to the client
-      res.json({
-        success: true,
-        message: 'Absences inserted successfully.',
-      });
+      res.redirect('/absence');
     } catch (error) {
       console.error('Error inserting absences:', error);
       // Handle the error, e.g., send an error response back to the client
@@ -216,37 +278,30 @@ const AbsenceController = {
     }
   },  
 
-  async updateAbsence(req, res, next) {
-    try {
-      const { id } = req.params;
-      const { stagiaire_id, date, period, first_session_attendance, second_session_attendance } = req.body;
+  // async updateAbsence(req, res, next) {
+  //   try {
+  //     const { id } = req.params;
+  //     const { first_session_attendance, second_session_attendance } = req.body;
   
-      // Ensure that the provided 'date' is a valid Date object or null
-      const parsedDate = date ? new Date(date) : null;
+  //     // Convert the checkbox values to boolean (true for checked, false for unchecked)
+  //     const firstSessionAttendance = first_session_attendance === 'on';
+  //     const secondSessionAttendance = second_session_attendance === 'on';
   
-      const updatedData = {
-        stagiaire_id,
-        date: parsedDate,
-        period,
-        first_session_attendance: first_session_attendance === 'AM', // Convert checkbox value to a boolean
-        second_session_attendance: second_session_attendance === 'AM', // Convert checkbox value to a boolean
-      };
+  //     // Assuming AbsenceModel.updateAbsence is a function to update the absence
+  //     const success = await AbsenceModel.updateAbsence(id, firstSessionAttendance, secondSessionAttendance);
   
-      // Assuming AbsenceModel.update returns a Promise that resolves to a boolean (true if successful, false otherwise)
-      const success = await AbsenceModel.update(id, updatedData);
-  
-      if (success) {
-        console.log('Absence updated successfully');
-        res.redirect('/absences');
-      } else {
-        console.error('Absence not found or not updated');
-        res.status(404).send('Absence not found or not updated');
-      }
-    } catch (error) {
-      console.error('Error updating absence:', error);
-      res.status(500).send('An error occurred while updating the absence');
-    }
-  },
+  //     if (success) {
+  //       res.sendStatus(200); // Send a success response
+  //     } else {
+  //       res.sendStatus(404); // Send a not found response
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating absence:', error);
+  //     res.sendStatus(500); // Send an internal server error response
+  //   }
+  // },
+
+
   deleteAbsence(req, res, next) {
     const { id } = req.params;
 
@@ -265,8 +320,60 @@ const AbsenceController = {
         next(error);
       });
   },
-  
 
+//   async updateAbsence(req, res, next) {
+//     try {
+//         const { id } = req.params;
+//         const { session1_attendance, session2_attendance } = req.body;
+
+//         // Determine the updated attendance data based on the presence of session1_attendance or session2_attendance
+//         const updatedAttendance = session1_attendance !== undefined ? session1_attendance : session2_attendance;
+//         const sessionNumber = session1_attendance !== undefined ? 1 : 2;
+
+//         // Assuming AbsenceModel.updateAbsence is a function to update the absence
+//         const success = await AbsenceModel.updateAbsence(id, sessionNumber, updatedAttendance);
+
+//         if (success) {
+//             res.sendStatus(200); // Send a success response
+//         } else {
+//             res.sendStatus(404); // Send a not found response
+//         }
+//     } catch (error) {
+//         console.error('Error updating absence:', error);
+//         res.sendStatus(500); // Send an internal server error response
+//     }
+// },
+
+
+async updateAbsence(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { session1_attendance, session2_attendance } = req.body;
+
+    // Determine the updated attendance data based on the presence of session1_attendance or session2_attendance
+    const updatedAttendance = session1_attendance !== undefined ? session1_attendance : session2_attendance;
+    const sessionNumber = session1_attendance !== undefined ? 1 : 2;
+
+    // Convert the string value to a boolean
+    const isChecked = updatedAttendance === '1' ? true : false;
+
+    // Assuming AbsenceModel.updateAbsence is a function to update the absence
+    const success = await AbsenceModel.updateAbsence(id, sessionNumber, isChecked);
+
+    if (success) {
+      res.sendStatus(200); // Send a success response
+    } else {
+      res.sendStatus(404); // Send a not found response
+    }
+  } catch (error) {
+    console.error('Error updating absence:', error);
+    res.sendStatus(500); // Send an internal server error response
+  }
+},
+
+
+
+ 
 
 };
 

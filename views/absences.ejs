@@ -78,28 +78,39 @@
                                               <th class="text-center"  id="seance2Header">2eme seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
                                             </tr>
                                           </thead>
-                                          
-                                        <tbody id="tableBody">
-                                          <% for (const absence of absences) { %>
-                                            <tr>
-                                              <td class="text-center"><%= absence.stagiaire.CEF %></td>
-                                              <td class="text-center"><%= absence.stagiaire.firstName %></td>
-                                              <td class="text-center"><%= absence.stagiaire.lastName %></td>
-                                              <td class="text-center">
-                                                <div class="form-check">
-                                                  <label for="1er-seance" class="mr-4">08:00-10:30</label>
-                                                  <i class="fas <% if (absence.first_session_attendance == 1) { %>fa-eye-slash red-eye<% } else { %>fa-eye green-eye<% } %>"></i>
-                                                </div>
-                                              </td>
-                                              <td class="text-center">
-                                                <div class="form-check">
-                                                  <label for="2eme-seance" class="mr-4"></label>
-                                                  <i class="fas <% if (absence.second_session_attendance == 1) { %>fa-eye-slash red-eye<% } else { %>fa-eye green-eye<% } %>"></i>
-                                                </div>
-                                              </td>
-                                            </tr>
-                                          <% } %>
-                                        </tbody>
+                                          <tbody id="tableBody">
+                                            <% for (const absence of absences) { %>
+                                              <tr>
+                                                <td class="text-center"><%= absence.stagiaire.CEF %></td>
+                                                <td class="text-center"><%= absence.stagiaire.firstName %></td>
+                                                <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                                <td class="text-center">
+                                                  <div class="form-check">
+                                                    <input
+                                                      type="checkbox"
+                                                      class="form-check-input attendance-checkbox first-session-checkbox"
+                                                      id="1er-seance-<%= absence.stagiaire.id %>"
+                                                      <% if (absence.first_session_attendance == 1) { %>checked<% } %>
+                                                      data-student-id="<%= absence.stagiaire.id %>"
+                                                    >
+                                                    <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>"></label>
+                                                  </div>
+                                                </td>
+                                                <td class="text-center">
+                                                  <div class="form-check">
+                                                    <input
+                                                      type="checkbox"
+                                                      class="form-check-input attendance-checkbox second-session-checkbox"
+                                                      id="2eme-seance-<%= absence.stagiaire.id %>"
+                                                      <% if (absence.second_session_attendance == 1) { %>checked<% } %>
+                                                      data-student-id="<%= absence.stagiaire.id %>"
+                                                    >
+                                                    <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>"></label>
+                                                  </div>
+                                                </td>
+                                              </tr>
+                                            <% } %>
+                                          </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -124,20 +135,65 @@
         }
     </script>
     <script>
-        function updateTableHeader() {
-          const periodSelect = document.getElementById('periodSelect');
-          const selectedPeriod = periodSelect.value;
-          const seance1Header = document.getElementById('seance1Header');
-          const seance2Header = document.getElementById('seance2Header');
-      
-          // Update the table headers with the selected period
-          seance1Header.textContent = `1er seance (${selectedPeriod})`;
-          seance2Header.textContent = `2eme seance (${selectedPeriod})`;
+  function updateTableHeader() {
+    const periodSelect = document.getElementById('periodSelect');
+    const selectedPeriod = periodSelect.value;
+    const seance1Header = document.getElementById('seance1Header');
+    const seance2Header = document.getElementById('seance2Header');
+
+    // Update the table headers with the selected period
+    seance1Header.textContent = `1er seance (${selectedPeriod})`;
+    seance2Header.textContent = `2eme seance (${selectedPeriod})`;
+  }
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add event listeners to the attendance checkboxes
+      const attendanceCheckboxes = document.querySelectorAll('.attendance-checkbox');
+      attendanceCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+          const studentId = checkbox.getAttribute('data-student-id');
+          const sessionNumber = checkbox.classList.contains('first-session-checkbox') ? 1 : 2;
+          const isChecked = checkbox.checked; // Get the updated checkbox value
+  
+          updateAttendance(studentId, sessionNumber, isChecked); // Call the function with the updated value
+        });
+      });
+    });
+  
+    async function updateAttendance(studentId, sessionNumber, isChecked) {
+      try {
+        // Make an AJAX request using the fetch API
+        const response = await fetch(`/absence/update/${studentId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            [`session${sessionNumber}_attendance`]: isChecked ? '1' : '0', // Convert the boolean to '1' or '0'
+          })
+        });
+  
+        if (response.ok) {
+          console.log('Attendance updated successfully');
+          // Optionally, you can update the checkbox state based on the server's response
+          // const responseData = await response.json();
+          // console.log(responseData);
+        } else {
+          console.error('Failed to update attendance');
+          // Handle the error response here if needed
         }
-      </script>
-      
-      
-      
+      } catch (error) {
+        console.error('Error updating attendance:', error);
+        // Handle any other errors here
+      }
+    }
+  </script>
+  
+    
 </body>
         
 </html>
