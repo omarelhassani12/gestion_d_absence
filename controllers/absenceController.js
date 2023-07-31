@@ -278,29 +278,6 @@ const AbsenceController = {
     }
   },  
 
-  // async updateAbsence(req, res, next) {
-  //   try {
-  //     const { id } = req.params;
-  //     const { first_session_attendance, second_session_attendance } = req.body;
-  
-  //     // Convert the checkbox values to boolean (true for checked, false for unchecked)
-  //     const firstSessionAttendance = first_session_attendance === 'on';
-  //     const secondSessionAttendance = second_session_attendance === 'on';
-  
-  //     // Assuming AbsenceModel.updateAbsence is a function to update the absence
-  //     const success = await AbsenceModel.updateAbsence(id, firstSessionAttendance, secondSessionAttendance);
-  
-  //     if (success) {
-  //       res.sendStatus(200); // Send a success response
-  //     } else {
-  //       res.sendStatus(404); // Send a not found response
-  //     }
-  //   } catch (error) {
-  //     console.error('Error updating absence:', error);
-  //     res.sendStatus(500); // Send an internal server error response
-  //   }
-  // },
-
 
   deleteAbsence(req, res, next) {
     const { id } = req.params;
@@ -321,28 +298,6 @@ const AbsenceController = {
       });
   },
 
-//   async updateAbsence(req, res, next) {
-//     try {
-//         const { id } = req.params;
-//         const { session1_attendance, session2_attendance } = req.body;
-
-//         // Determine the updated attendance data based on the presence of session1_attendance or session2_attendance
-//         const updatedAttendance = session1_attendance !== undefined ? session1_attendance : session2_attendance;
-//         const sessionNumber = session1_attendance !== undefined ? 1 : 2;
-
-//         // Assuming AbsenceModel.updateAbsence is a function to update the absence
-//         const success = await AbsenceModel.updateAbsence(id, sessionNumber, updatedAttendance);
-
-//         if (success) {
-//             res.sendStatus(200); // Send a success response
-//         } else {
-//             res.sendStatus(404); // Send a not found response
-//         }
-//     } catch (error) {
-//         console.error('Error updating absence:', error);
-//         res.sendStatus(500); // Send an internal server error response
-//     }
-// },
 
 
 async updateAbsence(req, res, next) {

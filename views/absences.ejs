@@ -74,6 +74,7 @@
                                               <th class="text-center">CEF</th>
                                               <th class="text-center">Prenom</th>
                                               <th class="text-center">Nom</th>
+                                              <th class="text-center">Period</th>
                                               <th class="text-center"  id="seance1Header">1er seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
                                               <th class="text-center"  id="seance2Header">2eme seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
                                             </tr>
@@ -85,27 +86,46 @@
                                                 <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                 <td class="text-center"><%= absence.stagiaire.lastName %></td>
                                                 <td class="text-center">
+                                                    <% if (absence.period === 'AM') { %>
+                                                            Matin
+                                                    <% } else if (absence.period === 'PM') { %>
+                                                            Apres midi
+                                                    <% } %>
+                                                  </td>
+                                                <td class="text-center">
                                                   <div class="form-check">
                                                     <input
                                                       type="checkbox"
-                                                      class="form-check-input attendance-checkbox first-session-checkbox"
+                                                      class="form-check-input attendance-checkbox first-session-checkbox "
                                                       id="1er-seance-<%= absence.stagiaire.id %>"
                                                       <% if (absence.first_session_attendance == 1) { %>checked<% } %>
-                                                      data-student-id="<%= absence.stagiaire.id %>"
+                                                      data-student-id="<%=absence.id %>"
                                                     >
-                                                    <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>"></label>
+                                                    <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>">
+                                                        <% if (absence.first_session_attendance === 1) { %>
+                                                            Absent
+                                                          <% } else { %>
+                                                            Présent
+                                                          <% } %>   
+                                                    </label>
                                                   </div>
                                                 </td>
                                                 <td class="text-center">
                                                   <div class="form-check">
                                                     <input
                                                       type="checkbox"
-                                                      class="form-check-input attendance-checkbox second-session-checkbox"
+                                                      class="form-check-input attendance-checkbox second-session-checkbox "
                                                       id="2eme-seance-<%= absence.stagiaire.id %>"
                                                       <% if (absence.second_session_attendance == 1) { %>checked<% } %>
-                                                      data-student-id="<%= absence.stagiaire.id %>"
+                                                      data-student-id="<%= absence.id %>"
                                                     >
-                                                    <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>"></label>
+                                                    <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>">
+                                                        <% if (absence.second_session_attendance === 1) { %>
+                                                            Absent
+                                                          <% } else { %>
+                                                            Présent
+                                                          <% } %>    
+                                                    </label>
                                                   </div>
                                                 </td>
                                               </tr>

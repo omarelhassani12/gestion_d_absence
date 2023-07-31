@@ -107,53 +107,6 @@ const AbsenceModel = {
     });
   },
  
-  // async updateAbsence(id, sessionNumber, updatedAttendance) {
-  //   try {
-  //     console.log('id:', id);
-  //     console.log('sessionNumber:', sessionNumber);
-  //     console.log('updatedAttendance:', updatedAttendance);
-  
-  //     // Check if updatedAttendance is null or undefined
-  //     if (updatedAttendance === null || updatedAttendance === undefined) {
-  //       throw new Error('Updated attendance data is null or undefined');
-  //     }
-  
-  //     // Determine which attendance column to update based on the session number
-  //     const columnToUpdate = sessionNumber === 1 ? 'first_session_attendance' : 'second_session_attendance';
-  
-  //     // Determine the value to set based on updatedAttendance
-  //     const valueToSet = updatedAttendance ? true : false;
-  
-  //     // Construct the SQL query for updating the attendance
-  //     const query = `
-  //       UPDATE absence 
-  //       SET ${columnToUpdate} = ?
-  //       WHERE stagiaire_id = ?
-  //     `;
-  
-  //     const values = [
-  //       valueToSet,
-  //       id
-  //     ];
-  
-  //     // Execute the query using the database connection
-  //     const result = await db.query(query, values);
-  
-  //     // Check if any rows were affected by the update operation
-  //     const success = result.affectedRows > 0;
-  
-  //     // Optionally, you can return a success message or any other response
-  //     return {
-  //       success,
-  //       message: success ? 'Absence updated successfully.' : 'Absence not found or not updated.',
-  //     };
-  //   } catch (error) {
-  //     console.error('Error updating absence:', error);
-  //     throw error;
-  //   }
-  // },
-
-
   async updateAbsence(id, sessionNumber, updatedAttendance) {
     try {
       // Check if updatedAttendance is null or undefined
@@ -171,7 +124,7 @@ const AbsenceModel = {
       const query = `
         UPDATE absence 
         SET ${columnToUpdate} = ?
-        WHERE stagiaire_id = ?
+        WHERE id = ?
       `;
   
       const values = [

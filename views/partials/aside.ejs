@@ -52,7 +52,7 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a href="/absence"
                             class="nav-link <%= activeRoute === 'absences' ? 'active' : '' %>">
                             <i class="nav-icon fas fa-calendar-times"></i>
@@ -60,12 +60,41 @@
                                 Liste des absences
                             </p>
                         </a>
+                    </li> -->
+                    <li class="nav-item ">
+                        <a href="#" class="nav-link">
+                          <i class="nav-icon fas fa-calendar"></i>
+                          <p>
+                            Gestion des absences
+                            <i class="fas fa-angle-left right"></i>
+                          </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/absence"
+                                    class="nav-link <%= activeRoute === 'absences' ? 'active' : '' %>">
+                                    <i class="nav-icon fas fa-calendar-times"></i>
+                                    <p>
+                                        Liste des absences
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/absence"
+                                    class="nav-link <%= activeRoute === 'absencesList' ? 'active' : '' %>">
+                                    <i class="nav-icon fas fa-calendar"></i>
+                                    <p>
+                                        Les liste par date
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a href="/user" class="nav-link <%= activeRoute === 'users' ? 'active' : '' %>">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
-                                Les formateurs
+                                formateurs
                             </p>
                         </a>
                     </li>
@@ -73,7 +102,7 @@
                         <a href="/group" class="nav-link <%= activeRoute === 'groups' ? 'active' : '' %>">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
-                                Les groupes
+                                groupes
                             </p>
                         </a>
                     </li>
