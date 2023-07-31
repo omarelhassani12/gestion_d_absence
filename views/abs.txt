@@ -45,9 +45,10 @@
                                             <div class="col-auto ms-auto d-print-none">
                                                 <div class="d-flex justify-content-end">
                                                     <!-- The "Nouvelle Absence" button -->
-                                                    <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-add-absence" id="new-absence-button">
+                                                    <a href="/stagaire" class="btn btn-primary d-none d-sm-inline-block">
                                                         Nouvelle Absence
                                                     </a>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -58,25 +59,48 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
+                                                <th class="text-center">CEF</th>
                                                 <th class="text-center">Stagiaire</th>
                                                 <th class="text-center">Fonction</th>
-                                                <th class="text-center">Type d'Absence</th>
                                                 <th class="text-center">Total d'Heures Manquées</th>
-                                                <th class="text-center">Justifiée</th>
+                                                <th class="text-center">Total d'Heures Manquées</th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <% absences.forEach(absence => {
+                                            <% // Create an object to store the total hours missed for each user
+                                            const totalHoursMissedByUser = {};
+                                    
+                                            absences.forEach(absence => {
                                                 // Find the corresponding stagiaire based on stagiaire_id
-                                                const stagiaire = stagiaires.find(st => st.id === absence.stagiaire_id);
+                                                const stagiaire = stagiaires.find(st => st.id === (absence.stagiaire_id || null)); // Use null if 'stagiaire_id' is undefined
                                                 const totalHeuresManquees = absence.total_heures_manquees;
+                                    
+                                                // Update the total hours missed for the user
+                                                if (stagiaire && stagiaire.id) {
+                                                    if (!totalHoursMissedByUser[stagiaire.id]) {
+                                                        totalHoursMissedByUser[stagiaire.id] = {
+                                                            stagiaire,
+                                                            totalHeuresManquees,
+                                                        };
+                                                    } else {
+                                                        totalHoursMissedByUser[stagiaire.id].totalHeuresManquees += totalHeuresManquees;
+                                                    }
+                                                }
+                                            });
+
+                                            
+                                    
+                                            // Loop through the grouped data and display the results
+                                            Object.values(totalHoursMissedByUser).forEach(data => {
+                                                const { stagiaire, totalHeuresManquees } = data;
                                             %>
                                                 <tr>
+                                                    <td class="text-center"><%= stagiaire && stagiaire.CEF ? stagiaire.CEF : 'Unknown CEF' %></td>
                                                     <td class="text-center"><%= stagiaire ? `${stagiaire.firstName} ${stagiaire.lastName}` : 'Unknown Stagiaire' %></td>
                                                     <td class="text-center">
                                                         <% if (totalHeuresManquees >= 2.5 && totalHeuresManquees < 7.5) { %>
-                                                            1er M.G
+                                                            <a href="#" download="/Rapports/Image_005.pdf"> 1er M.G</a>
                                                         <% } else if (totalHeuresManquees >= 7.5 && totalHeuresManquees < 15.5){ %>
                                                             2eme M.G
                                                         <% } else if (totalHeuresManquees >= 15.5 && totalHeuresManquees < 17.5){ %>
@@ -92,17 +116,22 @@
                                                         <% } else if (totalHeuresManquees > 52.5){ %>
                                                             Urgent
                                                         <% }; %>
+                                                        <% 
+                                                        const PRMG = `تطبيقا للقانون الداخلي المعمول به داخل مؤسسات التكوين المهني وخاصة الفصل الخامس المتعلق بالمواظبة والسلوك فقد تم توجيه عقوبة توبيخ للمتدرب(ة) ${stagiaire.firstName} ${stagiaire.lastName} المسجل بشعبة ${stagiaire.groupName} وذلك نظرا للغياب المتكرر والغير مبرر مع خصم خمس نقط من نقط المواظبة.`;
+                                                        %>
                                                     </td>
-                                                    <td class="text-center"><%= absence.absence_type %></td>
-                                                    <td class="text-center"><%= absence.total_heures_manquees %></td>
-                                                    <td class="text-center"><%= absence.is_justified ? 'Oui' : 'Non' %></td>
+                                                    <td class="text-center"><%= totalHeuresManquees %></td>
+                                                    <td class="text-center"><%= PRMG %></td>
                                                     <td class="text-center">
-                                                        <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= absence.id %>');">
+                                                        <a href="/detail-page/<%= stagiaire.id %>" class="btn btn-info detail-btn">
+                                                            <i class="fas fa-info-circle"></i> 
+                                                        </a>
+                                                        <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= stagiaire.id %>');">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                                        <form id="delete-form-<%= absence.id %>" style="display: inline;">
+                                                        <form id="delete-form-<%= stagiaire.id %>" style="display: inline;">
                                                             <input type="hidden" name="_method" value="DELETE">
-                                                            <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= absence.id %>');">
+                                                            <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= stagiaire.id %>');">
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         </form>
@@ -111,6 +140,8 @@
                                             <% }); %>
                                         </tbody>
                                     </table>
+                                    
+                                    
                                 </div>
                                 <!-- /.card-body -->
                             </div>

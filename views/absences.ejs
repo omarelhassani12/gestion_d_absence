@@ -2,7 +2,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 <%- include('partials/header') %>
-
+<head>
+    <style>
+        .red-eye {
+        color: red;
+      }
+        .green-eye {
+        color: green;
+      }
+    </style>
+</head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%- include('partials/navbar') %>
@@ -31,244 +40,105 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <div id="success-alert" class="alert alert-success" role="alert" style="display: none;">
-                                        Absence enregistrée avec succès
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
-                                    </div>
-                                    <div id="delete-success-alert" class="alert alert-success alert-dismissible fade show d-none" role="alert">
-                                        Absence supprimée avec succès
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
-                                    </div>
-
                                     <div class="row">
                                         <div class="col-sm-12 text-right">
                                             <div class="col-auto ms-auto d-print-none">
-                                                <div class="d-flex justify-content-end">
-                                                    <!-- The "Nouvelle Absence" button -->
-                                                    <a href="/stagaire" class="btn btn-primary d-none d-sm-inline-block">
-                                                        Nouvelle Absence
-                                                    </a>
-                                                    
-                                                </div>
+                                                <form action="/absence/create" method="post" id="absenceForm">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div>
+                                                            <select class="form-control btn btn-primary d-none d-sm-inline-block" id="dateSelect" name="dateSelect"></select>
+                                                        </div>
+                                                        <div>
+                                                            <select class="form-control btn btn-primary d-none d-sm-inline-block" id="periodSelect" name="periodSelect" onchange="updateTableHeader()">
+                                                                <option value="AM">Matin</option>
+                                                                <option value="PM">Après-midi</option>
+                                                            </select>
+                                                        </div>
+                                                        
+                                                        <% for (const stagiaire of stagiaires) { %>
+                                                            <input type="hidden" name="stagiaire_id[]" value="<%= stagiaire.id %>">
+                                                            <% } %>
+                                                            
+                                                            <button type="button" class="btn btn-primary d-none d-sm-inline-block" onclick="submitForm()">Nouvelle Liste</button>
+                                                        </div>
+                                                </form>
+                                                  
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- /.card-header -->
                                 <div class="card-body">
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th class="text-center">CEF</th>
-                                                <th class="text-center">Stagiaire</th>
-                                                <th class="text-center">Fonction</th>
-                                                <th class="text-center">Total d'Heures Manquées</th>
-                                                <th class="text-center">Type de PDF</th>
-                                                <th class="text-center">Actions</th>
+                                              <th class="text-center">CEF</th>
+                                              <th class="text-center">Prenom</th>
+                                              <th class="text-center">Nom</th>
+                                              <th class="text-center"  id="seance1Header">1er seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
+                                              <th class="text-center"  id="seance2Header">2eme seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% // Create an object to store the total hours missed for each user
-                                            const totalHoursMissedByUser = {};
-                                    
-                                            absences.forEach(absence => {
-                                                // Find the corresponding stagiaire based on stagiaire_id
-                                                const stagiaire = stagiaires.find(st => st.id === (absence.stagiaire_id || null)); // Use null if 'stagiaire_id' is undefined
-                                                const totalHeuresManquees = absence.total_heures_manquees;
-                                    
-                                                // Update the total hours missed for the user
-                                                if (stagiaire && stagiaire.id) {
-                                                    if (!totalHoursMissedByUser[stagiaire.id]) {
-                                                        totalHoursMissedByUser[stagiaire.id] = {
-                                                            stagiaire,
-                                                            totalHeuresManquees,
-                                                        };
-                                                    } else {
-                                                        totalHoursMissedByUser[stagiaire.id].totalHeuresManquees += totalHeuresManquees;
-                                                    }
-                                                }
-                                            });
-                                    
-                                            // Loop through the grouped data and display the results
-                                            Object.values(totalHoursMissedByUser).forEach(data => {
-                                                const { stagiaire, totalHeuresManquees } = data;
-                                            %>
-                                                <tr>
-                                                    <td class="text-center"><%= stagiaire && stagiaire.CEF ? stagiaire.CEF : 'Unknown CEF' %></td>
-                                                    <td class="text-center"><%= stagiaire ? `${stagiaire.firstName} ${stagiaire.lastName}` : 'Unknown Stagiaire' %></td>
-                                                    <td class="text-center">
-                                                        <% if (totalHeuresManquees >= 2.5 && totalHeuresManquees < 7.5) { %>
-                                                            1er M.G
-                                                        <% } else if (totalHeuresManquees >= 7.5 && totalHeuresManquees < 15.5){ %>
-                                                            2eme M.G
-                                                        <% } else if (totalHeuresManquees >= 15.5 && totalHeuresManquees < 17.5){ %>
-                                                            1er Aver
-                                                        <% } else if (totalHeuresManquees >= 17.5 && totalHeuresManquees < 22.5){ %>
-                                                            2eme Aver
-                                                        <% } else if (totalHeuresManquees >= 22.5 && totalHeuresManquees < 25.5){ %>
-                                                            Blame
-                                                        <% } else if (totalHeuresManquees >= 27.5 && totalHeuresManquees < 32.5){ %>
-                                                            2eme M.G
-                                                        <% } else if (totalHeuresManquees >= 32.5 && totalHeuresManquees < 35.5){ %>
-                                                            Exclusion
-                                                        <% } else if (totalHeuresManquees > 52.5){ %>
-                                                            Urgent
-                                                        <% }; %>
-                                                    </td>
-                                                    <td class="text-center"><%= totalHeuresManquees %></td>
-                                                    <td class="text-center"><a href="#">Download</a></td>
-                                                    <td class="text-center">
-                                                        <a href="/detail-page/<%= stagiaire.id %>" class="btn btn-info detail-btn">
-                                                            <i class="fas fa-info-circle"></i> 
-                                                        </a>
-                                                        <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= stagiaire.id %>');">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        <form id="delete-form-<%= stagiaire.id %>" style="display: inline;">
-                                                            <input type="hidden" name="_method" value="DELETE">
-                                                            <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= stagiaire.id %>');">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            <% }); %>
+                                          </thead>
+                                          
+                                        <tbody id="tableBody">
+                                          <% for (const absence of absences) { %>
+                                            <tr>
+                                              <td class="text-center"><%= absence.stagiaire.CEF %></td>
+                                              <td class="text-center"><%= absence.stagiaire.firstName %></td>
+                                              <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                              <td class="text-center">
+                                                <div class="form-check">
+                                                  <label for="1er-seance" class="mr-4">08:00-10:30</label>
+                                                  <i class="fas <% if (absence.first_session_attendance == 1) { %>fa-eye-slash red-eye<% } else { %>fa-eye green-eye<% } %>"></i>
+                                                </div>
+                                              </td>
+                                              <td class="text-center">
+                                                <div class="form-check">
+                                                  <label for="2eme-seance" class="mr-4"></label>
+                                                  <i class="fas <% if (absence.second_session_attendance == 1) { %>fa-eye-slash red-eye<% } else { %>fa-eye green-eye<% } %>"></i>
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          <% } %>
                                         </tbody>
                                     </table>
-                                    
-                                    
                                 </div>
-                                <!-- /.card-body -->
                             </div>
-                            <!-- /.card -->
                         </div>
-                        <!-- /.col -->
                     </div>
-                    <!-- /.row -->
                 </div>
-                <!-- /.container-fluid -->
             </section>
             <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
-
-        <%- include('partials/script') %>
-
-
-
-
-
-        <!-- Modal delete -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Supprimer l'Absence</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Êtes-vous sûr de vouloir supprimer cette absence ?
-            </div>
-            <div class="modal-footer d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger" id="confirm-delete-button">Supprimer</button>
-            </div>
-        </div>
+        
     </div>
-</div>
-
-<script>
-    function confirmDelete(event, absenceId) {
-        event.preventDefault(); // Empêcher la soumission du formulaire
-
-        // Récupérer l'élément modal
-        var modal = document.getElementById('confirmationModal');
-
-        // Récupérer les boutons dans la modal
-        var confirmButton = modal.querySelector('#confirm-delete-button');
-        var closeButton = modal.querySelector('.btn-secondary');
-
-        // Mettre à jour l'événement click du bouton de confirmation
-        confirmButton.onclick = function () {
-            // Effectuer l'opération de suppression
-            fetch(`/absence/${absenceId}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Absence supprimée avec succès
-                    $('#delete-success-alert').removeClass('d-none'); // Show success alert for delete
-                    setTimeout(function () {
-                        $('#delete-success-alert').addClass('d-none'); // Hide the delete success alert after 3 seconds
-                    }, 3000);
-                    location.reload(); // Reload the page
-                } else {
-                    // Erreur lors de la suppression de l'absence
-                    console.error('Une erreur est survenue lors de la suppression de l\'absence : ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                console.error('Une erreur est survenue lors de la suppression de l\'absence');
-            });
-
-            // Fermer la modal
-            $(modal).modal('hide');
-        };
-
-        // Afficher la modal
-        $(modal).modal('show');
-
-        // Mettre à jour l'événement click du bouton de fermeture
-        closeButton.onclick = function () {
-            // Fermer la modal
-            $(modal).modal('hide');
-        };
-    }
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- //seances caluc -->
-<script>
-    function updateTotalHoursMissed() {
-        const checkboxes = document.querySelectorAll('input[name="is_justified"]:checked');
-        const totalHoursMissedInput = document.getElementById('totalHoursMissed');
-        const hoursMissed = checkboxes.length * 2.5;
-        totalHoursMissedInput.value = hoursMissed;
-    }
-</script>
-<!-- //for the to day date  -->
-<script>
-    // Get the current date in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0];
     
-    // Set the value of the input to today's date
-    document.getElementById('observationDate').value = today;
-</script>
-<!-- <script>
-// Mettre à jour l'absence
-function goToUpdatePage(observationId) {
-    window.location.href = `/absence/update/${observationId}`;
-}
-</script> -->
+    <%- include('partials/script') %>
+    
+    <script src="/scripts/script.js"></script>
 
 
-<!-- Bootstrap Bundle with Popper -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<!-- jQuery -->
-
-
-
-
-
-
-    </div>
-    <!-- ./wrapper -->
-
-
-
+    <script>
+        function submitForm() {
+            // Submit the form
+            document.getElementById('absenceForm').submit();
+        }
+    </script>
+    <script>
+        function updateTableHeader() {
+          const periodSelect = document.getElementById('periodSelect');
+          const selectedPeriod = periodSelect.value;
+          const seance1Header = document.getElementById('seance1Header');
+          const seance2Header = document.getElementById('seance2Header');
+      
+          // Update the table headers with the selected period
+          seance1Header.textContent = `1er seance (${selectedPeriod})`;
+          seance2Header.textContent = `2eme seance (${selectedPeriod})`;
+        }
+      </script>
+      
+      
+      
 </body>
+        
 </html>
+

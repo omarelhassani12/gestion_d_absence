@@ -102,6 +102,7 @@ app.use('/stagaire', StagaireRoutes);
 app.use('/group', GroupRoutes);
 app.use('/absence', AbsenceRoutes);
 
+
 // Start the server
 app.listen(config.port, () => {
   console.log(`Server running on port ${config.port}`);

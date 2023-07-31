@@ -1,33 +1,152 @@
 const AbsenceModel = require('../models/absenceModel');
+const GroupModel = require('../models/groupModel');
 const StagiaireModel = require('../models/stagaireModel');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+const path = require('path');
+const bidi = require('bidi');
 
 const AbsenceController = {
+  // async getAllAbsences(req, res, next) {
+  //   try {
+  //     const absences = await AbsenceModel.findAll();
+  //     const groups = await GroupModel.findAll();
+
+  //     // Fetch the stagiaire information for each absence
+  //     for (const absence of absences) {
+  //       const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
+  //       absence.stagiaire = stagiaire;
+  //     }
+
+  //     const user = req.session.user || null;
+  //     const stagiaires = await StagiaireModel.findAll(); // Fetch all stagiaires separately
+  //     res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups }); // Include "groups" here
+  //   } catch (error) {
+  //     console.error('Error retrieving absences:', error);
+  //     next(error);
+  //   }
+  // },
   async getAllAbsences(req, res, next) {
     try {
       const absences = await AbsenceModel.findAll();
-      
+      const groups = await GroupModel.findAll();
+  
       // Fetch the stagiaire information for each absence
       for (const absence of absences) {
-        const stagiaire = await StagiaireModel.findById(absence.stagiaireId);
+        const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
         absence.stagiaire = stagiaire;
       }
   
       const user = req.session.user || null;
       const stagiaires = await StagiaireModel.findAll(); // Fetch all stagiaires separately
-      res.render('absences', { absences, activeRoute: 'absences', user, stagiaires });
+      res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups }); // Include "groups" here
     } catch (error) {
       console.error('Error retrieving absences:', error);
       next(error);
     }
-  },
+  },  
+
+  async downloadPDF(req, res, next) {
+    try {
+      const stagiaireId = req.params.stagiaireId;
   
+      // Fetch stagiaire data based on the provided ID
+      const stagiaire = await StagiaireModel.findById(stagiaireId);
+  
+      if (!stagiaire) {
+        return res.status(404).send('Stagiaire not found');
+      }
+  
+      // Create a PDF document
+      const doc = new PDFDocument({ autoFirstPage: false });
+  
+      // Set appropriate headers for the response
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="PRMG_${stagiaireId}.pdf"`);
+  
+      // Pipe the PDF content to the response
+      doc.pipe(res);
+  
+      // Set font for Arabic text (use the correct path to the Amiri-Regular.ttf font)
+      const fontPath = path.join(__dirname, 'fonts', 'Amiri-Regular.ttf');
+      doc.registerFont('amiri', fontPath);
+  
+      // Function to calculate RTL text width
+      const getRtlTextWidth = (text, fontSize) => {
+        return doc.widthOfString(text, { align: 'right', continued: true, width: 200, fontSize });
+      };
+  
+      // Function to draw RTL text
+      const drawRtlText = (text, x, y, fontSize) => {
+        const textWidth = getRtlTextWidth(text, fontSize);
+        doc.text(text, x - textWidth, y, { align: 'right', width: 100, continued: true, fontSize });
+      };
+  
+      // Add content to the PDF
+      doc.addPage({ size: 'A4', margin: 50 });
+      doc.font('amiri');
+  
+      // Text paragraph with dynamic student information
+      const dynamicText = `تطبيقا للقانون الداخلي المعمول به داخل مؤسسات التكوين المهني وخاصة الفصل الخامس المتعلق بالمواظبة والسلوك فقد تم توجيه عقوبة توبيخ للمتدرب(ة) ${stagiaire.firstName} ${stagiaire.lastName} المسجل بشعبة ${stagiaire.group} وذلك نظرا للغياب المتكرر والغير مبرر مع خصم خمس نقط من نقط المواظبة.`;
+  
+      // Determine if the dynamic text contains RTL characters
+      const isRtl = /[\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\uFE70-\uFEFF]/.test(dynamicText);
+  
+      // Add content to the PDF
+      doc.fontSize(24).text('اسم المدرسة', { align: 'center' });
+      doc.moveDown();
+      doc.fontSize(18).text('معلومات الطالب', { align: 'center' });
+  
+      // Add student data
+      doc.moveDown();
+      doc.fontSize(14).text(`الرقم الشخصي: ${stagiaire.id}`);
+      doc.fontSize(14).text(`الاسم الأول: ${stagiaire.firstName}`);
+      doc.fontSize(14).text(`الاسم الأخير: ${stagiaire.lastName}`);
+      if (isRtl) {
+        drawRtlText(`الشعبة: ${stagiaire.group}`, doc.page.width - 100, doc.y, 14);
+      } else {
+        doc.fontSize(14).text(`الشعبة: ${stagiaire.group}`);
+      }
+  
+      // Add dynamic text paragraph
+      doc.moveDown(2);
+      if (isRtl) {
+        drawRtlText(dynamicText, doc.page.width - 200, doc.y, 14);
+      } else {
+        doc.fontSize(14).text(dynamicText);
+      }
+  
+      // Add date and place for signature
+      doc.moveDown();
+      doc.fontSize(14).text('التاريخ:', { align: 'left' });
+      doc.text('_________________________', doc.page.width - 200, doc.y, { align: 'right', continued: true });
+      doc.moveDown();
+      doc.fontSize(14).text('التوقيع:', { align: 'left' });
+      doc.text('_________________________', doc.page.width - 200, doc.y, { align: 'right' });
+  
+      // Finalize the PDF and end the response
+      doc.end();
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      next(error);
+    }
+  },
+
   async getStagiaireById(req, res) {
     try {
       const stagiaireId = req.params.id;
       const stagiaire = await StagiaireModel.findById(stagiaireId);
+      const groups = await GroupModel.findAll();
       const user = req.session.user || null;
+  
+      // Find the corresponding group for the stagiaire based on groupId
+      // const groupName = groups.find(group => group.id === stagiaire.groupId)?.name || 'Unknown Group';
+      
+      // const dynamicText = `تطبيقا للقانون الداخلي المعمول به داخل مؤسسات التكوين المهني وخاصة الفصل الخامس المتعلق بالمواظبة والسلوك فقد تم توجيه عقوبة توبيخ للمتدرب(ة) ${stagiaire.firstName} ${stagiaire.lastName} المسجل بشعبة ${groupName} وذلك نظرا للغياب المتكرر والغير مبرر مع خصم خمس نقط من نقط المواظبة.`;
+  
       if (stagiaire) {
-        res.render('new-absence', { stagiaire, activeRoute: 'absences', user }); // Pass activeRoute and user to the template
+        // res.render('new-absence', { stagiaire, groups, activeRoute: 'absences', user, dynamicText });
+        res.render('new-absence', { stagiaire, groups, activeRoute: 'absences', user });
       } else {
         res.status(404).send('Stagiaire not found');
       }
@@ -36,7 +155,6 @@ const AbsenceController = {
       res.status(500).send('An error occurred while fetching the stagiaire');
     }
   },
-  
 
   getAbsenceById(req, res, next) {
     const { id } = req.params;
@@ -51,105 +169,106 @@ const AbsenceController = {
       });
   },
 
-
-
-  async createAbsence(req, res, next) {
+  async createAbsence(req, res) {
     try {
-      // Get the form data from the request body
-      const {
-        stagiaire_id,
-        absence_type,
-        start_date,
-        end_date,
-        decision,
-        decision_date,
-        matin_1ere_seance,
-        matin_2eme_seance,
-        apres_midi_3eme_seance,
-        apres_midi_4eme_seance,
-        total_heures_manquees,
-        absence_justifiee,
-      } = req.body;
+      const { dateSelect, periodSelect, stagiaire_id } = req.body;
   
-      // Create the absence in the database using the AbsenceModel
-      const newAbsence = await AbsenceModel.createAbsence({
-        stagiaire_id,
-        absence_type,
-        start_date,
-        end_date,
-        decision,
-        decision_date,
-        matin_1ere_seance,
-        matin_2eme_seance,
-        apres_midi_3eme_seance,
-        apres_midi_4eme_seance,
-        total_heures_manquees,
-        absence_justifiee,
+      // Make sure stagiaire_id is an array
+      if (!Array.isArray(stagiaire_id)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid data format. Expected an array for "stagiaire_id".',
+        });
+      }
+  
+      // Make sure dateSelect is provided and not null or empty
+      if (!dateSelect) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid data format. "dateSelect" cannot be null or empty.',
+        });
+      }
+  
+      // Create an array of absence data for each student
+      const absenceDataArray = stagiaire_id.map((studentId) => {
+        return {
+          date: dateSelect,
+          period: periodSelect,
+          stagiaire_id: parseInt(studentId), // Parse the ID as an integer
+        };
       });
   
-      // Optionally, you can send a response back to the frontend indicating success or redirect to a different page
-      res.redirect('/absence');    
-     } catch (error) {
-      console.error('Error creating absence:', error);
-      next(error);
+      // Call the updated createAbsence function from the model and pass the absenceDataArray
+      await AbsenceModel.createAbsence(absenceDataArray);
+  
+      // Send a response back to the client
+      res.json({
+        success: true,
+        message: 'Absences inserted successfully.',
+      });
+    } catch (error) {
+      console.error('Error inserting absences:', error);
+      // Handle the error, e.g., send an error response back to the client
+      res.status(500).json({
+        success: false,
+        message: 'Error inserting absences.',
+      });
+    }
+  },  
+
+  async updateAbsence(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { stagiaire_id, date, period, first_session_attendance, second_session_attendance } = req.body;
+  
+      // Ensure that the provided 'date' is a valid Date object or null
+      const parsedDate = date ? new Date(date) : null;
+  
+      const updatedData = {
+        stagiaire_id,
+        date: parsedDate,
+        period,
+        first_session_attendance: first_session_attendance === 'AM', // Convert checkbox value to a boolean
+        second_session_attendance: second_session_attendance === 'AM', // Convert checkbox value to a boolean
+      };
+  
+      // Assuming AbsenceModel.update returns a Promise that resolves to a boolean (true if successful, false otherwise)
+      const success = await AbsenceModel.update(id, updatedData);
+  
+      if (success) {
+        console.log('Absence updated successfully');
+        res.redirect('/absences');
+      } else {
+        console.error('Absence not found or not updated');
+        res.status(404).send('Absence not found or not updated');
+      }
+    } catch (error) {
+      console.error('Error updating absence:', error);
+      res.status(500).send('An error occurred while updating the absence');
     }
   },
-  
-
-  updateAbsence(req, res, next) {
+  deleteAbsence(req, res, next) {
     const { id } = req.params;
-    const { stagiaire_id, absence_type, start_date, end_date, decision, decision_date, matin_1ere_seance, matin_2eme_seance, apres_midi_3eme_seance, apres_midi_4eme_seance, total_heures_manquees, absence_justifiee } = req.body;
 
-    const updatedData = {
-      stagiaire_id,
-      absence_type,
-      start_date,
-      end_date,
-      decision,
-      decision_date,
-      matin_1ere_seance,
-      matin_2eme_seance,
-      apres_midi_3eme_seance,
-      apres_midi_4eme_seance,
-      total_heures_manquees,
-      absence_justifiee,
-    };
-
-    AbsenceModel.update(id, updatedData)
-      .then(success => {
+    AbsenceModel.delete(id)
+      .then((success) => {
         if (success) {
-          console.log('Absence updated successfully');
+          console.log('Absence deleted successfully');
           res.redirect('/absences');
         } else {
-          console.error('Absence not found or not updated');
-          next(new Error('Absence not found or not updated'));
+          console.error('Absence not found or not deleted');
+          next(new Error('Absence not found or not deleted'));
         }
       })
-      .catch(error => {
-        console.error('Error updating absence:', error);
+      .catch((error) => {
+        console.error('Error deleting absence:', error);
         next(error);
       });
   },
+  
 
-  deleteAbsence(req, res, next) {
-    const { id } = req.params;
-  
-    AbsenceModel.delete(id)
-        .then(success => {
-            if (success) {
-                console.log('Absence deleted successfully');
-                res.redirect('/absences'); 
-            } else {
-                console.error('Absence not found or not deleted');
-                next(new Error('Absence not found or not deleted'));
-            }
-        })
-        .catch(error => {
-            console.error('Error deleting absence:', error);
-            next(error);
-        });
-  },
-  
+
 };
+
 
 module.exports = AbsenceController;

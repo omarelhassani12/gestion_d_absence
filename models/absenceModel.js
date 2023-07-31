@@ -4,7 +4,7 @@ const AbsenceModel = {
   findAll() {
     return new Promise((resolve, reject) => {
       db.query(
-        'SELECT * FROM absences', // Updated table name from "absence" to "absences"
+        'SELECT * FROM absence',
         (error, results) => {
           if (error) {
             reject(error);
@@ -18,7 +18,7 @@ const AbsenceModel = {
 
   findById(id) {
     return new Promise((resolve, reject) => {
-      const sql = 'SELECT * FROM absences WHERE id = ?'; // Updated column name from "observation_id" to "id"
+      const sql = 'SELECT * FROM absence WHERE id = ?';
       db.query(sql, [id], (error, results) => {
         if (error) {
           reject(error);
@@ -29,55 +29,40 @@ const AbsenceModel = {
     });
   },
 
-  async  createAbsence(absenceData) {
+  async createAbsence(absenceDataArray) {
     try {
-      // Perform the database insertion using your chosen database connection or ORM
-      // This is just an example using raw SQL syntax, adjust it based on your database setup
-      const query = `
-        INSERT INTO absences (
-          stagiaire_id,
-          absence_type,
-          start_date,
-          end_date,
-          decision,
-          decision_date,
-          matin_1ere_seance,
-          matin_2eme_seance,
-          apres_midi_3eme_seance,
-          apres_midi_4eme_seance,
-          total_heures_manquees,
-          absence_justifiee
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
-      const values = [
-        absenceData.stagiaire_id,
-        absenceData.absence_type,
-        absenceData.start_date,
-        absenceData.end_date,
-        absenceData.decision,
-        absenceData.decision_date,
-        absenceData.matin_1ere_seance,
-        absenceData.matin_2eme_seance,
-        absenceData.apres_midi_3eme_seance,
-        absenceData.apres_midi_4eme_seance,
-        absenceData.total_heures_manquees,
-        absenceData.absence_justifiee,
-      ];
-  
-      // Execute the query and return the result
-      const result = await db.query(query, values);
-  
-      // Fetch the ID of the newly inserted record
-      const insertedId = result.insertId;
-  
-      // Fetch the newly created absence from the database using the ID
-      const createdAbsence = await db.query('SELECT * FROM absences WHERE id = ?', [insertedId]);
-  
-      // The newly created absence will be available in createdAbsence[0]
-      return createdAbsence[0];
+      for (const data of absenceDataArray) {
+        const query = `
+          INSERT INTO absence (
+            stagiaire_id,
+            date,
+            period,
+            first_session_attendance,
+            second_session_attendance
+          )
+          VALUES (?, ?, ?, ?, ?)
+        `;
+        const values = [
+          data.stagiaire_id,
+          data.date,
+          data.period,
+          data.first_session_attendance ? 1 : 0,
+          data.second_session_attendance ? 1 : 0,
+        ];
+
+        // Execute the query using the database connection
+        await db.query(query, values);
+      }
+
+      // No need to fetch inserted rows, since we're inserting in bulk
+
+      // Optionally, you can return a success message or any other response
+      return {
+        success: true,
+        message: 'Absences inserted successfully.',
+      };
     } catch (error) {
-      console.error('Error creating absence in the database:', error);
+      console.error('Error inserting absences:', error);
       throw error;
     }
   },
@@ -90,8 +75,15 @@ const AbsenceModel = {
       }
 
       db.query(
-        'UPDATE absences SET stagiaire_id = ?, absence_type = ?, start_date = ?, end_date = ?, decision = ?, decision_date = ?, matin_1ere_seance = ?, matin_2eme_seance = ?, apres_midi_3eme_seance = ?, apres_midi_4eme_seance = ?, total_heures_manquees = ?, absence_justifiee = ? WHERE id = ?',
-        [updatedData.stagiaire_id, updatedData.absence_type, updatedData.start_date, updatedData.end_date, updatedData.decision, updatedData.decision_date, updatedData.matin_1ere_seance, updatedData.matin_2eme_seance, updatedData.apres_midi_3eme_seance, updatedData.apres_midi_4eme_seance, updatedData.total_heures_manquees, updatedData.absence_justifiee, id],
+        'UPDATE absence SET stagiaire_id = ?, date = ?, period = ?, first_session_attendance = ?, second_session_attendance = ? WHERE id = ?',
+        [
+          updatedData.stagiaire_id,
+          updatedData.date,
+          updatedData.period,
+          updatedData.first_session_attendance,
+          updatedData.second_session_attendance,
+          id
+        ],
         (error, results) => {
           if (error) {
             reject(error);
@@ -105,7 +97,7 @@ const AbsenceModel = {
 
   delete(id) {
     return new Promise((resolve, reject) => {
-      db.query('DELETE FROM absences WHERE id = ?', [id], (error, results) => {
+      db.query('DELETE FROM absence WHERE id = ?', [id], (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -114,6 +106,30 @@ const AbsenceModel = {
       });
     });
   },
+  async getAbsencesByDateAndPeriod(date, period) {
+  try {
+    const sql = `
+      SELECT
+        a.id AS absence_id,
+        a.stagiaire_id,
+        a.date,
+        a.period,
+        a.first_session_attendance,
+        a.second_session_attendance,
+        s.CEF,
+        s.firstName,
+        s.lastName
+      FROM absence a
+      JOIN stagiaires s ON a.stagiaire_id = s.id
+      WHERE a.date = ? AND a.period = ?
+    `;
+
+    const results = await db.query(sql, [date, period]);
+    return results;
+  } catch (error) {
+    throw error;
+  }
+},
 };
 
 module.exports = AbsenceModel;

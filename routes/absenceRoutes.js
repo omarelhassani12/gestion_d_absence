@@ -3,22 +3,11 @@ const AbsenceController = require('../controllers/absenceController');
 
 const AbsenceRoutes = express.Router();
 
-// Existing routes
 AbsenceRoutes.get('/', AbsenceController.getAllAbsences);
 AbsenceRoutes.get('/:id', AbsenceController.getAbsenceById);
-AbsenceRoutes.post('/', AbsenceController.createAbsence);
-AbsenceRoutes.post('/update/:id', AbsenceController.updateAbsence);
-AbsenceRoutes.get('/update/:id', AbsenceController.getAbsenceById);
+AbsenceRoutes.post('/create', AbsenceController.createAbsence);
+AbsenceRoutes.post('/:id/update', AbsenceController.updateAbsence); // Add the update route
 AbsenceRoutes.delete('/:id', AbsenceController.deleteAbsence);
-
-// New route to handle "/absence/new-absence/:id"
-AbsenceRoutes.get('/new-absence/:id', AbsenceController.getStagiaireById);
-
-// Route to handle form submission with Stagiaire ID
-AbsenceRoutes.post('/:id', AbsenceController.createAbsence);
-
-
+AbsenceRoutes.get('/download-pdf/:stagiaireId', AbsenceController.downloadPDF);
 
 module.exports = AbsenceRoutes;
-
-
