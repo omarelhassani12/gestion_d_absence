@@ -43,25 +43,7 @@
                                     <div class="row">
                                         <div class="col-sm-12 text-right">
                                             <div class="col-auto ms-auto d-print-none">
-                                                <!-- <form action="/absence/create" method="post" id="absenceForm">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div>
-                                                            <select class="form-control btn btn-primary d-none d-sm-inline-block" id="dateSelect" name="dateSelect"></select>
-                                                        </div>
-                                                        <div>
-                                                            <select class="form-control btn btn-primary d-none d-sm-inline-block" id="periodSelect" name="periodSelect" onchange="updateTableHeader()">
-                                                                <option value="AM">Matin</option>
-                                                                <option value="PM">Après-midi</option>
-                                                            </select>
-                                                        </div>
-                                                        
-                                                        <% for (const stagiaire of stagiaires) { %>
-                                                            <input type="hidden" name="stagiaire_id[]" value="<%= stagiaire.id %>">
-                                                            <% } %>
-                                                            
-                                                            <button type="button" class="btn btn-primary d-none d-sm-inline-block" onclick="submitForm()">Nouvelle Liste</button>
-                                                        </div>
-                                                </form> -->
+                                            
                                                 <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByPeriod('AM')">Filter AM</button>
                                                 <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByPeriod('PM')">Filter PM</button>
                                                   
@@ -77,8 +59,8 @@
                                               <th class="text-center">Prenom</th>
                                               <th class="text-center">Nom</th>
                                               <th class="text-center">Period</th>
-                                              <th class="text-center"  id="seance1Header">1er seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
-                                              <th class="text-center"  id="seance2Header">2eme seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
+                                              <th class="text-center"  id="seance1Header">1er seance</th>
+                                              <th class="text-center"  id="seance2Header">2eme seance</th>
                                             </tr>
                                           </thead>
                                           <tbody id="tableBody">

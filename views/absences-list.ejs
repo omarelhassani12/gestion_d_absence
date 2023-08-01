@@ -42,92 +42,61 @@
                                 <div class="card-header">
                                     <div class="row">
                                         <div class="col-sm-12 text-right">
-                                            <div class="col-auto ms-auto d-print-none">
-                                                <form action="/absence/create" method="post" id="absenceForm">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div>
-                                                            <select class="form-control btn btn-primary d-none d-sm-inline-block" id="dateSelect" name="dateSelect"></select>
-                                                        </div>
-                                                        <div>
-                                                            <select class="form-control btn btn-primary d-none d-sm-inline-block" id="periodSelect" name="periodSelect" onchange="updateTableHeader()">
-                                                                <option value="AM">Matin</option>
-                                                                <option value="PM">Après-midi</option>
-                                                            </select>
-                                                        </div>
-                                                        
-                                                        <% for (const stagiaire of stagiaires) { %>
-                                                            <input type="hidden" name="stagiaire_id[]" value="<%= stagiaire.id %>">
-                                                            <% } %>
-                                                            
-                                                            <button type="button" class="btn btn-primary d-none d-sm-inline-block" onclick="submitForm()">Nouvelle Liste</button>
-                                                        </div>
-                                                </form>
-                                                  
-                                            </div>
+                                          <div class="col-auto ms-auto d-print-none">
+                                            <form action="/absence" method="get" id="absenceForm">
+                                              <div class="d-flex justify-content-between">
+                                                <div>
+                                                  <% const uniqueDates = new Set(); %>
+                                                  <select class="form-control btn btn-primary d-none d-sm-inline-block" id="dateSelect" name="dateSelect">
+                                                    <% for (const absence of absences) { %>
+                                                      <!-- Get the date in "DD/MM/YYYY" format -->
+                                                      <% const formattedDate = new Date(absence.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }); %>
+                                                      <!-- Check if the date is already in the Set -->
+                                                      <% if (!uniqueDates.has(formattedDate)) { %>
+                                                        <!-- Add the date to the Set to avoid duplicates -->
+                                                        <% uniqueDates.add(formattedDate); %>
+                                                        <!-- Display the unique date in the dropdown -->
+                                                        <option value="<%= formattedDate %>"><%= formattedDate %></option>
+                                                      <% } %>
+                                                    <% } %>
+                                                    
+                                                  </select>
+                                                </div>
+                                                <div>
+                                                  <select class="form-control btn btn-primary d-none d-sm-inline-block" id="periodSelect" name="periodSelect" onchange="submitForm()">
+                                                    <option value="AM" <% if (selectedPeriod === 'AM') { %>selected<% } %>>Matin</option>
+                                                    <option value="PM" <% if (selectedPeriod === 'PM') { %>selected<% } %>>Après-midi</option>
+                                                  </select>
+                                                </div>
+                                                <button type="button" class="btn btn-primary d-none d-sm-inline-block" onclick="submitForm()">Nouvelle Liste</button>
+                                              </div>
+                                            </form>
+                                          </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByPeriod('AM')">Filter AM</button>
+                                <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByPeriod('PM')">Filter PM</button>
+                                   -->
                                 <div class="card-body">
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                               <th class="text-center">CEF</th>
+                                              <th class="text-center">period</th>
                                               <th class="text-center">Prenom</th>
                                               <th class="text-center">Nom</th>
-                                              <th class="text-center">Period</th>
-                                              <th class="text-center"  id="seance1Header">1er seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
-                                              <th class="text-center"  id="seance2Header">2eme seance (<%= absences.length > 0 ? absences[0].period : '' %>)</th>
+                                              <th class="text-center">Total Hours</th>
                                             </tr>
                                           </thead>
                                           <tbody id="tableBody">
                                             <% for (const absence of absences) { %>
                                               <tr>
                                                 <td class="text-center"><%= absence.stagiaire.CEF %></td>
+                                                <td class="text-center"><%= absence.period %></td>
                                                 <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                 <td class="text-center"><%= absence.stagiaire.lastName %></td>
-                                                <td class="text-center">
-                                                    <% if (absence.period === 'AM') { %>
-                                                            Matin
-                                                    <% } else if (absence.period === 'PM') { %>
-                                                            Apres midi
-                                                    <% } %>
-                                                  </td>
-                                                <td class="text-center">
-                                                  <div class="form-check">
-                                                    <input
-                                                      type="checkbox"
-                                                      class="form-check-input attendance-checkbox first-session-checkbox "
-                                                      id="1er-seance-<%= absence.stagiaire.id %>"
-                                                      <% if (absence.first_session_attendance == 1) { %>checked<% } %>
-                                                      data-student-id="<%=absence.id %>"
-                                                    >
-                                                    <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>">
-                                                        <% if (absence.first_session_attendance === 1) { %>
-                                                            Absent
-                                                          <% } else { %>
-                                                            Présent
-                                                          <% } %>   
-                                                    </label>
-                                                  </div>
-                                                </td>
-                                                <td class="text-center">
-                                                  <div class="form-check">
-                                                    <input
-                                                      type="checkbox"
-                                                      class="form-check-input attendance-checkbox second-session-checkbox "
-                                                      id="2eme-seance-<%= absence.stagiaire.id %>"
-                                                      <% if (absence.second_session_attendance == 1) { %>checked<% } %>
-                                                      data-student-id="<%= absence.id %>"
-                                                    >
-                                                    <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>">
-                                                        <% if (absence.second_session_attendance === 1) { %>
-                                                            Absent
-                                                          <% } else { %>
-                                                            Présent
-                                                          <% } %>    
-                                                    </label>
-                                                  </div>
-                                                </td>
+                                                <td class="text-center"><%= absence.totalHours %></td>
                                               </tr>
                                             <% } %>
                                           </tbody>
@@ -145,74 +114,25 @@
     
     <%- include('partials/script') %>
     
-    <script src="/scripts/script.js"></script>
+    <!-- <script src="/scripts/script.js"></script> -->
+
 
 
     <script>
-        function submitForm() {
-            // Submit the form
-            document.getElementById('absenceForm').submit();
-        }
-    </script>
-    <script>
-  function updateTableHeader() {
-    const periodSelect = document.getElementById('periodSelect');
-    const selectedPeriod = periodSelect.value;
-    const seance1Header = document.getElementById('seance1Header');
-    const seance2Header = document.getElementById('seance2Header');
-
-    // Update the table headers with the selected period
-    seance1Header.textContent = `1er seance (${selectedPeriod})`;
-    seance2Header.textContent = `2eme seance (${selectedPeriod})`;
-  }
-</script>
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Add event listeners to the attendance checkboxes
-      const attendanceCheckboxes = document.querySelectorAll('.attendance-checkbox');
-      attendanceCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-          const studentId = checkbox.getAttribute('data-student-id');
-          const sessionNumber = checkbox.classList.contains('first-session-checkbox') ? 1 : 2;
-          const isChecked = checkbox.checked; // Get the updated checkbox value
-  
-          updateAttendance(studentId, sessionNumber, isChecked); // Call the function with the updated value
-        });
-      });
-    });
-  
-    async function updateAttendance(studentId, sessionNumber, isChecked) {
-      try {
-        // Make an AJAX request using the fetch API
-        const response = await fetch(`/absence/update/${studentId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            [`session${sessionNumber}_attendance`]: isChecked ? '1' : '0', // Convert the boolean to '1' or '0'
-          })
-        });
-  
-        if (response.ok) {
-          console.log('Attendance updated successfully');
-          // Optionally, you can update the checkbox state based on the server's response
-          // const responseData = await response.json();
-          // console.log(responseData);
-        } else {
-          console.error('Failed to update attendance');
-          // Handle the error response here if needed
-        }
-      } catch (error) {
-        console.error('Error updating attendance:', error);
-        // Handle any other errors here
+      // Function to submit the form with selected date and period
+      function submitForm() {
+        const dateSelect = document.getElementById('dateSelect');
+        const periodSelect = document.getElementById('periodSelect');
+        const selectedDate = dateSelect.value;
+        const selectedPeriod = periodSelect.value;
+    
+        // Update the form action URL with the selected date and period
+        document.getElementById('absenceForm').action = `/absence/absences?date=${selectedDate}&period=${selectedPeriod}`;
+    
+        // Submit the form
+        document.getElementById('absenceForm').submit();
       }
-    }
-  </script>
-  
+    </script>
     
 </body>
         

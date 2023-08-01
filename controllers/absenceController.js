@@ -49,8 +49,131 @@ const AbsenceController = {
       next(error);
     }
   },
+
+  async getAllAbsencesWithHoures(req, res, next) {
+    try {
+      const { dateSelect, periodSelect } = req.query;
   
+      // If dateSelect and periodSelect are not provided, get the current date and AM period by default
+      const currentDate = dateSelect || new Date().toISOString().split('T')[0];
+      const currentPeriod = periodSelect || 'AM';
   
+      // Fetch the absences for the selected date and period using AbsenceModel's findAllByDateAndPeriod function
+      const absences = await AbsenceModel.findAllByDateAndPeriod(currentDate, currentPeriod);
+  
+      // Fetch the stagiaire information and total hours for each absence
+      for (const absence of absences) {
+        const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
+        absence.stagiaire = stagiaire;
+        const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(absence.stagiaire_id);
+        absence.totalHours = totalHours;
+      }
+  
+      const groups = await GroupModel.findAll();
+      const user = req.session.user || null;
+      const stagiaires = await StagiaireModel.findAll();
+  
+      // Pass the selected date, period, and the absences array to the EJS template
+      res.render('absences-list', {
+        absences,
+        activeRoute: 'absencesList',
+        user,
+        stagiaires,
+        groups,
+        selectedDate: currentDate,
+        selectedPeriod: currentPeriod,
+      });
+    } catch (error) {
+      console.error('Error retrieving absences:', error);
+      next(error);
+    }
+  },  
+
+  // async getAllAbsencesWithFunctions(req, res, next) {
+  //   try {
+  //     // Fetch all absences
+  //     const absences = await AbsenceModel.findAll();
+  
+  //     // Fetch all stagiaires
+  //     const stagiaires = await StagiaireModel.findAll();
+  
+  //     // Loop through each absence and assign the corresponding stagiaire to it
+  //     for (const absence of absences) {
+  //       const stagiaire = stagiaires.find((stagiaire) => stagiaire.id === absence.stagiaire_id);
+  //       if (stagiaire) {
+  //         absence.stagiaire = stagiaire;
+  //         const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(stagiaire.id);
+  //         absence.totalHours = totalHours;
+  //       }
+  //     }
+  
+  //     // Fetch all groups
+  //     const groups = await GroupModel.findAll();
+  
+  //     // Check if there is a logged-in user in the session
+  //     const user = req.session.user || null;
+  
+  //     // Render the view with all absences, stagiaires, and their total hours
+  //     res.render('absences-list-function', {
+  //       absences,
+  //       activeRoute: 'absencesListFunction',
+  //       user,
+  //       groups,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error retrieving absences, stagiaires, and total hours:', error);
+  //     next(error);
+  //   }
+  // },
+  
+  async getAllAbsencesWithFunctions(req, res, next) {
+    try {
+      // Fetch all absences
+      const absences = await AbsenceModel.findAll();
+  
+      // Calculate the total hours for each stagiaire and store it in a map
+      const totalHoursMap = new Map();
+      for (const absence of absences) {
+        const stagiaireId = absence.stagiaire_id;
+        const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(stagiaireId);
+        if (totalHoursMap.has(stagiaireId)) {
+          // If the stagiaire already exists in the map, add the hours to the existing total
+          const existingTotalHours = totalHoursMap.get(stagiaireId);
+          totalHoursMap.set(stagiaireId, existingTotalHours + totalHours);
+        } else {
+          // If the stagiaire does not exist in the map, add a new entry
+          totalHoursMap.set(stagiaireId, totalHours);
+        }
+      }
+  
+      // Fetch all stagiaires
+      const stagiaires = await StagiaireModel.findAll();
+  
+      // Loop through each stagiaire and add their total hours
+      for (const stagiaire of stagiaires) {
+        const totalHours = totalHoursMap.get(stagiaire.id);
+        stagiaire.totalHours = totalHours || 0;
+      }
+  
+      // Fetch all groups
+      const groups = await GroupModel.findAll();
+  
+      // Check if there is a logged-in user in the session
+      const user = req.session.user || null;
+  
+      // Render the view with all stagiaires and their total hours
+      res.render('absences-list-function', {
+        stagiaires,
+        activeRoute: 'absencesListFunction',
+        user,
+        groups,
+      });
+    } catch (error) {
+      console.error('Error retrieving stagiaires and total hours:', error);
+      next(error);
+    }
+  }
+,  
   async downloadPDF(req, res, next) {
     try {
       const stagiaireId = req.params.stagiaireId;

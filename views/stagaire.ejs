@@ -73,9 +73,7 @@
                                                     <td class="text-center"><%= stagiaire.firstName %></td>
                                                     <td class="text-center"><%= stagiaire.groupId != null && stagiaire.groupId != 0 ? 'group ' + stagiaire.groupId : 'No group' %></td>
                                                     <td class="text-center">
-                                                        <button class="btn btn-warning absent-btn" onclick="goToAbsentPage('<%= stagiaire.id %>')">
-                                                            <i class="fas fa-calendar-times"></i>
-                                                        </button>
+                                                      
                                                         <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= stagiaire.id %>')">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
@@ -343,12 +341,8 @@ $('#create-stagiaire-form').on('submit', function(event) {
             window.location.href = `/stagaire/stagiaire-update/${stagiaireId}`;
         }
 </script>
-<!-- //update stagiaire -->
-<script>
-        function goToAbsentPage(stagiaireId) {
-            window.location.href = `/absence/new-absence/${stagiaireId}`;
-        }
-</script>
+
+
 
 <!-- Place this script tag at the end of your HTML file, just before the closing </body> tag -->
 <script>

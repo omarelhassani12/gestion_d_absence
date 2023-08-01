@@ -48,6 +48,70 @@ const AbsenceModel = {
     });
   },
 
+  async findAllByDate(date) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT * FROM absence WHERE date = ?',
+        [date],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  },
+
+  async findAllByPeriod(period) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT * FROM absence WHERE period = ?',
+        [period],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  },
+  
+  async findAllByDateAndPeriod(date, period) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT * FROM absence WHERE date = ? AND period = ?',
+        [date, period],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  },
+
+  async getTotalHoursOfAbsenceByStagiaire(stagiaireId) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ?',
+        [stagiaireId],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results[0].totalHours || 0);
+          }
+        }
+      );
+    });
+  },
+
   async createAbsence(absenceDataArray) {
     try {
       for (const data of absenceDataArray) {
@@ -84,6 +148,22 @@ const AbsenceModel = {
       console.error('Error inserting absences:', error);
       throw error;
     }
+  },
+
+  async findAllByStagiaireId(stagiaireId) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT * FROM absence WHERE stagiaire_id = ?',
+        [stagiaireId],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
   },
 
   update(id, updatedData) {
@@ -169,42 +249,42 @@ const AbsenceModel = {
   },
   
 
- fetchStagiaires(db) {
-  return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM stagiaires';
-    db.query(query, (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
+  fetchStagiaires(db) {
+    return new Promise((resolve, reject) => {
+      const query = 'SELECT * FROM stagiaires';
+      db.query(query, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
     });
-  });
-},
+  },
 
-insertAbsencesForToday(db, stagiaires) {
-  const currentDate = format(new Date(), 'yyyy-MM-dd');
+  insertAbsencesForToday(db, stagiaires) {
+    const currentDate = format(new Date(), 'yyyy-MM-dd');
 
-  return new Promise((resolve, reject) => {
-    // Create an array to hold the values for all stagiaires
-    const values = stagiaires.flatMap((stagiaire) => [
-      [stagiaire.id, currentDate, "AM", 0, 0],
-      [stagiaire.id, currentDate, "PM", 0, 0],
-    ]);
+    return new Promise((resolve, reject) => {
+      // Create an array to hold the values for all stagiaires
+      const values = stagiaires.flatMap((stagiaire) => [
+        [stagiaire.id, currentDate, "AM", 0, 0],
+        [stagiaire.id, currentDate, "PM", 0, 0],
+      ]);
 
-    // Create the SQL query with multiple placeholders for each stagiaire
-    const insertQuery = 'INSERT IGNORE INTO absence (stagiaire_id, date, period, first_session_attendance, second_session_attendance) VALUES ?';
+      // Create the SQL query with multiple placeholders for each stagiaire
+      const insertQuery = 'INSERT IGNORE INTO absence (stagiaire_id, date, period, first_session_attendance, second_session_attendance) VALUES ?';
 
-    // Execute the query using the database connection
-    db.query(insertQuery, [values], (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
-      }
+      // Execute the query using the database connection
+      db.query(insertQuery, [values], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
     });
-  });
-},
+  },
 
 
 async main() {
@@ -225,6 +305,6 @@ startScheduler() {
 
 };
 
-AbsenceModel.main();
+// AbsenceModel.main();
 AbsenceModel.startScheduler();
 module.exports = AbsenceModel;

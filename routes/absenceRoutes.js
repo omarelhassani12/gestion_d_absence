@@ -4,6 +4,8 @@ const AbsenceController = require('../controllers/absenceController');
 const AbsenceRoutes = express.Router();
 
 AbsenceRoutes.get('/', AbsenceController.getAllAbsences);
+AbsenceRoutes.get('/absences', AbsenceController.getAllAbsencesWithHoures);
+AbsenceRoutes.get('/absences/function', AbsenceController.getAllAbsencesWithFunctions);
 
 AbsenceRoutes.get('/:id', AbsenceController.getAbsenceById);
 AbsenceRoutes.post('/create', AbsenceController.createAbsence);
