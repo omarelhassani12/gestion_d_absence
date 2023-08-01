@@ -1,10 +1,29 @@
 const db = require('../config/database');
+const { format } = require('date-fns');
+const cron = require('node-cron');
 
 const AbsenceModel = {
+  // findAll() {
+  //   return new Promise((resolve, reject) => {
+  //     db.query(
+  //       'SELECT * FROM absence',
+  //       (error, results) => {
+  //         if (error) {
+  //           reject(error);
+  //         } else {
+  //           resolve(results);
+  //         }
+  //       }
+  //     );
+  //   });
+  // },
+ 
   findAll() {
     return new Promise((resolve, reject) => {
+      const today = format(new Date(), 'yyyy-MM-dd');
       db.query(
-        'SELECT * FROM absence',
+        'SELECT * FROM absence WHERE date = ?',
+        [today],
         (error, results) => {
           if (error) {
             reject(error);
@@ -149,10 +168,63 @@ const AbsenceModel = {
     }
   },
   
-  
+
+ fetchStagiaires(db) {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM stagiaires';
+    db.query(query, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+},
+
+insertAbsencesForToday(db, stagiaires) {
+  const currentDate = format(new Date(), 'yyyy-MM-dd');
+
+  return new Promise((resolve, reject) => {
+    // Create an array to hold the values for all stagiaires
+    const values = stagiaires.flatMap((stagiaire) => [
+      [stagiaire.id, currentDate, "AM", 0, 0],
+      [stagiaire.id, currentDate, "PM", 0, 0],
+    ]);
+
+    // Create the SQL query with multiple placeholders for each stagiaire
+    const insertQuery = 'INSERT IGNORE INTO absence (stagiaire_id, date, period, first_session_attendance, second_session_attendance) VALUES ?';
+
+    // Execute the query using the database connection
+    db.query(insertQuery, [values], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+},
 
 
-  
+async main() {
+  try {
+    const stagiaires = await AbsenceModel.fetchStagiaires(db);
+    await AbsenceModel.insertAbsencesForToday(db, stagiaires);
+    console.log('Absences inserted successfully.');
+  } catch (error) {
+    console.error('Failed to insert absences:', error);
+  }
+},
+  // Schedule the main function to run every day at midnight (00:00)
+startScheduler() {
+  cron.schedule('0 0 * * *', () => {
+    this.main();
+  });
+},
+
 };
 
+AbsenceModel.main();
+AbsenceModel.startScheduler();
 module.exports = AbsenceModel;

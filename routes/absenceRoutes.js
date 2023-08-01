@@ -4,6 +4,7 @@ const AbsenceController = require('../controllers/absenceController');
 const AbsenceRoutes = express.Router();
 
 AbsenceRoutes.get('/', AbsenceController.getAllAbsences);
+
 AbsenceRoutes.get('/:id', AbsenceController.getAbsenceById);
 AbsenceRoutes.post('/create', AbsenceController.createAbsence);
 AbsenceRoutes.post('/update/:id', AbsenceController.updateAbsence); // Add the update route
