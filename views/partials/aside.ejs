@@ -52,16 +52,7 @@
                             </p>
                         </a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a href="/absence"
-                            class="nav-link <%= activeRoute === 'absences' ? 'active' : '' %>">
-                            <i class="nav-icon fas fa-calendar-times"></i>
-                            <p>
-                                Liste des absences
-                            </p>
-                        </a>
-                    </li> -->
-                    <li class="nav-item ">
+                    <li class="nav-item has-treeview <%= activeRoute.includes('absence') ? 'menu-open' : '' %>">
                         <a href="#" class="nav-link">
                           <i class="nav-icon fas fa-calendar"></i>
                           <p>
@@ -70,35 +61,33 @@
                           </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="/absence"
-                                    class="nav-link <%= activeRoute === 'absences' ? 'active' : '' %>">
-                                    <i class="nav-icon fas fa-calendar-times"></i>
-                                    <p>
-                                        Liste des absences
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/absence/absences"
-                                    class="nav-link <%= activeRoute === 'absencesList' ? 'active' : '' %>">
-                                    <i class="nav-icon fas fa-calendar"></i>
-                                    <p>
-                                        Les liste specifique
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/absence/absences/function"
-                                    class="nav-link <%= activeRoute === 'absencesListFunction' ? 'active' : '' %>">
-                                    <i class="nav-icon fas fa-calendar"></i>
-                                    <p>
-                                        Les liste avec fonction
-                                    </p>
-                                </a>
-                            </li>
+                          <li class="nav-item">
+                            <a href="/absence" class="nav-link <%= activeRoute === 'absences' ? 'active' : '' %>">
+                              <i class="nav-icon fas fa-calendar-times"></i>
+                              <p>
+                                Liste des absences
+                              </p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/absence/absences" class="nav-link <%= activeRoute === 'absencesList' ? 'active' : '' %>">
+                                <i class="nav-icon fas fa-calendar-check"></i>
+                                <p>
+                                Les liste spécifique
+                              </p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/absence/absences/function" class="nav-link <%= activeRoute === 'absencesListFunction' ? 'active' : '' %>">
+                              <i class="nav-icon fas fa-calendar"></i>
+                              <p>
+                                Les liste avec fonction
+                              </p>
+                            </a>
+                          </li>
                         </ul>
-                    </li>
+                      </li>
+                      
                     <li class="nav-item">
                         <a href="/user" class="nav-link <%= activeRoute === 'users' ? 'active' : '' %>">
                             <i class="nav-icon fas fa-users"></i>
