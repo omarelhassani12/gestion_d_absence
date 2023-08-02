@@ -99,13 +99,54 @@ const AbsenceModel = {
   async getTotalHoursOfAbsenceByStagiaire(stagiaireId) {
     return new Promise((resolve, reject) => {
       db.query(
-        'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ?',
+        'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ? ',
         [stagiaireId],
         (error, results) => {
           if (error) {
             reject(error);
           } else {
             resolve(results[0].totalHours || 0);
+          }
+        }
+      );
+    });
+  },
+  
+async getTotalHoursOfAbsenceByStagiaireForToday(stagiaireId, selectedDate) {
+  try {
+    // Convert the selected date to the "YYYY-MM-DD" format
+    const formattedDate = new Date(selectedDate).toISOString().slice(0, 10);
+
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ? AND date = ?',
+        [stagiaireId, formattedDate],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results[0].totalHours || 0);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error('Error fetching total hours of absence:', error);
+    throw error;
+  }
+},
+
+
+  async findAllUniqueDates() {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT DISTINCT date FROM absence', // Assuming the date column in the absence table is called "date"
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            const uniqueDates = results.map((result) => result.date);
+            resolve(uniqueDates);
           }
         }
       );

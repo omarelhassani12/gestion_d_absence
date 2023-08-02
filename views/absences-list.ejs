@@ -46,31 +46,36 @@
                                             <form action="/absence" method="get" id="absenceForm">
                                               <div class="d-flex justify-content-between">
                                                 <div>
-                                                  <% const uniqueDates = new Set(); %>
                                                   <select class="form-control btn btn-primary d-none d-sm-inline-block" id="dateSelect" name="dateSelect">
-                                                    <% for (const absence of absences) { %>
-                                                      <!-- Get the date in "DD/MM/YYYY" format -->
-                                                      <% const formattedDate = new Date(absence.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }); %>
-                                                      <!-- Check if the date is already in the Set -->
-                                                      <% if (!uniqueDates.has(formattedDate)) { %>
-                                                        <!-- Add the date to the Set to avoid duplicates -->
-                                                        <% uniqueDates.add(formattedDate); %>
-                                                        <!-- Display the unique date in the dropdown -->
-                                                        <option value="<%= formattedDate %>"><%= formattedDate %></option>
-                                                      <% } %>
+                                                    <% for (const date of uniqueDates) {
+                                                      // Convert the date to a JavaScript Date object
+                                                      const currentDate = new Date(date);
+                                                      // Add one day to the current date
+                                                      currentDate.setDate(currentDate.getDate() + 1);
+                                                      // Get the formatted date in the "YYYY-MM-DD" format
+                                                      const formattedDate = currentDate.toISOString().slice(0, 10);
+                                                    %>
+                                                      <option value="<%= formattedDate %>"><%= formattedDate %></option>
                                                     <% } %>
-                                                    
                                                   </select>
                                                 </div>
+                                                
+                                                
+                                                
+                                                
+                                              
                                                 <div>
                                                   <select class="form-control btn btn-primary d-none d-sm-inline-block" id="periodSelect" name="periodSelect" onchange="submitForm()">
                                                     <option value="AM" <% if (selectedPeriod === 'AM') { %>selected<% } %>>Matin</option>
                                                     <option value="PM" <% if (selectedPeriod === 'PM') { %>selected<% } %>>Après-midi</option>
                                                   </select>
                                                 </div>
+                                                
                                                 <button type="button" class="btn btn-primary d-none d-sm-inline-block" onclick="submitForm()">Nouvelle Liste</button>
                                               </div>
                                             </form>
+                                            
+                                            
                                           </div>
                                         </div>
                                     </div>
@@ -79,13 +84,17 @@
                                 <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByPeriod('PM')">Filter PM</button>
                                    -->
                                 <div class="card-body">
+                                  <% if (noDataFound) { %>
+                                    <p>No absences found for the selected date and period.</p>
+                                  <% } else { %>
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                               <th class="text-center">CEF</th>
-                                              <th class="text-center">period</th>
                                               <th class="text-center">Prenom</th>
                                               <th class="text-center">Nom</th>
+                                              <th class="text-center">period</th>
+                                              <th class="text-center">date</th>
                                               <th class="text-center">Total Hours</th>
                                             </tr>
                                           </thead>
@@ -93,14 +102,17 @@
                                             <% for (const absence of absences) { %>
                                               <tr>
                                                 <td class="text-center"><%= absence.stagiaire.CEF %></td>
-                                                <td class="text-center"><%= absence.period %></td>
                                                 <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                 <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                                <td class="text-center"><%= absence.period %></td>
+                                                <td class="text-center"><%= absence.date.toLocaleDateString('en-GB') %></td>
                                                 <td class="text-center"><%= absence.totalHours %></td>
                                               </tr>
                                             <% } %>
                                           </tbody>
                                     </table>
+                                    <% } %>
+
                                 </div>
                             </div>
                         </div>
@@ -118,22 +130,21 @@
 
 
 
-    <script>
-      // Function to submit the form with selected date and period
-      function submitForm() {
-        const dateSelect = document.getElementById('dateSelect');
-        const periodSelect = document.getElementById('periodSelect');
-        const selectedDate = dateSelect.value;
-        const selectedPeriod = periodSelect.value;
-    
-        // Update the form action URL with the selected date and period
-        document.getElementById('absenceForm').action = `/absence/absences?date=${selectedDate}&period=${selectedPeriod}`;
-    
-        // Submit the form
-        document.getElementById('absenceForm').submit();
-      }
-    </script>
-    
+<script>
+  function submitForm() {
+    const dateSelect = document.getElementById('dateSelect');
+    const periodSelect = document.getElementById('periodSelect');
+    const selectedDate = dateSelect.value; // Make sure this line is correct
+    const selectedPeriod = periodSelect.value;
+
+    // Update the form action URL with the selected date and period
+    document.getElementById('absenceForm').action = `/absence/absences?dateSelect=${selectedDate}&periodSelect=${selectedPeriod}`;
+
+    // Submit the form
+    document.getElementById('absenceForm').submit();
+  }
+</script>
+
 </body>
         
 </html>

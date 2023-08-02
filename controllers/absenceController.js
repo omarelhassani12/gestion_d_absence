@@ -50,81 +50,95 @@ const AbsenceController = {
     }
   },
 
-  async getAllAbsencesWithHoures(req, res, next) {
-    try {
-      const { dateSelect, periodSelect } = req.query;
-  
-      // If dateSelect and periodSelect are not provided, get the current date and AM period by default
-      const currentDate = dateSelect || new Date().toISOString().split('T')[0];
-      const currentPeriod = periodSelect || 'AM';
-  
-      // Fetch the absences for the selected date and period using AbsenceModel's findAllByDateAndPeriod function
-      const absences = await AbsenceModel.findAllByDateAndPeriod(currentDate, currentPeriod);
-  
-      // Fetch the stagiaire information and total hours for each absence
-      for (const absence of absences) {
-        const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
-        absence.stagiaire = stagiaire;
-        const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(absence.stagiaire_id);
-        absence.totalHours = totalHours;
-      }
-  
-      const groups = await GroupModel.findAll();
-      const user = req.session.user || null;
-      const stagiaires = await StagiaireModel.findAll();
-  
-      // Pass the selected date, period, and the absences array to the EJS template
-      res.render('absences-list', {
-        absences,
-        activeRoute: 'absencesList',
-        user,
-        stagiaires,
-        groups,
-        selectedDate: currentDate,
-        selectedPeriod: currentPeriod,
-      });
-    } catch (error) {
-      console.error('Error retrieving absences:', error);
-      next(error);
-    }
-  },  
-
-  // async getAllAbsencesWithFunctions(req, res, next) {
+  // async getAllAbsencesWithHoures(req, res, next) {
   //   try {
-  //     // Fetch all absences
-  //     const absences = await AbsenceModel.findAll();
+  //     const { dateSelect, periodSelect } = req.query;
   
-  //     // Fetch all stagiaires
-  //     const stagiaires = await StagiaireModel.findAll();
+  //     // If dateSelect and periodSelect are not provided, get the current date and AM period by default
+  //     const currentDate = dateSelect || new Date().toISOString().split('T')[0];
+  //     const currentPeriod = periodSelect || 'AM';
   
-  //     // Loop through each absence and assign the corresponding stagiaire to it
+  //     // Fetch the absences for the selected date and period using AbsenceModel's findAllByDateAndPeriod function
+  //     const absences = await AbsenceModel.findAllByDateAndPeriod(currentDate, currentPeriod);
+  
+  //     // Fetch the stagiaire information and total hours for each absence
   //     for (const absence of absences) {
-  //       const stagiaire = stagiaires.find((stagiaire) => stagiaire.id === absence.stagiaire_id);
-  //       if (stagiaire) {
-  //         absence.stagiaire = stagiaire;
-  //         const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(stagiaire.id);
-  //         absence.totalHours = totalHours;
-  //       }
+  //       const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
+  //       absence.stagiaire = stagiaire;
+  //       const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(absence.stagiaire_id);
+  //       absence.totalHours = totalHours;
   //     }
   
-  //     // Fetch all groups
   //     const groups = await GroupModel.findAll();
-  
-  //     // Check if there is a logged-in user in the session
   //     const user = req.session.user || null;
+  //     const stagiaires = await StagiaireModel.findAll();
   
-  //     // Render the view with all absences, stagiaires, and their total hours
-  //     res.render('absences-list-function', {
+  //     // Pass the selected date, period, and the absences array to the EJS template
+  //     res.render('absences-list', {
   //       absences,
-  //       activeRoute: 'absencesListFunction',
+  //       activeRoute: 'absencesList',
   //       user,
+  //       stagiaires,
   //       groups,
+  //       selectedDate: currentDate,
+  //       selectedPeriod: currentPeriod,
   //     });
   //   } catch (error) {
-  //     console.error('Error retrieving absences, stagiaires, and total hours:', error);
+  //     console.error('Error retrieving absences:', error);
   //     next(error);
   //   }
-  // },
+  // },  
+
+
+  
+  async getAllAbsencesWithHoures(req, res, next) {
+    try {
+        const { dateSelect, periodSelect } = req.query;
+  
+       
+    // If dateSelect and periodSelect are not provided, get the current date and AM period by default
+    const currentDate = dateSelect || new Date().toISOString().split('T')[0];
+    const currentPeriod = periodSelect || 'AM';
+
+    // Fetch the absences for the selected date and period using AbsenceModel's findAllByDateAndPeriod function
+    const absences = await AbsenceModel.findAllByDateAndPeriod(currentDate, currentPeriod);
+
+    // Fetch the unique dates from the database using AbsenceModel's findAllUniqueDates function
+    const uniqueDates = await AbsenceModel.findAllUniqueDates();
+
+    // Fetch the stagiaire information and total hours for each absence
+    for (const absence of absences) {
+      const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
+      absence.stagiaire = stagiaire;
+    
+      // Pass the currentDate to getTotalHoursOfAbsenceByStagiaire to get total hours for the specific date
+      const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaireForToday(absence.stagiaire_id, currentDate);
+      absence.totalHours = totalHours;
+    }
+    
+  
+        const groups = await GroupModel.findAll();
+        const user = req.session.user || null;
+        const stagiaires = await StagiaireModel.findAll();
+  
+        // Pass the selected date, period, uniqueDates, and the absences array to the EJS template
+        res.render('absences-list', {
+            absences,
+            activeRoute: 'absencesList',
+            user,
+            stagiaires,
+            groups,
+            selectedDate: currentDate,
+            selectedPeriod: currentPeriod,
+            uniqueDates,
+            noDataFound: absences.length === 0,
+        });
+    } catch (error) {
+        console.error('Error retrieving absences:', error);
+        next(error);
+    }
+},
+
   
   async getAllAbsencesWithFunctions(req, res, next) {
     try {
@@ -137,9 +151,7 @@ const AbsenceController = {
         const stagiaireId = absence.stagiaire_id;
         const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(stagiaireId);
         if (totalHoursMap.has(stagiaireId)) {
-          // If the stagiaire already exists in the map, add the hours to the existing total
-          const existingTotalHours = totalHoursMap.get(stagiaireId);
-          totalHoursMap.set(stagiaireId, existingTotalHours + totalHours);
+          totalHoursMap.set(stagiaireId,  totalHours);
         } else {
           // If the stagiaire does not exist in the map, add a new entry
           totalHoursMap.set(stagiaireId, totalHours);

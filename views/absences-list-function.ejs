@@ -57,6 +57,7 @@
                                         <th class="text-center">Prenom</th>
                                         <th class="text-center">Nom</th>
                                         <th class="text-center">Total Hours</th>
+                                        <th class="text-center">Note/10</th>
                                         <th class="text-center">Function</th>
                                       </tr>
                                     </thead>
@@ -68,8 +69,14 @@
                                           <td class="text-center"><%= stagiaire.lastName %></td>
                                           <td class="text-center"><%= stagiaire.totalHours %></td>
                                           <td class="text-center">
+                                            <% 
+                                             const commule = stagiaire.totalHours / 5;
+                                            const note = 10 - commule
+                                             %>
+                                            <%= note %></td>
+                                          <td class="text-center">
                                             <% if (stagiaire.totalHours >= 2.5 && stagiaire.totalHours < 7.5) { %>
-                                              <a href="#" download="/Rapports/Image_005.pdf">1er M.G</a>
+                                              <a href="#" download="./Rapport/Image_005.pdf">1er M.G</a>
                                             <% } else if (stagiaire.totalHours >= 7.5 && stagiaire.totalHours < 15.5) { %>
                                               2eme M.G
                                             <% } else if (stagiaire.totalHours >= 15.5 && stagiaire.totalHours < 17.5) { %>
@@ -85,7 +92,7 @@
                                             <% } else if (stagiaire.totalHours > 52.5) { %>
                                               Urgent
                                             <% } else { %>
-                                              Aucune fonction spécifique pour ce stagiaire
+                                              Aucune fonction
                                             <% }; %>
                                           </td>
                                           
