@@ -50,46 +50,6 @@ const AbsenceController = {
     }
   },
 
-  // async getAllAbsencesWithHoures(req, res, next) {
-  //   try {
-  //     const { dateSelect, periodSelect } = req.query;
-  
-  //     // If dateSelect and periodSelect are not provided, get the current date and AM period by default
-  //     const currentDate = dateSelect || new Date().toISOString().split('T')[0];
-  //     const currentPeriod = periodSelect || 'AM';
-  
-  //     // Fetch the absences for the selected date and period using AbsenceModel's findAllByDateAndPeriod function
-  //     const absences = await AbsenceModel.findAllByDateAndPeriod(currentDate, currentPeriod);
-  
-  //     // Fetch the stagiaire information and total hours for each absence
-  //     for (const absence of absences) {
-  //       const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
-  //       absence.stagiaire = stagiaire;
-  //       const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(absence.stagiaire_id);
-  //       absence.totalHours = totalHours;
-  //     }
-  
-  //     const groups = await GroupModel.findAll();
-  //     const user = req.session.user || null;
-  //     const stagiaires = await StagiaireModel.findAll();
-  
-  //     // Pass the selected date, period, and the absences array to the EJS template
-  //     res.render('absences-list', {
-  //       absences,
-  //       activeRoute: 'absencesList',
-  //       user,
-  //       stagiaires,
-  //       groups,
-  //       selectedDate: currentDate,
-  //       selectedPeriod: currentPeriod,
-  //     });
-  //   } catch (error) {
-  //     console.error('Error retrieving absences:', error);
-  //     next(error);
-  //   }
-  // },  
-
-
   
   async getAllAbsencesWithHoures(req, res, next) {
     try {
@@ -374,11 +334,10 @@ const AbsenceController = {
   },
 
 
-
 async updateAbsence(req, res, next) {
   try {
     const { id } = req.params;
-    const { session1_attendance, session2_attendance } = req.body;
+    const { session1_attendance, session2_attendance, is_justified } = req.body;
 
     // Determine the updated attendance data based on the presence of session1_attendance or session2_attendance
     const updatedAttendance = session1_attendance !== undefined ? session1_attendance : session2_attendance;
@@ -388,7 +347,7 @@ async updateAbsence(req, res, next) {
     const isChecked = updatedAttendance === '1' ? true : false;
 
     // Assuming AbsenceModel.updateAbsence is a function to update the absence
-    const success = await AbsenceModel.updateAbsence(id, sessionNumber, isChecked);
+    const success = await AbsenceModel.updateAbsence(id, sessionNumber, isChecked, is_justified);
 
     if (success) {
       res.sendStatus(200); // Send a success response
@@ -400,8 +359,6 @@ async updateAbsence(req, res, next) {
     res.sendStatus(500); // Send an internal server error response
   }
 },
-
-
 
  
 

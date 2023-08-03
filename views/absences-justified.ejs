@@ -1,0 +1,101 @@
+<!-- absence.ejs -->
+<!DOCTYPE html>
+<html lang="fr">
+<%- include('partials/header') %>
+<head>
+    <style>
+        .red-eye {
+        color: red;
+      }
+        .green-eye {
+        color: green;
+      }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include('partials/navbar') %>
+        <%- include('partials/aside') %>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h6>Résumé des Absences des Stagiaires et Fonctions Associées</h6>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                                <li class="breadcrumb-item active">Absences</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-sm-12 text-right">
+                                          <div class="col-auto ms-auto d-print-none">
+                                            
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="card-body">
+                                  <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                      <tr>
+                                        <th class="text-center">CEF</th>
+                                        <th class="text-center">Prenom</th>
+                                        <th class="text-center">Nom</th>
+                                        <th class="text-center">Start Date</th>
+                                        <th class="text-center">End Date</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                      <% function formatDate(dateString) {
+                                        const date = new Date(dateString);
+                                        const day = date.getDate().toString().padStart(2, '0');
+                                        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                                        const year = date.getFullYear();
+                                        return `${day}/${month}/${year}`;
+                                      } %>
+                                      <% for (const justifiedAbsence of justifiedAbsences) { %>
+                                        <% const endDate = new Date(justifiedAbsence.end_date); %>
+                                        <% const today = new Date(); %>
+                                        <tr class="<%= endDate <= today ? 'table-danger' : 'table-success' %>">
+                                          <td class="text-center"><%= justifiedAbsence.CEF %></td>
+                                          <td class="text-center"><%= justifiedAbsence.firstName %></td>
+                                          <td class="text-center"><%= justifiedAbsence.lastName %></td>
+                                          <td class="text-center"><%= formatDate(justifiedAbsence.start_date) %></td>
+                                          <td class="text-center"><%= formatDate(justifiedAbsence.end_date) %></td>
+                                        </tr>
+                                      <% } %>
+                                    </tbody>
+                                  </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+        
+    </div>
+    
+    <%- include('partials/script') %>
+    
+
+</body>
+        
+</html>
+

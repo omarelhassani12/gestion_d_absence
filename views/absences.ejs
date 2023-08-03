@@ -61,6 +61,7 @@
                                               <th class="text-center">Period</th>
                                               <th class="text-center"  id="seance1Header">1er seance</th>
                                               <th class="text-center"  id="seance2Header">2eme seance</th>
+                                              <th class="text-center">Justifie</th>
                                             </tr>
                                           </thead>
                                           <tbody id="tableBody">
@@ -69,13 +70,7 @@
                                                 <td class="text-center"><%= absence.stagiaire.CEF %></td>
                                                 <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                 <td class="text-center"><%= absence.stagiaire.lastName %></td>
-                                                <td class="text-center" data-period="<%= absence.period %>">
-                                                    <% if (absence.period === 'AM') { %>
-                                                            Matin
-                                                    <% } else if (absence.period === 'PM') { %>
-                                                            Apres midi
-                                                    <% } %>
-                                                  </td>
+                                                <td class="text-center" data-period="<%= absence.period %>"><%= absence.period %></td>
                                                 <td class="text-center">
                                                   <div class="form-check">
                                                     <input
@@ -112,6 +107,28 @@
                                                     </label>
                                                   </div>
                                                 </td>
+                                                <td class="text-center">
+                                                  <div class="form-check">
+                                                    <input
+                                                      type="checkbox"
+                                                      class="form-check-input is-justified-checkbox"
+                                                      id="justified-seance-<%= absence.stagiaire.id %>"
+                                                      <% if (absence.is_justified == 1) { %>checked<% } %>
+                                                      data-absence-id="<%= absence.id %>"
+                                                      data-stagiaire-id="<%= absence.stagiaire.id %>"
+                                                      data-justified-checkbox
+                                                    >
+                                                    <label class="form-check-label" for="justified-seance-<%= absence.stagiaire.id %>">
+                                                      <% if (absence.is_justified === 1) { %>
+                                                        Oui
+                                                      <% } else { %>
+                                                        Non
+                                                      <% } %>
+                                                    </label>
+                                                  </div>
+                                                </td>
+                                                
+                                                
                                               </tr>
                                             <% } %>
                                           </tbody>
@@ -126,94 +143,181 @@
         </div>
         
     </div>
-    
-    <%- include('partials/script') %>
-    
-    <script src="/scripts/script.js"></script>
+   
+   
+<!-- Add a modal for choosing justified absence duration -->
+<div class="modal" id="justifiedAbsenceModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Choisir la durée de l'absence justifiée</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label for="startDate">Date de début :</label>
+        <input class="form-control" type="date" id="startDate">
+        <label for="endDate">Date de fin :</label>
+        <input class="form-control" type="date" id="endDate">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="saveJustifiedAbsence()">Enregistrer</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-    <script>
-        function submitForm() {
-            // Submit the form
-            document.getElementById('absenceForm').submit();
-        }
-    </script>
-    <script>
-  function updateTableHeader() {
-    const periodSelect = document.getElementById('periodSelect');
-    const selectedPeriod = periodSelect.value;
-    const seance1Header = document.getElementById('seance1Header');
-    const seance2Header = document.getElementById('seance2Header');
 
-    // Update the table headers with the selected period
-    seance1Header.textContent = `1er seance (${selectedPeriod})`;
-    seance2Header.textContent = `2eme seance (${selectedPeriod})`;
+
+<script>
+  // Event listener for the specific justified checkbox
+  const justifiedCheckboxes = document.querySelectorAll('[data-justified-checkbox]');
+  justifiedCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', function () {
+      if (this.checked) {
+        // Show the modal when the checkbox is checked
+        const stagiaireId = this.getAttribute('data-stagiaire-id'); // Use data-stagiaire-id attribute instead of data-absence-id
+        showJustifiedAbsenceModal(stagiaireId); // Pass stagiaireId instead of absenceId
+      }
+    });
+  });
+
+  // Function to show the justified absence modal
+  function showJustifiedAbsenceModal(stagiaireId) { // Use stagiaireId instead of absenceId
+    document.getElementById('justifiedAbsenceModal').setAttribute('data-stagiaire-id', stagiaireId); // Use data-stagiaire-id attribute instead of data-absence-id
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+    $('#justifiedAbsenceModal').modal('show');
+  }
+
+  // Function to handle the form submission and create the justified absence record
+  function saveJustifiedAbsence() {
+    const stagiaireId = document.getElementById('justifiedAbsenceModal').getAttribute('data-stagiaire-id'); // Use data-stagiaire-id attribute instead of data-absence-id
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    // Perform any validation if needed (e.g., check if the dates are valid)
+
+    // Send the form data to the server using fetch or any other method
+    const formData = {
+      stagiaireId, // Use stagiaireId instead of absenceId
+      startDate,
+      endDate,
+    };
+
+    // Make a POST request to your server to create the justified absence
+    fetch('/justified-absences', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the response from the server (e.g., show a success message)
+        console.log(data);
+        // Optionally, you can hide the modal after creating the justified absence
+        $('#justifiedAbsenceModal').modal('hide');
+      })
+      .catch((error) => {
+        // Handle any error that occurred during the POST request
+        console.error('Error creating justified absence:', error);
+      });
   }
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Add event listeners to the attendance checkboxes
-      const attendanceCheckboxes = document.querySelectorAll('.attendance-checkbox');
-      attendanceCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-          const studentId = checkbox.getAttribute('data-student-id');
-          const sessionNumber = checkbox.classList.contains('first-session-checkbox') ? 1 : 2;
-          const isChecked = checkbox.checked; // Get the updated checkbox value
-  
-          updateAttendance(studentId, sessionNumber, isChecked); // Call the function with the updated value
-        });
-      });
-    });
-  
-    async function updateAttendance(studentId, sessionNumber, isChecked) {
-      try {
-        // Make an AJAX request using the fetch API
-        const response = await fetch(`/absence/update/${studentId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            [`session${sessionNumber}_attendance`]: isChecked ? '1' : '0', // Convert the boolean to '1' or '0'
-          })
-        });
-  
-        if (response.ok) {
-          console.log('Attendance updated successfully');
-          // Optionally, you can update the checkbox state based on the server's response
-          // const responseData = await response.json();
-          // console.log(responseData);
-        } else {
-          console.error('Failed to update attendance');
-          // Handle the error response here if needed
-        }
-      } catch (error) {
-        console.error('Error updating attendance:', error);
-        // Handle any other errors here
-      }
-    }
-  </script>
-  
 
 
-  <script>
-    function filterByPeriod(period) {
-      const rows = document.querySelectorAll('#tableBody tr');
-  
-      // Hide all rows
-      rows.forEach(row => (row.style.display = 'none'));
-  
-      // Show rows with the matching period
-      rows.forEach(row => {
-        const periodCell = row.querySelector('.text-center[data-period]');
-        if (periodCell.dataset.period === period) {
-          row.style.display = 'table-row';
-        }
-      });
+
+
+
+
+
+
+
+
+
+
+
+<!-- <script>
+  // Event listener for the specific justified checkbox
+  const justifiedCheckbox = document.querySelector('[data-justified-checkbox]');
+  justifiedCheckbox.addEventListener('change', function () {
+    if (this.checked) {
+      // Show the modal when the checkbox is checked
+      const absenceId = this.getAttribute('data-absence-id');
+      showJustifiedAbsenceModal(absenceId);
     }
-  </script>
+  });
+
+  // Function to show the justified absence modal
+  function showJustifiedAbsenceModal(absenceId) {
+    // Set the data-absence-id attribute of the modal to the selected absence ID
+    document.getElementById('justifiedAbsenceModal').setAttribute('data-absence-id', absenceId);
     
+    // Clear the input fields in the modal for a new selection
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+
+    // Show the modal
+    $('#justifiedAbsenceModal').modal('show');
+  }
+
+// Function to handle the form submission and create the justified absence record
+function saveJustifiedAbsence() {
+    // Get the selected absence ID from the modal
+    const absenceId = document.getElementById('justifiedAbsenceModal').getAttribute('data-absence-id');
+
+    // Get the start date and end date values from the modal
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    // Perform any validation if needed (e.g., check if the dates are valid)
+
+    // Send the form data to the server using fetch or any other method
+    const formData = {
+      absenceId,
+      startDate,
+      endDate,
+    };
+
+    // Make a POST request to your server to create the justified absence
+    fetch('/justified-absences', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the server (e.g., show a success message)
+      console.log(data);
+      // Optionally, you can hide the modal after creating the justified absence
+      $('#justifiedAbsenceModal').modal('hide');
+    })
+    .catch(error => {
+      // Handle any error that occurred during the POST request
+      console.error('Error creating justified absence:', error);
+    });
+  }
+  </script> -->
+
+
+
+
+
+
+    <%- include('partials/script') %>
+    
+    <script src="/scripts/absences.js"></script>
+
+
+<script>
+  
+</script>
 </body>
         
 </html>

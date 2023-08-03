@@ -30,7 +30,6 @@
                 </div>
             </div>
         </div>
-  
         <!-- Menu de la barre latérale -->
         <% if (user.role == 0) { %>
             <nav class="mt-2">
@@ -85,9 +84,16 @@
                               </p>
                             </a>
                           </li>
+                          <li class="nav-item">
+                            <a href="/justified-absences" class="nav-link <%= activeRoute === 'absencesJustified' ? 'active' : '' %>">
+                              <i class="nav-icon fas fa-calendar"></i>
+                              <p>
+                                Les absence justifie
+                              </p>
+                            </a>
+                          </li>
                         </ul>
-                      </li>
-                      
+                    </li>
                     <li class="nav-item">
                         <a href="/user" class="nav-link <%= activeRoute === 'users' ? 'active' : '' %>">
                             <i class="nav-icon fas fa-users"></i>

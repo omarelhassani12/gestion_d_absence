@@ -112,29 +112,29 @@ const AbsenceModel = {
     });
   },
   
-async getTotalHoursOfAbsenceByStagiaireForToday(stagiaireId, selectedDate) {
-  try {
-    // Convert the selected date to the "YYYY-MM-DD" format
-    const formattedDate = new Date(selectedDate).toISOString().slice(0, 10);
+  async getTotalHoursOfAbsenceByStagiaireForToday(stagiaireId, selectedDate) {
+    try {
+      // Convert the selected date to the "YYYY-MM-DD" format
+      const formattedDate = new Date(selectedDate).toISOString().slice(0, 10);
 
-    return new Promise((resolve, reject) => {
-      db.query(
-        'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ? AND date = ?',
-        [stagiaireId, formattedDate],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(results[0].totalHours || 0);
+      return new Promise((resolve, reject) => {
+        db.query(
+          'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ? AND date = ?',
+          [stagiaireId, formattedDate],
+          (error, results) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(results[0].totalHours || 0);
+            }
           }
-        }
-      );
-    });
-  } catch (error) {
-    console.error('Error fetching total hours of absence:', error);
-    throw error;
-  }
-},
+        );
+      });
+    } catch (error) {
+      console.error('Error fetching total hours of absence:', error);
+      throw error;
+    }
+  },
 
 
   async findAllUniqueDates() {
@@ -247,7 +247,49 @@ async getTotalHoursOfAbsenceByStagiaireForToday(stagiaireId, selectedDate) {
     });
   },
  
-  async updateAbsence(id, sessionNumber, updatedAttendance) {
+  // async updateAbsence(id, sessionNumber, updatedAttendance) {
+  //   try {
+  //     // Check if updatedAttendance is null or undefined
+  //     if (updatedAttendance === null || updatedAttendance === undefined) {
+  //       throw new Error('Updated attendance data is null or undefined');
+  //     }
+  
+  //     // Determine which attendance column to update based on the session number
+  //     const columnToUpdate = sessionNumber === 1 ? 'first_session_attendance' : 'second_session_attendance';
+  
+  //     // Convert the boolean to a number (0 or 1)
+  //     const valueToSet = updatedAttendance ? 1 : 0;
+  
+  //     // Construct the SQL query for updating the attendance
+  //     const query = `
+  //       UPDATE absence 
+  //       SET ${columnToUpdate} = ?
+  //       WHERE id = ?
+  //     `;
+  
+  //     const values = [
+  //       valueToSet,
+  //       id
+  //     ];
+  
+  //     // Execute the query using the database connection
+  //     const result = await db.query(query, values);
+  
+  //     // Check if any rows were affected by the update operation
+  //     const success = result.affectedRows > 0;
+  
+  //     // Optionally, you can return a success message or any other response
+  //     return {
+  //       success,
+  //       message: success ? 'Absence updated successfully.' : 'Absence not found or not updated.',
+  //     };
+  //   } catch (error) {
+  //     console.error('Error updating absence:', error);
+  //     throw error;
+  //   }
+  // },
+  
+  async updateAbsence(id, sessionNumber, updatedAttendance, is_justified) {
     try {
       // Check if updatedAttendance is null or undefined
       if (updatedAttendance === null || updatedAttendance === undefined) {
@@ -260,15 +302,17 @@ async getTotalHoursOfAbsenceByStagiaireForToday(stagiaireId, selectedDate) {
       // Convert the boolean to a number (0 or 1)
       const valueToSet = updatedAttendance ? 1 : 0;
   
-      // Construct the SQL query for updating the attendance
+      // Construct the SQL query for updating the attendance and is_justified
       const query = `
         UPDATE absence 
-        SET ${columnToUpdate} = ?
+        SET ${columnToUpdate} = ?,
+            is_justified = ?
         WHERE id = ?
       `;
   
       const values = [
         valueToSet,
+        is_justified === '1' ? 1 : 0,
         id
       ];
   
