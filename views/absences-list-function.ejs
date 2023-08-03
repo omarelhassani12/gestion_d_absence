@@ -113,27 +113,7 @@
     </div>
     
     <%- include('partials/script') %>
-    
-    <!-- <script src="/scripts/script.js"></script> -->
-
-
-
-    <script>
-      // Function to submit the form with selected date and period
-      function submitForm() {
-        const dateSelect = document.getElementById('dateSelect');
-        const periodSelect = document.getElementById('periodSelect');
-        const selectedDate = dateSelect.value;
-        const selectedPeriod = periodSelect.value;
-    
-        // Update the form action URL with the selected date and period
-        document.getElementById('absenceForm').action = `/absence/absences?date=${selectedDate}&period=${selectedPeriod}`;
-    
-        // Submit the form
-        document.getElementById('absenceForm').submit();
-      }
-    </script>
-    
+        
 </body>
         
 </html>
