@@ -144,8 +144,9 @@ const AbsenceController = {
       console.error('Error retrieving stagiaires and total hours:', error);
       next(error);
     }
-  }
-,  
+  },
+  
+  
   async downloadPDF(req, res, next) {
     try {
       const stagiaireId = req.params.stagiaireId;
