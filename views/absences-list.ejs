@@ -47,14 +47,13 @@
                                               <div class="d-flex justify-content-between">
                                                 <div>
                                                   <select class="form-control btn btn-primary d-none d-sm-inline-block" id="dateSelect" name="dateSelect">
-                                                    <% for (const date of uniqueDates) {
-                                                      // Convert the date to a JavaScript Date object
-                                                      const currentDate = new Date(date);
-                                                      // Add one day to the current date
-                                                      currentDate.setDate(currentDate.getDate() + 1);
-                                                      // Get the formatted date in the "YYYY-MM-DD" format
-                                                      const formattedDate = currentDate.toISOString().slice(0, 10);
-                                                    %>
+                                                    <% for (const date of uniqueDates) { %>
+                                                      <!-- // Convert the date to a JavaScript Date object -->
+                                                      <% const currentDate = new Date(date); %>
+                                                      <!-- // Add one day to the current date -->
+                                                      <% currentDate.setDate(currentDate.getDate() + 1); %>
+                                                      <!-- // Get the formatted date in the "YYYY-MM-DD" format -->
+                                                      <% const formattedDate = currentDate.toISOString().slice(0, 10); %>
                                                       <option value="<%= formattedDate %>"><%= formattedDate %></option>
                                                     <% } %>
                                                   </select>
