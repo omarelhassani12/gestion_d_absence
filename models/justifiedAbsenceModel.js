@@ -15,6 +15,20 @@ const JustifiedAbsence = {
     });
   },
 
+  findAllByStagiaireIdAndDateRange(stagiaireId) {
+    return new Promise((resolve, reject) => {
+      const query = 'SELECT justified_absence.*, stagiaires.CEF, stagiaires.firstName, stagiaires.lastName FROM justified_absence LEFT JOIN stagiaires ON justified_absence.stagiaire_id = stagiaires.id WHERE justified_absence.stagiaire_id = ?';
+      const values = [stagiaireId];
+      db.query(query, values, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  },
+
   findById(id) {
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM justified_absence WHERE id = ?';

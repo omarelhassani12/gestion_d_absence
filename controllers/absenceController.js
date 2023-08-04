@@ -51,6 +51,9 @@ const AbsenceController = {
   //   }
   // },
   
+
+ 
+
   async getAllAbsences(req, res, next) {
     try {
       const absences = await AbsenceModel.findAll();
@@ -69,7 +72,26 @@ const AbsenceController = {
       const selectedDate = req.query.date;
       const selectedPeriod = req.query.period;
   
-      // If both selectedDate and selectedPeriod are present, filter the absences based on date and period
+      // Fetch justified absences for all stagiaires and store them in a Map for easy lookup
+      const justifiedAbsencesMap = new Map();
+      const justifiedAbsences = await JustifiedAbsence.findAll();
+      for (const justifiedAbsence of justifiedAbsences) {
+        if (!justifiedAbsencesMap.has(justifiedAbsence.stagiaire_id)) {
+          justifiedAbsencesMap.set(justifiedAbsence.stagiaire_id, []);
+        }
+        justifiedAbsencesMap.get(justifiedAbsence.stagiaire_id).push(justifiedAbsence);
+      }
+  
+      // Check if each absence is justified or not and set a flag accordingly
+      for (const absence of absences) {
+        const stagiaireJustifiedAbsences = justifiedAbsencesMap.get(absence.stagiaire_id) || [];
+        const isJustified = stagiaireJustifiedAbsences.some(
+          (justifiedAbsence) =>
+            justifiedAbsence.start_date <= selectedDate && justifiedAbsence.end_date >= selectedDate
+        );
+        absence.is_justified = isJustified ? 1 : 0;
+      }
+  
       if (selectedDate && selectedPeriod) {
         const absencesByDateAndPeriod = absences.filter(
           (absence) => absence.date === selectedDate && absence.period === selectedPeriod
@@ -77,6 +99,7 @@ const AbsenceController = {
   
         res.render('absences', {
           absences: absencesByDateAndPeriod,
+          justifiedAbsences, // Pass justified absences to the view
           activeRoute: 'absences',
           user,
           stagiaires,
@@ -84,14 +107,13 @@ const AbsenceController = {
         });
       } else {
         // If not, render the view with all absences
-        res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups });
+        res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups, justifiedAbsences });
       }
     } catch (error) {
       console.error('Error retrieving absences:', error);
       next(error); // Make sure to call `next(error)` to pass the error to the error-handling middleware
     }
   },  
- 
 
   
   async getAllAbsencesWithHoures(req, res, next) {
