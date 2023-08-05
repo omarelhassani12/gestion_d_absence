@@ -70,22 +70,21 @@ const JustifiedAbsenceController = {
         res.status(500).json({ error: 'Failed to update justified absence' });
       });
   },
-
   deleteJustifiedAbsence(req, res) {
     const id = req.params.id;
-
+  
     JustifiedAbsenceModel.delete(id)
       .then((success) => {
         if (success) {
-          res.status(200).json({ message: 'Justified absence deleted successfully' });
+          res.redirect('/absences-justified?message=Justified%20absence%20deleted%20successfully');
         } else {
-          res.status(404).json({ message: 'Justified absence not found or not deleted' });
+          res.redirect('/absences-justified?message=Justified%20absence%20not%20found%20or%20not%20deleted');
         }
       })
       .catch((error) => {
-        res.status(500).json({ error: 'Failed to delete justified absence' });
+        res.redirect('/absences-justified?message=Failed%20to%20delete%20justified%20absence');
       });
-  },
+  },  
 };
 
 module.exports = JustifiedAbsenceController;

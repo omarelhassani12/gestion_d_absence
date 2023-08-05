@@ -2,57 +2,10 @@ const AbsenceModel = require('../models/absenceModel');
 const GroupModel = require('../models/groupModel');
 const StagiaireModel = require('../models/stagaireModel');
 const PDFDocument = require('pdfkit');
-const fs = require('fs');
 const path = require('path');
-const bidi = require('bidi');
 const JustifiedAbsence = require('../models/justifiedAbsenceModel');
 
 const AbsenceController = {
-
-
-  // async getAllAbsences(req, res, next) {
-  //   try {
-  //     const absences = await AbsenceModel.findAll();
-  //     const groups = await GroupModel.findAll();
-  
-  //     // Fetch the stagiaire information for each absence
-  //     for (const absence of absences) {
-  //       const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
-  //       absence.stagiaire = stagiaire;
-  //     }
-  
-  //     const user = req.session.user || null;
-  //     const stagiaires = await StagiaireModel.findAll(); // Fetch all stagiaires separately
-  
-  //     // Get the selected date and period from the request query parameters
-  //     const selectedDate = req.query.date;
-  //     const selectedPeriod = req.query.period;
-  
-  //     // If both selectedDate and selectedPeriod are present, filter the absences based on date and period
-  //     if (selectedDate && selectedPeriod) {
-  //       const absencesByDateAndPeriod = absences.filter(
-  //         (absence) => absence.date === selectedDate && absence.period === selectedPeriod
-  //       );
-  
-  //       res.render('absences', {
-  //         absences: absencesByDateAndPeriod,
-  //         activeRoute: 'absences',
-  //         user,
-  //         stagiaires,
-  //         groups,
-  //       });
-  //     } else {
-  //       // If not, render the view with all absences
-  //       res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups });
-  //     }
-  //   } catch (error) {
-  //     console.error('Error retrieving absences:', error);
-  //     next(error);
-  //   }
-  // },
-  
-
- 
 
   async getAllAbsences(req, res, next) {
     try {

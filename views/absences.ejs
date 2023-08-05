@@ -103,52 +103,52 @@
                                                 }
                                                 %>
                                                <% const isEndDateValid = isJustifiedEndDateValid(absence.stagiaire.id); %>
-                                           
                                                <td class="text-center"> 
                                                 <div class="form-check">
                                                   <input
                                                     type="checkbox"
                                                     class="form-check-input attendance-checkbox first-session-checkbox"
-                                                    id="1er-seance-<%= absence.stagiaire.id %>"
+                                                    id="1er-seance-<%= absence.stagiaire.id %>-<%= absence.period %>"
                                                     <% if (absence.first_session_attendance == 1) { %>checked<% } %>
                                                     data-student-id="<%= absence.id %>"
                                                     <% if (isEndDateValid) { %>disabled<% } %>
                                                   >
-                                                  <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>">
+                                                  <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>-<%= absence.period %>">
                                                     <% if (absence.first_session_attendance === 1) { %>
                                                       Absent  
-                                                    <% } else { if (isEndDateValid) {%>
+                                                    <% } else { if (isEndDateValid) { %>
                                                       Absence justifiée
-                                                      <% }else{ %>
+                                                    <% } else { %>
                                                       Présent  
                                                     <% } %> 
                                                     <% } %>   
                                                   </label>
                                                 </div>
                                               </td>
-                                                <td class="text-center">
-                                                  <div class="form-check">
-                                                    <input
-                                                      type="checkbox"
-                                                      class="form-check-input attendance-checkbox second-session-checkbox "
-                                                      id="2eme-seance-<%= absence.stagiaire.id %>"
-                                                      <% if (absence.second_session_attendance == 1) { %>checked<% } %>
-                                                      data-student-id="<%= absence.id %>"
-                                                      <% if (isEndDateValid) { %>disabled<% } %>
-
-                                                    >
-                                                    <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>">
-                                                      <% if (absence.second_session_attendance === 1) { %>
-                                                        Absent
-                                                      <% } else { if (isEndDateValid) {%>
-                                                        Absence justifiée
-                                                        <% }else{ %>
-                                                        Présent  
-                                                      <% } %>    
-                                                      <% } %>    
-                                                    </label>
-                                                  </div>
-                                                </td>
+                                              
+                                              <td class="text-center">
+                                                <div class="form-check">
+                                                  <input
+                                                    type="checkbox"
+                                                    class="form-check-input attendance-checkbox second-session-checkbox "
+                                                    id="2eme-seance-<%= absence.stagiaire.id %>-<%= absence.period %>"
+                                                    <% if (absence.second_session_attendance == 1) { %>checked<% } %>
+                                                    data-student-id="<%= absence.id %>"
+                                                    <% if (isEndDateValid) { %>disabled<% } %>
+                                                  >
+                                                  <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>-<%= absence.period %>">
+                                                    <% if (absence.second_session_attendance === 1) { %>
+                                                      Absent
+                                                    <% } else { if (isEndDateValid) { %>
+                                                      Absence justifiée
+                                                    <% } else { %>
+                                                      Présent  
+                                                    <% } %>    
+                                                    <% } %>    
+                                                  </label>
+                                                </div>
+                                              </td>
+                                              
 
                                              
                                               

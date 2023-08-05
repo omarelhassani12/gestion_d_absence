@@ -42,25 +42,7 @@ const JustifiedAbsence = {
     });
   },
 
-  // create(justifiedAbsenceData) {
-  //   return new Promise((resolve, reject) => {
-  //     const query = 'INSERT INTO justified_absence (absence_id, start_date, end_date) VALUES (?, ?, ?)';
-  //     const values = [
-  //       justifiedAbsenceData.absenceId,
-  //       justifiedAbsenceData.startDate,
-  //       justifiedAbsenceData.endDate,
-  //     ];
-
-  //     db.query(query, values, (error, result) => {
-  //       if (error) {
-  //         reject(error);
-  //       } else {
-  //         resolve(result.insertId);
-  //       }
-  //     });
-  //   });
-  // },
-  create(justifiedAbsenceData) {
+ create(justifiedAbsenceData) {
     return new Promise((resolve, reject) => {
       const query = 'INSERT INTO justified_absence (stagiaire_id, start_date, end_date) VALUES (?, ?, ?)';
       const values = [
@@ -105,7 +87,7 @@ const JustifiedAbsence = {
         }
       });
     });
-  },
+  },  
 
 };
 
