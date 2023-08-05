@@ -5,7 +5,8 @@ const UserController = {
     try {
       const users = await UserModel.findAll();
       const user = req.session.user || null;
-      res.render('users', { users: users, activeRoute: 'users',user });
+      const userConnected = req.session.user ? req.session.user.email : null; // Get the email of the logged-in user
+      res.render('users', { users: users, activeRoute: 'users',user , userConnected });
     } catch (error) {
       console.error('An error occurred while fetching the users:', error);
       res.status(500).send('An error occurred while fetching the users');
