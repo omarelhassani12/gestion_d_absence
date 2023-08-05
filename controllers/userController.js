@@ -115,31 +115,31 @@ const UserController = {
       console.log('Found user:', user);
   
       if (user) {
-        // Create a session and store user data in it
-        req.session.user = {
-          name: user.nom_complete,
-          email: user.email,
-          role: user.role,
-        };
-        // req.session.user = user;
-
-         // Set a cookie with the user's email
-      res.cookie('userEmail', user.email, 'userRole', user.role);
-      // Store the cookies object in res.locals
-      res.locals.cookies = req.cookies;
-
-  
-        res.status(200).json(user); // Send the user data back as a response
+        if (user.isApproved) {
+          // If user is found and isApproved is true, proceed with login
+          req.session.user = {
+            name: user.nom_complete,
+            email: user.email,
+            role: user.role,
+          };
+          res.cookie('userEmail', user.email, 'userRole', user.role);
+          res.status(200).json(user);
+        } else {
+          // If user is found but isApproved is false, deny login
+          res.status(401).json({ error: 'User not approved for login' });
+        }
       } else {
-        res.status(401).send('Invalid username or password');
+        // If user is not found, deny login
+        res.status(401).json({ error: 'Invalid username or password' });
       }
     } catch (error) {
       console.error('An error occurred while logging in:', error);
-      res.status(500).send('An error occurred while logging in');
+      res.status(500).json({ error: 'An error occurred while logging in' });
     }
-    },
+  }
+  ,  
 
-    async logout(req, res) {
+  async logout(req, res) {
       try {
         // Destroy the session to log the user out
         req.session.destroy((err) => {
@@ -158,7 +158,7 @@ const UserController = {
         console.error('An error occurred while logging out:', error);
         res.status(500).json({ error: 'An error occurred while logging out' });
       }
-    },
+  },
 
 
 };

@@ -67,6 +67,8 @@
                                                 <th class="text-center">Nom Complete</th>
                                                 <th class="text-center">Email</th>
                                                 <th class="text-center">Password</th>
+                                                <th class="text-center">Role</th>
+                                                <th class="text-center">Approuvé</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -77,10 +79,25 @@
                                             </tr>
                                             <% } else { %>
                                             <% users.forEach((user) => { %>
-                                                <tr>
+                                                <tr class="<%= user.isApproved ? 'table-success' : 'table-danger' %>">
                                                     <td class="text-center"><%= user.nom_complete %></td>
                                                     <td class="text-center"><%= user.email %></td>
                                                     <td class="text-center"><%= user.password %></td>
+                                                    <td class="text-center"><%= user.role === 0 ? 'Admin' : 'Formateur' %></td>
+                                                    <td class="text-center">
+                                                        <div class="form-check form-switch">
+                                                          <input
+                                                            type="checkbox"
+                                                            class="form-check-input"
+                                                            id="is-approved-<%= user.id %>"
+                                                            <%= user.isApproved ? 'checked' : '' %>
+                                                            onchange="updateApprovalStatus('<%= user.id %>')"
+                                                          >
+                                                          <label class="form-check-label" for="is-approved-<%= user.id %>">
+                                                            <%= user.isApproved ? 'Approuvé' : 'Non Approuvé' %>
+                                                          </label>
+                                                        </div>
+                                                    </td>                                                      
                                                     <td class="text-center">
                                                         <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= user.id %>')">
                                                             <i class="fas fa-edit"></i>
@@ -170,198 +187,37 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/scripts/users.js"></script>
 
 <script>
-    $(document).ready(function () {
-        // Insert User
-        $('#create-user-button').on('click', function () {
-            var form = $('#create-user-form');
-            var formData = form.serialize();
-
-            // Get the full name value from the input field
-            var fullName = $('[name="nom_complete"]').val();
-
-            // Set the password field with the full name value
-            $('[name="password"]').val(fullName);
-
-            $.ajax({
-                url: '/user',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    console.log('Utilisateur créé avec succès');
-
-                    // Show success alert
-                    $('#success-alert').fadeIn();
-
-                    // Hide the alert after 3 seconds
-                    setTimeout(function () {
-                        $('#success-alert').fadeOut();
-                    }, 3000);
-
-                    // Fermer la fenêtre modale
-                    $('#modal-report').modal('hide');
-
-                    // Recharger la page pour afficher le nouvel utilisateur
-                    location.reload();
-                },
-                error: function (xhr, status, error) {
-                    console.error('Une erreur est survenue lors de la création de l\'utilisateur :', error);
-                }
-            });
+    function updateApprovalStatus(userId) {
+      const checkbox = document.getElementById(`is-approved-${userId}`);
+      const isApproved = checkbox.checked;
+  
+      fetch(`/user/update/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isApproved }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Reload the page to reflect the updated user data
+            window.location.reload();
+          } else {
+            // Handle error if needed
+            console.error('Error updating user approval status:', data.error);
+          }
+        })
+        .catch((error) => {
+          // Handle fetch error if needed
+          console.error('Error updating user approval status:', error);
         });
-    });
-</script>
-
-<script>
-    // Supprimer l'utilisateur
-    function confirmDelete(event, userId) {
-        event.preventDefault(); // Empêcher la soumission du formulaire
-
-        // Récupérer l'élément modal
-        var modal = document.getElementById('exampleModalCenter');
-
-        // Récupérer les boutons dans la modal
-        var confirmButton = modal.querySelector('#confirm-delete-button');
-        var closeButton = modal.querySelector('.btn-secondary');
-
-        // Mettre à jour l'événement click du bouton de confirmation
-        confirmButton.onclick = function() {
-            // Effectuer l'opération de suppression
-            fetch(`/user/${userId}`, {
-                method: 'DELETE'
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Utilisateur supprimé avec succès
-                        $('#delete-success-alert').removeClass('d-none'); // Show success alert for delete
-                        setTimeout(function () {
-                            $('#delete-success-alert').addClass('d-none'); // Hide the delete success alert after 3 seconds
-                        }, 3000);
-                        location.href = location.href; // Redirect to the same page to refresh it after successful deletion
-                    } else {
-                        // Erreur lors de la suppression de l'utilisateur
-                        console.error('Une erreur est survenue lors de la suppression de l\'utilisateur : ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    console.error('Une erreur est survenue lors de la suppression de l\'utilisateur');
-                });
-
-            // Fermer la modal
-            $(modal).modal('hide');
-        };
-
-        // Afficher la modal
-        $(modal).modal('show');
-
-        // Mettre à jour l'événement click du bouton de fermeture
-        closeButton.onclick = function() {
-            // Fermer la modal
-            $(modal).modal('hide');
-        };
     }
+  </script>
+  
 
-</script>
-
-<script>
-// Mettre à jour l'utilisateur
-function goToUpdatePage(userId) {
-    window.location.href = `/user/update/${userId}`;
-}
-</script>
-
-
-<!-- Insert User Script -->
-<!-- <script>
-    $(document).ready(function () {
-        // Insert User
-        $('#create-user-button').on('click', function () {
-            var form = $('#create-user-form');
-            var formData = form.serialize();
-
-            // Get the full name value from the input field
-            var fullName = $('[name="nom_complete"]').val();
-
-            // Set the password field with the full name value
-            $('[name="password"]').val(fullName);
-
-            $.ajax({
-                url: '/user',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    console.log('Utilisateur créé avec succès');
-
-                    // Fermer la fenêtre modale
-                    $('#modal-report').modal('hide');
-
-                    // Recharger la page pour afficher le nouvel utilisateur
-                    location.reload();
-                },
-                error: function (xhr, status, error) {
-                    console.error('Une erreur est survenue lors de la création de l\'utilisateur :', error);
-                }
-            });
-        });
-    });
-</script> -->
-
-<!-- <script>
-
-    // Supprimer l'utilisateur
-    function confirmDelete(event, userId) {
-        event.preventDefault(); // Empêcher la soumission du formulaire
-
-        // Récupérer l'élément modal
-        var modal = document.getElementById('exampleModalCenter');
-
-        // Récupérer les boutons dans la modal
-        var confirmButton = modal.querySelector('#confirm-delete-button');
-        var closeButton = modal.querySelector('.btn-secondary');
-
-        // Mettre à jour l'événement click du bouton de confirmation
-        confirmButton.onclick = function() {
-            // Effectuer l'opération de suppression
-            fetch(`/user/${userId}`, {
-                method: 'DELETE'
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Utilisateur supprimé avec succès
-                        alert('Utilisateur supprimé avec succès');
-                        window.location.href = window.location.href; // Recharger la page
-                    } else {
-                        // Erreur lors de la suppression de l'utilisateur
-                        console.error('Une erreur est survenue lors de la suppression de l\'utilisateur : ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    console.error('Une erreur est survenue lors de la suppression de l\'utilisateur');
-                });
-
-            // Fermer la modal
-            $(modal).modal('hide');
-        };
-
-        // Afficher la modal
-        $(modal).modal('show');
-
-        // Mettre à jour l'événement click du bouton de fermeture
-        closeButton.onclick = function() {
-            // Fermer la modal
-            $(modal).modal('hide');
-        };
-    }
-
-    // Mettre à jour l'utilisateur
-    function goToUpdatePage(userId) {
-        window.location.href = `/user/update/${userId}`;
-    }
-</script> -->
 </body>
 </html>

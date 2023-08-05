@@ -72,7 +72,7 @@ const UserModel = {
       });
     });
   },
-  update(id, updatedData) {
+  async update(id, updatedData) {
     return new Promise((resolve, reject) => {
       if (!updatedData) {
         reject(new Error('Updated data is null or undefined'));
@@ -83,7 +83,7 @@ const UserModel = {
         if (error) {
           reject(error);
         } else {
-          resolve(results.affectedRows > 0);
+          resolve({ success: results.affectedRows > 0 });
         }
       });
     });
