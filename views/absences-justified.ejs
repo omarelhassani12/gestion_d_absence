@@ -4,8 +4,11 @@
 <%- include('partials/header') %>
 <head>
     <style>
-        .delete-icon {
+        .delete-icon, .fond-rouge{
           color: red;
+        }
+        .fond-vert{
+          color: green;
         }
     </style>
 </head>
@@ -38,10 +41,16 @@
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row">
-                                        <div class="col-sm-12 text-right">
+                                        <div class="col-sm-12 text-left">
                                           <div class="col-auto ms-auto d-print-none">
-                                            
-                                          </div>
+                                            <div class="d-flex justify-content-between">
+                                            <div>
+                                              <p><span class="fond-rouge">Absences justifiées (date passée)</span></p>
+                                            </div>
+                                            <div>
+                                              <p><span class="fond-vert">Absences justifiées (date future)</span></p>
+                                            </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
