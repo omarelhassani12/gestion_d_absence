@@ -7,7 +7,7 @@ const path = require("path");
 
 
 
-function generatePDFFromData(stagiaire) {
+function generatePDFFromData(stagiaire,warningMessage) {
   const doc = new PDFDocument();
   const filename = `report_${stagiaire.firstName}__${stagiaire.lastName}_${Date.now()}.pdf`;
 
@@ -23,13 +23,13 @@ function generatePDFFromData(stagiaire) {
 
   
   doc.moveDown(5);
-  doc.fontSize(18).font('Helvetica-Bold').text("Premier avertissement", { align: "center"});
+  doc.fontSize(18).font('Helvetica-Bold').text(warningMessage, { align: "center"});
   doc.moveDown(1.5);
   doc.fontSize(12).text("Office de la Formation Professionnelle et de la Promotion de Travail", { align: "left" });
   doc.moveDown(2.5);
   
   doc.fontSize(12).text('Conformément au règlement intérieur en vigueur au sein des établissements de formation professionnelle, notamment le chapitre 5 relatif à l\'assiduité et au comportement, une sanction a été infligée : ', { continued: true })
-  .font('Helvetica-Bold').text(`Premier avertissement`)
+  .font('Helvetica-Bold').text(warningMessage)
   .font('Helvetica').text(` pour le stagiaire/la stagiaire ` , { continued: true })
   .font('Helvetica-Bold').text(`${stagiaire.firstName} ${stagiaire.lastName}`, { continued: true })
   .font('Helvetica').text(` inscrit(e) en filière ` , { continued: true })
@@ -50,14 +50,14 @@ function generatePDFFromData(stagiaire) {
   return filename;
 }
 
-async function generatePDF(stagiaireId) {
+async function generatePDF(stagiaireId,warningMessage) {
   try {
     const stagiaire = await findStagiaireFromDatabase(stagiaireId);
     if (!stagiaire) {
       throw new Error("Stagiaire not found");
     }
 
-    const pdfFileName = generatePDFFromData(stagiaire);
+    const pdfFileName = generatePDFFromData(stagiaire,warningMessage);
     return pdfFileName;
   } catch (err) {
     throw new Error("Error generating PDF: " + err.message);
