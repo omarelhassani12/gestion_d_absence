@@ -33,7 +33,7 @@ function generatePDFFromData(stagiaire) {
   .font('Helvetica').text(` pour le stagiaire/la stagiaire ` , { continued: true })
   .font('Helvetica-Bold').text(`${stagiaire.firstName} ${stagiaire.lastName}`, { continued: true })
   .font('Helvetica').text(` inscrit(e) en filière ` , { continued: true })
-  .font('Helvetica-Bold').text(`${stagiaire.groupId}`, { continued: true })
+  .font('Helvetica-Bold').text(`${stagiaire.group.groupName}`, { continued: true })
   .font('Helvetica').text(` en raison de ses absences répétées et non justifiées, entraînant une déduction de `,{ continued: true })
   .font('Helvetica-Bold').text(`trois points`, { continued: true })
   .font('Helvetica').text(` de son assiduité.`);
