@@ -121,20 +121,24 @@ const AbsenceController = {
   async getAllAbsencesWithFunctions(req, res, next) {
     try {
       // Fetch all absences
-      const absences = await AbsenceModel.findAll();
+      // const absences = await AbsenceModel.findAll();
   
+      // // Calculate the total hours for each stagiaire and store it in a map
+      // const totalHoursMap = new Map();
+      // for (const absence of absences) {
+      //   const stagiaireId = absence.stagiaire_id;
+      //   const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(stagiaireId);
+      //   if (totalHoursMap.has(stagiaireId)) {
+      //     const currentTotalHours = totalHoursMap.get(stagiaireId);
+      //     totalHoursMap.set(stagiaireId, currentTotalHours + totalHours);
+      //   } else {
+      //     totalHoursMap.set(stagiaireId, totalHours);
+      //   }
+      // }
       // Calculate the total hours for each stagiaire and store it in a map
-      const totalHoursMap = new Map();
-      for (const absence of absences) {
-        const stagiaireId = absence.stagiaire_id;
-        const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(stagiaireId);
-        if (totalHoursMap.has(stagiaireId)) {
-          totalHoursMap.set(stagiaireId,  totalHours);
-        } else {
-          // If the stagiaire does not exist in the map, add a new entry
-          totalHoursMap.set(stagiaireId, totalHours);
-        }
-      }
+      const totalHoursMap = await AbsenceModel.getTotalHoursOfAbsence();
+
+      
   
       // Fetch all stagiaires
       const stagiaires = await StagiaireModel.findAll();
@@ -164,92 +168,6 @@ const AbsenceController = {
     }
   },
   
-  
-  async downloadPDF(req, res, next) {
-    try {
-      const stagiaireId = req.params.stagiaireId;
-  
-      // Fetch stagiaire data based on the provided ID
-      const stagiaire = await StagiaireModel.findById(stagiaireId);
-  
-      if (!stagiaire) {
-        return res.status(404).send('Stagiaire not found');
-      }
-  
-      // Create a PDF document
-      const doc = new PDFDocument({ autoFirstPage: false });
-  
-      // Set appropriate headers for the response
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="PRMG_${stagiaireId}.pdf"`);
-  
-      // Pipe the PDF content to the response
-      doc.pipe(res);
-  
-      // Set font for Arabic text (use the correct path to the Amiri-Regular.ttf font)
-      const fontPath = path.join(__dirname, 'fonts', 'Amiri-Regular.ttf');
-      doc.registerFont('amiri', fontPath);
-  
-      // Function to calculate RTL text width
-      const getRtlTextWidth = (text, fontSize) => {
-        return doc.widthOfString(text, { align: 'right', continued: true, width: 200, fontSize });
-      };
-  
-      // Function to draw RTL text
-      const drawRtlText = (text, x, y, fontSize) => {
-        const textWidth = getRtlTextWidth(text, fontSize);
-        doc.text(text, x - textWidth, y, { align: 'right', width: 100, continued: true, fontSize });
-      };
-  
-      // Add content to the PDF
-      doc.addPage({ size: 'A4', margin: 50 });
-      doc.font('amiri');
-  
-      // Text paragraph with dynamic student information
-      const dynamicText = `تطبيقا للقانون الداخلي المعمول به داخل مؤسسات التكوين المهني وخاصة الفصل الخامس المتعلق بالمواظبة والسلوك فقد تم توجيه عقوبة توبيخ للمتدرب(ة) ${stagiaire.firstName} ${stagiaire.lastName} المسجل بشعبة ${stagiaire.group} وذلك نظرا للغياب المتكرر والغير مبرر مع خصم خمس نقط من نقط المواظبة.`;
-  
-      // Determine if the dynamic text contains RTL characters
-      const isRtl = /[\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\uFE70-\uFEFF]/.test(dynamicText);
-  
-      // Add content to the PDF
-      doc.fontSize(24).text('اسم المدرسة', { align: 'center' });
-      doc.moveDown();
-      doc.fontSize(18).text('معلومات الطالب', { align: 'center' });
-  
-      // Add student data
-      doc.moveDown();
-      doc.fontSize(14).text(`الرقم الشخصي: ${stagiaire.id}`);
-      doc.fontSize(14).text(`الاسم الأول: ${stagiaire.firstName}`);
-      doc.fontSize(14).text(`الاسم الأخير: ${stagiaire.lastName}`);
-      if (isRtl) {
-        drawRtlText(`الشعبة: ${stagiaire.group}`, doc.page.width - 100, doc.y, 14);
-      } else {
-        doc.fontSize(14).text(`الشعبة: ${stagiaire.group}`);
-      }
-  
-      // Add dynamic text paragraph
-      doc.moveDown(2);
-      if (isRtl) {
-        drawRtlText(dynamicText, doc.page.width - 200, doc.y, 14);
-      } else {
-        doc.fontSize(14).text(dynamicText);
-      }
-  
-      // Add date and place for signature
-      doc.moveDown();
-      doc.fontSize(14).text('التاريخ:', { align: 'left' });
-      doc.text('_________________________', doc.page.width - 200, doc.y, { align: 'right', continued: true });
-      doc.moveDown();
-      doc.fontSize(14).text('التوقيع:', { align: 'left' });
-      doc.text('_________________________', doc.page.width - 200, doc.y, { align: 'right' });
-  
-      // Finalize the PDF and end the response
-      doc.end();
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      next(error);
-    }
-  },
 
   async getStagiaireById(req, res) {
     try {

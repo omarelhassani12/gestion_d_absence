@@ -7,8 +7,12 @@ const crypto = require('crypto');
 const connection = require('./config/database');
 const MySQLStore = require('express-mysql-session')(session); // Require express-mysql-session package
 
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
 const app = express();
 const upload = multer({ dest: 'uploads/' });
+app.use(express.static('uploads'));
 
 const path = require('path');
 const serviceRoutes = require('./routes/serviceRoutes');
@@ -17,6 +21,7 @@ const GroupRoutes = require('./routes/groupRoutes');
 const authRoutes = require('./routes/authRoutes');
 const AbsenceRoutes = require('./routes/absenceRoutes');
 const JustifiedAbsenceRoutes = require('./routes/justifiedAbsenceRoutes');
+const pdfRoutes = require('./routes/pdfRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -103,6 +108,8 @@ app.use('/stagaire', StagaireRoutes);
 app.use('/group', GroupRoutes);
 app.use('/absence', AbsenceRoutes);
 app.use('/justified-absences', JustifiedAbsenceRoutes);
+app.use("/", pdfRoutes);
+
 
 
 // Start the server

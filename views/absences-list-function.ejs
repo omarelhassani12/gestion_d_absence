@@ -76,9 +76,10 @@
                                             <%= note %></td>
                                           <td class="text-center">
                                             <% if (stagiaire.totalHours >= 2.5 && stagiaire.totalHours < 7.5) { %>
-                                              <a href="#" download="./Rapport/Image_005.pdf">1er M.G</a>
-                                            <% } else if (stagiaire.totalHours >= 7.5 && stagiaire.totalHours < 15.5) { %>
-                                              2eme M.G
+                                              <a href="/Image_005.pdf"  download="1er_M.G.pdf">1er M.G</a>
+                                              <% } else if (stagiaire.totalHours >= 7.5 && stagiaire.totalHours < 15.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id  %>" >2eme M.G</a>
+                                              
                                             <% } else if (stagiaire.totalHours >= 15.5 && stagiaire.totalHours < 17.5) { %>
                                               1er Aver
                                             <% } else if (stagiaire.totalHours >= 17.5 && stagiaire.totalHours < 22.5) { %>
@@ -111,6 +112,7 @@
         </div>
         
     </div>
+    
     
     <%- include('partials/script') %>
         

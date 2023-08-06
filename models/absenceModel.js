@@ -3,20 +3,6 @@ const { format } = require('date-fns');
 const cron = require('node-cron');
 
 const AbsenceModel = {
-  // findAll() {
-  //   return new Promise((resolve, reject) => {
-  //     db.query(
-  //       'SELECT * FROM absence',
-  //       (error, results) => {
-  //         if (error) {
-  //           reject(error);
-  //         } else {
-  //           resolve(results);
-  //         }
-  //       }
-  //     );
-  //   });
-  // },
  
   findAll() {
     return new Promise((resolve, reject) => {
@@ -96,22 +82,42 @@ const AbsenceModel = {
     });
   },
 
-  async getTotalHoursOfAbsenceByStagiaire(stagiaireId) {
+  // async getTotalHoursOfAbsenceByStagiaire(stagiaireId) {
+  //   return new Promise((resolve, reject) => {
+  //     db.query(
+  //       'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ?',
+  //       [stagiaireId],
+  //       (error, results) => {
+  //         if (error) {
+  //           reject(error);
+  //         } else {
+  //           resolve(results[0].totalHours || 0);
+  //         }
+  //       }
+  //     );
+  //   });
+  // },
+
+  async getTotalHoursOfAbsence() {
     return new Promise((resolve, reject) => {
       db.query(
-        'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ? ',
-        [stagiaireId],
+        'SELECT stagiaire_id, SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence GROUP BY stagiaire_id',
         (error, results) => {
           if (error) {
             reject(error);
           } else {
-            resolve(results[0].totalHours || 0);
+            const totalHoursMap = new Map();
+            for (const result of results) {
+              totalHoursMap.set(result.stagiaire_id, result.totalHours || 0);
+            }
+            resolve(totalHoursMap);
           }
         }
       );
     });
   },
-  
+
+
   async getTotalHoursOfAbsenceByStagiaireForToday(stagiaireId, selectedDate) {
     try {
       // Convert the selected date to the "YYYY-MM-DD" format
@@ -350,5 +356,5 @@ startScheduler() {
 };
 
 // AbsenceModel.main();
-AbsenceModel.startScheduler();
+// AbsenceModel.startScheduler();
 module.exports = AbsenceModel;
