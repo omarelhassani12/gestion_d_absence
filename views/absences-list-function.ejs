@@ -43,7 +43,14 @@
                                     <div class="row">
                                         <div class="col-sm-12 text-right">
                                           <div class="col-auto ms-auto d-print-none">
-                                            
+                                            <div class="col-auto ms-auto d-print-none">
+                                              <div class="d-flex justify-content-between">
+                                                <div>
+                                                  <p><span class="fond-rouge">Les fonctions sont modifiées en fonction des horaires d'absence. Vous pouvez cliquer sur le titre de la fonction pour <b>télécharger le PDF</b>.</span></p>
+                                                </div>
+                                              
+                                              </div>
+                                            </div>
                                           </div>
                                         </div>
                                     </div>
@@ -75,24 +82,24 @@
                                              %>
                                             <%= note %></td>
                                           <td class="text-center">
-                                            <% if (stagiaire.totalHours >= 2.5 && stagiaire.totalHours < 7.5) { %>
-                                              <a href="/Image_005.pdf"  download="1er_M.G.pdf">1er M.G</a>
-                                              <% } else if (stagiaire.totalHours >= 7.5 && stagiaire.totalHours < 15.5) { %>
-                                                <!-- <a href="/pdf/<%= stagiaire.id  %>" >2eme M.G</a> -->
-                                                <a href="/pdf/<%= stagiaire.id %>/Premier%20avertissement">2eme M.G</a>
-
-                                            <% } else if (stagiaire.totalHours >= 15.5 && stagiaire.totalHours < 17.5) { %>
-                                              1er Aver
-                                            <% } else if (stagiaire.totalHours >= 17.5 && stagiaire.totalHours < 22.5) { %>
-                                              2eme Aver
-                                            <% } else if (stagiaire.totalHours >= 22.5 && stagiaire.totalHours < 25.5) { %>
-                                              Blame
-                                            <% } else if (stagiaire.totalHours >= 27.5 && stagiaire.totalHours < 32.5) { %>
-                                              2eme M.G
-                                            <% } else if (stagiaire.totalHours >= 32.5 && stagiaire.totalHours < 35.5) { %>
-                                              Exclusion
-                                            <% } else if (stagiaire.totalHours > 52.5) { %>
-                                              Urgent
+                                            <% if (stagiaire.totalHours > 0 && stagiaire.totalHours <= 7.5) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Premier%20mise%20en%20garde">1er M.G</a>
+                                            <% } else if (stagiaire.totalHours > 7.5 && stagiaire.totalHours <= 12.5) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Deuxième%20mise%20en%20garde">2eme M.G</a>
+                                            <% } else if (stagiaire.totalHours > 12.5 && stagiaire.totalHours <= 17.5) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Premier%20avertissement">1er Aver</a>
+                                            <% } else if (stagiaire.totalHours > 17.5 && stagiaire.totalHours <= 22.5) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Deuxième%20avertissement">2eme Aver</a>
+                                            <% } else if (stagiaire.totalHours > 22.5 && stagiaire.totalHours <= 27.5) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Blame">Blame</a>
+                                            <% } else if (stagiaire.totalHours > 27.5 && stagiaire.totalHours <= 32.5) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Exclusion">Exclue 2 j</a>                                            
+                                            <% } else if (stagiaire.totalHours > 32.5 && stagiaire.totalHours <= 37.5) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Exclusion">Exclusion</a>
+                                            <% } else if (stagiaire.totalHours > 37.5 && stagiaire.totalHours <= 52.5) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Urgent">Urgent 1</a>
+                                            <% } else if (stagiaire.totalHours > 52.5 ) { %>
+                                              <a href="/pdf/<%= stagiaire.id %>/Urgent">Urgent 2</a>
                                             <% } else { %>
                                               Aucune fonction
                                             <% }; %>
