@@ -1,7 +1,11 @@
 // controllers/pdfController.js
 const PDFDocument = require("pdfkit");
+const fontkit = require("fontkit");
 const fs = require("fs");
 const { findStagiaireFromDatabase } = require("../models/pdfModel");
+const path = require("path");
+
+
 
 function generatePDFFromData(stagiaire) {
   const doc = new PDFDocument();
@@ -9,21 +13,36 @@ function generatePDFFromData(stagiaire) {
 
   doc.pipe(fs.createWriteStream(filename));
 
-  const cef = stagiaire.CEF;
-  doc.fontSize(18).text(cef, { align: "center" });
-  doc.moveDown(0.5);
-  doc.fontSize(16).text("OFPPT", { align: "left" });
-  doc.moveDown(0.5);
+  // Add the image to the top of the PDF
+  const imagePath = path.join(__dirname, "images/ofppt.png");
+  doc.image(imagePath, {
+    fit: [500, 150], // Set the width asnd height of the image
+    align: "center",
+    valign: "top",
+  });
+
   
-  doc.fontSize(14).text(`Conformément au règlement intérieur en vigueur au sein des établissements de formation professionnelle, notamment le chapitre 5 relatif à l'assiduité et au comportement, une sanction a été infligée Premier avertissement pour le stagiaire/la stagiaire ${stagiaire.firstName} ${stagiaire.lastName} inscrit(e) en filière ${stagiaire.groupId} en raison de ses absences répétées et non justifiées, entraînant une déduction de trois points de son assiduité.`);
-  doc.moveDown(0.5);
-  // Get the current date
+  doc.moveDown(5);
+  doc.fontSize(18).font('Helvetica-Bold').text("Premier avertissement", { align: "center"});
+  doc.moveDown(1.5);
+  doc.fontSize(12).text("Office de la Formation Professionnelle et de la Promotion de Travail", { align: "left" });
+  doc.moveDown(2.5);
+  
+  doc.fontSize(12).text('Conformément au règlement intérieur en vigueur au sein des établissements de formation professionnelle, notamment le chapitre 5 relatif à l\'assiduité et au comportement, une sanction a été infligée : ', { continued: true })
+  .font('Helvetica-Bold').text(`Premier avertissement`)
+  .font('Helvetica').text(` pour le stagiaire/la stagiaire ` , { continued: true })
+  .font('Helvetica-Bold').text(`${stagiaire.firstName} ${stagiaire.lastName}`, { continued: true })
+  .font('Helvetica').text(` inscrit(e) en filière ` , { continued: true })
+  .font('Helvetica-Bold').text(`${stagiaire.groupId}`, { continued: true })
+  .font('Helvetica').text(` en raison de ses absences répétées et non justifiées, entraînant une déduction de `,{ continued: true })
+  .font('Helvetica-Bold').text(`trois points`, { continued: true })
+  .font('Helvetica').text(` de son assiduité.`);
+ doc.moveDown(2.5);
   const currentDate = new Date();
-  // Format the date as a string without time according to the user's locale
   const formattedDate = currentDate.toLocaleDateString();
 
-  // Display the formatted date on the right side
-  doc.fontSize(14).text("le "+ formattedDate, { align: "right" });
+  doc.fontSize(14).font('Helvetica-Bold').text("le "+formattedDate, { align: "right" , continued: true});  
+  doc.moveDown(4.5);
   doc.fontSize(18).text("Signature de l'intéressé(e): ---------------", { align: "center" });
 
   doc.end();

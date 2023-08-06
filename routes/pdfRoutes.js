@@ -8,7 +8,8 @@ pdfRoutes.get("/pdf/:stagiaireId", async (req, res) => {
   try {
     const stagiaireId = parseInt(req.params.stagiaireId);
     const pdfFileName = await pdfController.generatePDF(stagiaireId);
-    res.status(200).send(`PDF generated for Stagiaire ID ${stagiaireId}: ${pdfFileName}`);
+    res.redirect("/");
+    // res.status(200).send(`PDF generated for Stagiaire ID ${stagiaireId}: ${pdfFileName}`);
   } catch (err) {
     res.status(500).send(`Error generating PDF: ${err.message}`);
   }
