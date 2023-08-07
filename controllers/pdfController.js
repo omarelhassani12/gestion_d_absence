@@ -1,6 +1,5 @@
 // controllers/pdfController.js
 const PDFDocument = require("pdfkit");
-const fontkit = require("fontkit");
 const fs = require("fs");
 const { findStagiaireFromDatabase } = require("../models/pdfModel");
 const path = require("path");

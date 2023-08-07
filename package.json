@@ -21,7 +21,6 @@
 		"express": "^4.18.2",
 		"express-mysql-session": "^3.0.0",
 		"express-session": "^1.17.3",
-		"fontkit": "^2.0.2",
 		"fs": "^0.0.1-security",
 		"jsonwebtoken": "^9.0.0",
 		"list": "^2.0.19",
