@@ -8,9 +8,10 @@ const pdfController = require("../controllers/pdfController");
 
 pdfRoutes.get("/pdf/:stagiaireId/:warningMessage", async (req, res) => {
     try {
-      const stagiaireId = parseInt(req.params.stagiaireId);
-      const warningMessage = req.params.warningMessage.replace(/%20/g, ' ');
-      const pdfFileName = await pdfController.generatePDF(stagiaireId,warningMessage);
+        const stagiaireId = parseInt(req.params.stagiaireId);
+        const warningMessage = req.params.warningMessage.replace(/%20/, ' ');
+        const pdfFileName = await pdfController.generatePDF(stagiaireId, warningMessage);
+        
   
       // Wait for the PDF to be generated
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Add a delay if needed
