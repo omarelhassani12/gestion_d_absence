@@ -120,22 +120,6 @@ const AbsenceController = {
   
   async getAllAbsencesWithFunctions(req, res, next) {
     try {
-      // Fetch all absences
-      // const absences = await AbsenceModel.findAll();
-  
-      // // Calculate the total hours for each stagiaire and store it in a map
-      // const totalHoursMap = new Map();
-      // for (const absence of absences) {
-      //   const stagiaireId = absence.stagiaire_id;
-      //   const totalHours = await AbsenceModel.getTotalHoursOfAbsenceByStagiaire(stagiaireId);
-      //   if (totalHoursMap.has(stagiaireId)) {
-      //     const currentTotalHours = totalHoursMap.get(stagiaireId);
-      //     totalHoursMap.set(stagiaireId, currentTotalHours + totalHours);
-      //   } else {
-      //     totalHoursMap.set(stagiaireId, totalHours);
-      //   }
-      // }
-      // Calculate the total hours for each stagiaire and store it in a map
       const totalHoursMap = await AbsenceModel.getTotalHoursOfAbsence();
 
       
@@ -168,6 +152,107 @@ const AbsenceController = {
     }
   },
   
+  async getAllAbsencesForPvND(req, res, next) {
+    try {
+      const totalHoursMap = await AbsenceModel.getTotalHoursOfAbsence();
+
+      
+  
+      // Fetch all stagiaires
+      const stagiaires = await StagiaireModel.findAll();
+  
+      // Loop through each stagiaire and add their total hours
+      for (const stagiaire of stagiaires) {
+        const totalHours = totalHoursMap.get(stagiaire.id);
+        stagiaire.totalHours = totalHours || 0;
+      }
+  
+      // Fetch all groups
+      const groups = await GroupModel.findAll();
+  
+      // Check if there is a logged-in user in the session
+      const user = req.session.user || null;
+  
+      // Render the view with all stagiaires and their total hours
+      res.render('pvnd', {
+        stagiaires,
+        activeRoute: 'pvnd',
+        user,
+        groups,
+      });
+    } catch (error) {
+      console.error('Error retrieving stagiaires and total hours:', error);
+      next(error);
+    }
+  },
+  
+  async getAllAbsencesForPvM(req, res, next) {
+    try {
+      const totalHoursMap = await AbsenceModel.getTotalHoursOfAbsence();
+
+      
+  
+      // Fetch all stagiaires
+      const stagiaires = await StagiaireModel.findAll();
+  
+      // Loop through each stagiaire and add their total hours
+      for (const stagiaire of stagiaires) {
+        const totalHours = totalHoursMap.get(stagiaire.id);
+        stagiaire.totalHours = totalHours || 0;
+      }
+  
+      // Fetch all groups
+      const groups = await GroupModel.findAll();
+  
+      // Check if there is a logged-in user in the session
+      const user = req.session.user || null;
+  
+      // Render the view with all stagiaires and their total hours
+      res.render('pvm', {
+        stagiaires,
+        activeRoute: 'pvm',
+        user,
+        groups,
+      });
+    } catch (error) {
+      console.error('Error retrieving stagiaires and total hours:', error);
+      next(error);
+    }
+  },
+
+  async getAllAbsencesForNotes(req, res, next) {
+    try {
+      const totalHoursMap = await AbsenceModel.getTotalHoursOfAbsence();
+
+      
+  
+      // Fetch all stagiaires
+      const stagiaires = await StagiaireModel.findAll();
+  
+      // Loop through each stagiaire and add their total hours
+      for (const stagiaire of stagiaires) {
+        const totalHours = totalHoursMap.get(stagiaire.id);
+        stagiaire.totalHours = totalHours || 0;
+      }
+  
+      // Fetch all groups
+      const groups = await GroupModel.findAll();
+  
+      // Check if there is a logged-in user in the session
+      const user = req.session.user || null;
+  
+      // Render the view with all stagiaires and their total hours
+      res.render('notes', {
+        stagiaires,
+        activeRoute: 'notes',
+        user,
+        groups,
+      });
+    } catch (error) {
+      console.error('Error retrieving stagiaires and total hours:', error);
+      next(error);
+    }
+  },
 
   async getStagiaireById(req, res) {
     try {

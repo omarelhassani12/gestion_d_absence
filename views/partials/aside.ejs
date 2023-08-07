@@ -52,7 +52,7 @@
                         </a>
                     </li>
                     <li class="nav-item has-treeview <%= activeRoute.includes('absence') ? 'menu-open' : '' %>">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link <%= activeRoute.includes('absence') ? 'active' : '' %>">
                           <i class="nav-icon fas fa-calendar"></i>
                           <p>
                             Gestion des absences
@@ -94,6 +94,42 @@
                           </li>
                         </ul>
                     </li>
+                    <li class="nav-item has-treeview <%= activeRoute === 'pvnd' || activeRoute === 'pvm' || activeRoute === 'notes' ? 'menu-open' : '' %>">
+                      <a href="#" class="nav-link <%= activeRoute === 'pvnd' || activeRoute === 'pvm' || activeRoute === 'notes' ? 'active' : '' %>">
+                        <i class="nav-icon fas fa-calendar"></i>
+                        <p>
+                          Gestion des Notes PV
+                          <i class="fas fa-angle-left right"></i>
+                        </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                          <a href="/absence/absences/pvnd" class="nav-link <%= activeRoute === 'pvnd' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-calendar-times"></i>
+                            <p>
+                              PVND
+                            </p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/absence/absences/pvm" class="nav-link <%= activeRoute === 'pvm' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-filter"></i>
+                            <p>
+                              PVM
+                            </p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/absence/absences/notes" class="nav-link <%= activeRoute === 'notes' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-calendar"></i>
+                            <p>
+                              Notes
+                            </p>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    
                     <li class="nav-item">
                         <a href="/user" class="nav-link <%= activeRoute === 'users' ? 'active' : '' %>">
                             <i class="nav-icon fas fa-users"></i>
