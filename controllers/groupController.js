@@ -27,6 +27,36 @@ const GroupController = {
       });
   },
 
+ 
+//   async getAllGroupsForGroupsDetails(req, res, next) {
+//   const user = req.session.user || null;
+
+//   if (user && user.role === 1) {
+//     // Fetch groups by formateur id (user id)
+//     GroupModel.findByFormateurId(user.id)  // Make sure you're passing user.id here
+//       .then(groups => {
+//         res.render('groups-details.ejs', { groups, activeRoute: 'groupsDetails', user });
+//       })
+//       .catch(error => {
+//         console.error('Error retrieving groups:', error);
+//         next(error);
+//       });
+//   } else {
+//     // Fetch all groups
+//     Promise.all([GroupModel.findAll(), UserModel.findByRole(1)])
+//       .then(([groups, users]) => {
+//         res.render('groups-details.ejs', { groups, users, activeRoute: 'groupsDetails', user });
+//       })
+//       .catch(error => {
+//         console.error('Error retrieving groups:', error);
+//         next(error);
+//       });
+//   }
+// },
+
+
+
+
   async getGroupDetails(req, res) {
     try {
       const groupId = req.params.id; 

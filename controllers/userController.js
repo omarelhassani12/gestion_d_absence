@@ -119,11 +119,17 @@ const UserController = {
         if (user.isApproved) {
           // If user is found and isApproved is true, proceed with login
           req.session.user = {
+            id: user.id,
             name: user.nom_complete,
             email: user.email,
             role: user.role,
           };
-          res.cookie('userEmail', user.email, 'userRole', user.role);
+          res.cookie(
+            'userid', user.id,
+            'userName', user.nom_complete,
+            'userEmail', user.email,
+             'userRole', user.role,
+          );
           res.status(200).json(user);
         } else {
           // If user is found but isApproved is false, deny login

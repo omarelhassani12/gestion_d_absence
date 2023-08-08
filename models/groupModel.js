@@ -16,6 +16,24 @@ const GroupModel = {
     });
   },
 
+  async findByFormateurId(userId) {
+    return new Promise((resolve, reject) => {
+      const query = 'SELECT * FROM groups WHERE user_id = ?';
+      console.log('Executing query:', query, 'with userId:', userId);
+  
+      db.query(query, [userId], (error, results) => {
+        if (error) {
+          console.error('Error executing query:', error);
+          reject(error);
+        } else {
+          console.log('Query executed successfully. Results:', results);
+          resolve(results);
+        }
+      });
+    });
+  },
+  
+
   
   findById(id) {
     return new Promise((resolve, reject) => {

@@ -41,7 +41,7 @@
             </section>
 
 
-           
+           <% if(user.role == 0){ %>
             <section class="content">
                 <div class="container-fluid">
                   <div class="row">
@@ -78,8 +78,49 @@
                     </div>
                   </div>
                 </div>
-              </section>
-              
+            </section>
+            <%}else if(user.role == 1){ %>
+                <section class="content">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="card">
+                            <div class="card-header d-flex justify-content-center">
+                              <h3 class="card-title">Vos groupes avec leurs responsables et les stagiaires</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <% if (!groups || groups.length === 0) { %>
+                                        <div>
+                                            <h1 style="text-align:center">Aucun groupe trouvé.</h1>
+                                        </div>
+                                    <% } else { %>
+                                        <% groups.forEach((group) => { %>
+                                            <% if (user && user.id === group.user_id) { %> 
+                                                <div class="col-sm-3 ">
+                                                    <a href="/group/groups-details-stg/<%= group.id %>" class="card-link">
+                                                      <div class="card">
+                                                        <div class="card-body">
+                                                          <h3 class="text-center"><%= group.name %></h3>
+                                                          <hr>
+                                                          <h5 class="text-center"><%= group.user_name %></h5>
+                                                        </div>
+                                                      </div>
+                                                    </a>
+                                                </div>
+                                            <% } %>
+                                        <% }) %>
+                                    <% } %>
+                                </div>
+                                
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </section>
+            <%} %>
+
         </div>
 
 
