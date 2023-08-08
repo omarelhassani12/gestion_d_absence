@@ -71,6 +71,7 @@
                                               <th class="text-center">Justifie</th>
                                             </tr>
                                           </thead>
+                                          <% if(user.role == 0){ %>
                                           <tbody id="tableBody">
                                             <% for (const absence of absences) { %>
                                               <tr>
@@ -103,7 +104,7 @@
                                                 }
                                                 %>
                                                <% const isEndDateValid = isJustifiedEndDateValid(absence.stagiaire.id); %>
-                                               <td class="text-center"> 
+                                              <td class="text-center"> 
                                                 <div class="form-check">
                                                   <input
                                                     type="checkbox"
@@ -125,7 +126,6 @@
                                                   </label>
                                                 </div>
                                               </td>
-                                              
                                               <td class="text-center">
                                                 <div class="form-check">
                                                   <input
@@ -148,11 +148,7 @@
                                                   </label>
                                                 </div>
                                               </td>
-                                              
-
-                                             
-                                              
-                                                <td class="text-center">
+                                              <td class="text-center">
                                                   <div class="form-check">
                                                     <input
                                                       type="checkbox"
@@ -173,12 +169,111 @@
                                                       <% } %>
                                                     </label>
                                                   </div>
-                                                </td>
-                                                
-                                                
+                                              </td>
                                               </tr>
                                             <% } %>
                                           </tbody>
+                                          <%}else if(user.role == 1){ %>
+                                            <tbody id="tableBody">
+                                              <% for (const absence of absences) { %>
+                                              <% if (  user.groupId == absence.stagiaire.groupId) { %>
+                                                
+                                                <tr>
+                                                  <% const today = new Date() %>
+                                                  <td class="text-center"><%= absence.stagiaire.CEF %></td>
+                                                  <td class="text-center"><%= absence.stagiaire.firstName %></td>
+                                                  <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                                  <td class="text-center" data-period="<%= absence.period %>"><%= absence.period %></td>
+                                                  <%
+                                                  // Helper function to get justified absence by stagiaire ID
+                                                  function getJustifiedAbsence(stagiaireId) {
+                                                    return justifiedAbsences.find(justified => justified.stagiaire_id === stagiaireId);
+                                                  }
+                                                  // Helper function to check if justified end date is valid
+                                                  function isJustifiedEndDateValid(stagiaireId) {
+                                                    const justifiedAbsence = getJustifiedAbsence(stagiaireId);
+                                                    if (!justifiedAbsence || !justifiedAbsence.end_date) {
+                                                      return false;
+                                                    }
+                                                    const endDate = new Date(justifiedAbsence.end_date);
+                                                    const id = justifiedAbsence.stagiaire_id;
+                                                    const today = new Date();
+                                                 
+                                                    return endDate >= today;
+                                                  }
+                                                  %>
+                                                 <% const isEndDateValid = isJustifiedEndDateValid(absence.stagiaire.id); %>
+                                                <td class="text-center"> 
+                                                  <div class="form-check">
+                                                    <input
+                                                      type="checkbox"
+                                                      class="form-check-input attendance-checkbox first-session-checkbox"
+                                                      id="1er-seance-<%= absence.stagiaire.id %>-<%= absence.period %>"
+                                                      <% if (absence.first_session_attendance == 1) { %>checked<% } %>
+                                                      data-student-id="<%= absence.id %>"
+                                                      <% if (isEndDateValid) { %>disabled<% } %>
+                                                    >
+                                                    <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>-<%= absence.period %>">
+                                                      <% if (absence.first_session_attendance === 1) { %>
+                                                        Absent  
+                                                      <% } else { if (isEndDateValid) { %>
+                                                        Absence justifiée
+                                                      <% } else { %>
+                                                        Présent  
+                                                      <% } %> 
+                                                      <% } %>   
+                                                    </label>
+                                                  </div>
+                                                </td>
+                                                <td class="text-center">
+                                                  <div class="form-check">
+                                                    <input
+                                                      type="checkbox"
+                                                      class="form-check-input attendance-checkbox second-session-checkbox "
+                                                      id="2eme-seance-<%= absence.stagiaire.id %>-<%= absence.period %>"
+                                                      <% if (absence.second_session_attendance == 1) { %>checked<% } %>
+                                                      data-student-id="<%= absence.id %>"
+                                                      <% if (isEndDateValid) { %>disabled<% } %>
+                                                    >
+                                                    <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>-<%= absence.period %>">
+                                                      <% if (absence.second_session_attendance === 1) { %>
+                                                        Absent
+                                                      <% } else { if (isEndDateValid) { %>
+                                                        Absence justifiée
+                                                      <% } else { %>
+                                                        Présent  
+                                                      <% } %>    
+                                                      <% } %>    
+                                                    </label>
+                                                  </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-check">
+                                                      <input
+                                                        type="checkbox"
+                                                        class="form-check-input is-justified-checkbox"
+                                                        id="justified-seance-<%= absence.stagiaire.id %>"
+                                                        <% if (absence.is_justified == 1 || isEndDateValid) { %>checked<% } %>
+                                                        data-absence-id="<%= absence.id %>"
+                                                        data-stagiaire-id="<%= absence.stagiaire.id %>"
+                                                        data-justified-checkbox
+                                                        <% if (isEndDateValid) { %>disabled<% } %>
+  
+                                                      >
+                                                      <label class="form-check-label" for="justified-seance-<%= absence.stagiaire.id %>">
+                                                        <% if (absence.is_justified === 1 || isEndDateValid) { %>
+                                                          Oui
+                                                        <% } else { %>
+                                                          Non
+                                                        <% } %>
+                                                      </label>
+                                                    </div>
+                                                </td>
+                                                </tr>
+                                              <% } %>
+                                              <% } %>
+                                            </tbody>
+                                        <%} %>
                                     </table>
                                 </div>
                             </div>
@@ -186,6 +281,9 @@
                     </div>
                 </div>
             </section>
+            
+
+
             <!-- /.content -->
         </div>
         

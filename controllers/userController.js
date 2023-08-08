@@ -1,3 +1,4 @@
+const GroupModel = require('../models/groupModel');
 const UserModel = require('../models/userModel');
 
 const UserController = {
@@ -117,18 +118,22 @@ const UserController = {
   
       if (user) {
         if (user.isApproved) {
-          // If user is found and isApproved is true, proceed with login
+  
+          const groupId = await GroupModel.findGroupIdByUserId(user.id);
+        console.log("groupid", groupId);
           req.session.user = {
             id: user.id,
             name: user.nom_complete,
             email: user.email,
             role: user.role,
+            groupId: groupId,
           };
           res.cookie(
             'userid', user.id,
             'userName', user.nom_complete,
             'userEmail', user.email,
-             'userRole', user.role,
+            'userRole', user.role,
+            'userGroupId', groupId,
           );
           res.status(200).json(user);
         } else {
@@ -143,8 +148,8 @@ const UserController = {
       console.error('An error occurred while logging in:', error);
       res.status(500).json({ error: 'An error occurred while logging in' });
     }
-  }
-  ,  
+  },
+    
 
   async logout(req, res) {
       try {

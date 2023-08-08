@@ -53,6 +53,29 @@ const GroupModel = {
     });
   },
 
+  findGroupIdByUserId(userId) {
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT id
+        FROM groups
+        WHERE user_id = ?
+      `;
+  
+      db.query(query, [userId], (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+  
+        if (results.length > 0) {
+          const groupId = results[0].id;
+          resolve(groupId);
+        } else {
+          resolve(null); // User not found or no group ID
+        }
+      });
+    });
+  },
+
   create(group) {
     return new Promise((resolve, reject) => {
       if (!group) {
