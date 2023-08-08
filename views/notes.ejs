@@ -63,10 +63,8 @@
                                         <th class="text-center">CEF</th>
                                         <th class="text-center">Prénom</th>
                                         <th class="text-center">Nom</th>
-                                        <th class="text-center">Note / 10(a)</th>
-                                        <th class="text-center">Note Comportement / 5(b)</th>
-                                        <th class="text-center">Note Formateur / 5(c)</th>
-                                        <th class="text-center">Total ((a+b+c)/3)</th>
+                                        <th class="text-center">Note / ...</th>
+                                        <th class="text-center">Observation</th>
                                       </tr>
                                     </thead>
                                     <%if(user.role == 0){ %>
@@ -76,17 +74,8 @@
                                             <td class="text-center"><%= stagiaire.CEF %></td>
                                             <td class="text-center"><%= stagiaire.firstName %></td>
                                             <td class="text-center"><%= stagiaire.lastName %></td>
-                                            <td class="text-center">
-                                              <% 
-                                               const commule = stagiaire.totalHours / 5;
-                                               const note = 10 - commule
-                                               %>
-                                              <%= note %></td>
                                             <td class="text-center"></td>
                                             <td class="text-center"></td>
-                                            <td class="text-center"></td>
-                                           
-                                            
                                           </tr>
                                         <% } %>
                                       </tbody>
@@ -98,17 +87,8 @@
                                               <td class="text-center"><%= stagiaire.CEF %></td>
                                               <td class="text-center"><%= stagiaire.firstName %></td>
                                               <td class="text-center"><%= stagiaire.lastName %></td>
-                                              <td class="text-center">
-                                                <% 
-                                                 const commule = stagiaire.totalHours / 5;
-                                                 const note = 10 - commule
-                                                 %>
-                                                <%= note %></td>
                                               <td class="text-center"></td>
                                               <td class="text-center"></td>
-                                              <td class="text-center"></td>
-                                             
-                                              
                                             </tr>
                                           <% } %>
                                           <% } %>
