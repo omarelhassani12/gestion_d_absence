@@ -9,7 +9,7 @@
         <!-- Panneau utilisateur de la barre latérale (facultatif) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="./dist/img/avatar5.png" class="img-circle elevation-2" alt="Image Utilisateur">
+                <img src="/images/avatar5.png" class="img-circle elevation-2" alt="Utilisateur">
             </div>
             <div class="info">
                 <a href="#" class="d-block">M.<%= user.name %></a>
@@ -138,13 +138,32 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="/group" class="nav-link <%= activeRoute === 'groups' ? 'active' : '' %>">
-                            <i class="nav-icon fas fa-users"></i>
+                    <li class="nav-item has-treeview <%= activeRoute.includes('groups') ? 'menu-open' : '' %>">
+                      <a href="#" class="nav-link <%= activeRoute.includes('groups') ? 'active' : '' %>">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                          Gestion des Groupes
+                          <i class="fas fa-angle-left right"></i>
+                        </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                          <a href="/group" class="nav-link <%= activeRoute === 'groups' ? 'active' : '' %>">
+                              <i class="nav-icon fas fa-users"></i>
+                              <p>
+                                  listes des Groupes
+                              </p>
+                          </a>
+                      </li>
+                        <li class="nav-item">
+                          <a href="/group/group-details" class="nav-link <%= activeRoute === 'groupsDetails' ? 'active' : '' %>">
+                            <i class="nav-icon fas fa-filter"></i>
                             <p>
-                                groupes
+                              groupes & details
                             </p>
-                        </a>
+                          </a>
+                        </li>
+                      </ul>
                     </li>
                 </ul>
             </nav>

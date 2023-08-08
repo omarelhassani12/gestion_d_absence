@@ -1,4 +1,5 @@
 const GroupModel = require('../models/groupModel');
+const StagiaireModel = require('../models/stagaireModel');
 const UserModel = require('../models/userModel');
 
 const GroupController = {
@@ -12,6 +13,35 @@ const GroupController = {
         console.error('Error retrieving groups:', error);
         next(error);
       });
+  },
+
+  getAllGroupsForGroupsDetails(req, res, next) {
+    Promise.all([GroupModel.findAll(), UserModel.findByRole(1)])
+      .then(([groups, users]) => {
+        const user = req.session.user || null;
+        res.render('groups-details.ejs', { groups, users, activeRoute: 'groupsDetails',user });
+      })
+      .catch(error => {
+        console.error('Error retrieving groups:', error);
+        next(error);
+      });
+  },
+
+  async getGroupDetails(req, res) {
+    try {
+      const groupId = req.params.id; 
+      const stagaires = await StagiaireModel.findAllByGroupId(groupId); 
+      const group = await GroupModel.findById(groupId); 
+
+      if (!stagaires) {
+        return res.status(404).send('stagaires not found');
+      }
+      const user = req.session.user || null;
+      res.render('groups-details-stg', { stagaires ,group, activeRoute: 'groupsDetails',user});
+    } catch (error) {
+      console.error('Error getting group details:', error);
+      res.status(500).send('Internal Server Error');
+    }
   },
 
   getGroupById(req, res, next) {

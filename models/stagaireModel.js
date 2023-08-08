@@ -13,6 +13,19 @@ const StagiaireModel = {
       });
     });
   },
+ 
+  findAllByGroupId(groupId) {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT * FROM stagiaires WHERE groupId = ?', [groupId], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  },
+  
 
   findById(id) {
     return new Promise((resolve, reject) => {

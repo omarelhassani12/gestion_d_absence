@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header') %>
+<head>
+    <style>
+                  .card-link {
+                text-decoration: none;
+                color: inherit;
+                }
+
+                .card-link:hover .card {
+                background-color: #f0f0f0; 
+                color: #333; 
+                }
+                .card-link:hover .card .card-body h5 {
+                color: #253deb; 
+                }
+
+    </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include('partials/navbar') %>
+        <%- include('partials/aside') %>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Groupes</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                                <li class="breadcrumb-item active">Groupes</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+           
+            <section class="content">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-header d-flex justify-content-center">
+                          <h3 class="card-title">Vos groupes avec leurs responsables et les stagiaires</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <% if (!groups || groups.length === 0) { %>
+                                    <div>
+                                        <h1 style="text-align:center">Aucun groupe trouvé.</h1>
+                                    </div>
+                                <% } else { %>
+                                    <% groups.forEach((group) => { %>
+                                        <div class="col-sm-3 ">
+                                            <a href="/group/groups-details-stg/<%= group.id %>" class="card-link">
+                                              <div class="card">
+                                                <div class="card-body">
+                                                  <h3 class="text-center"><%= group.name %></h3>
+                                                  <hr>
+                                                  <h5 class="text-center"><%= group.user_name %></h5>
+                                                </div>
+                                              </div>
+                                            </a>
+                                          </div>                                          
+                                <% }) %>
+                                <% } %>
+                            
+                            </div>
+                            </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              
+        </div>
+
+
+
+
+        <%- include('partials/script') %>
+    </div>
+    <!-- ./wrapper -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
