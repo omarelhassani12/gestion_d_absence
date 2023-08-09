@@ -22,6 +22,7 @@ const authRoutes = require('./routes/authRoutes');
 const AbsenceRoutes = require('./routes/absenceRoutes');
 const JustifiedAbsenceRoutes = require('./routes/justifiedAbsenceRoutes');
 const pdfRoutes = require('./routes/pdfRoutes');
+const ChartRoutes = require('./routes/chartRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -109,6 +110,7 @@ app.use('/group', GroupRoutes);
 app.use('/absence', AbsenceRoutes);
 app.use('/justified-absences', JustifiedAbsenceRoutes);
 app.use('/', pdfRoutes);
+app.use(ChartRoutes);
 
 
 

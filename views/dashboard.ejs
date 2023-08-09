@@ -157,6 +157,21 @@
           </div>
           <!-- /.col -->
         </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-center">
+                <h3 class="card-title">Top absences</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <canvas id="absenceChart"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- /.col -->
+        </div>
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
@@ -304,5 +319,40 @@
 
 
 <%- include('partials/script') %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+
+  
+  document.addEventListener('DOMContentLoaded', () => {
+  createAbsenceChart();
+});
+</script>
+
+
+<!-- <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById("absenceChart").getContext("2d");
+    const data = {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May"], // X-axis labels
+      datasets: [
+        {
+          label: "Number of Absences",
+          data: [5, 10, 8, 12, 15], // Y-axis data
+          backgroundColor: "rgba(75, 192, 192, 0.6)", // Bar color
+        },
+      ],
+    };
+    const config = {
+      type: "bar", // Chart type
+      data: data,
+    };
+    const myChart = new Chart(ctx, config);
+  });
+</script> -->
+
+
+
 </body>
 </html>

@@ -192,10 +192,7 @@ const ServiceModel = {
             console.error('Error in getCountOfStagiairesWithNonZeroAbsenceHours:', error);
             throw error;
         }
-    }
-    
-
-
+    },
 };
 
 module.exports = ServiceModel;
