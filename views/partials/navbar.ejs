@@ -10,7 +10,7 @@
     <ul class="navbar-nav ml-auto">
       <% if(user.role == 0){ %>
         <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
+      <!-- <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-comments"></i>
           <span class="badge badge-danger navbar-badge">3</span>
@@ -19,9 +19,7 @@
           <a href="#" class="dropdown-item">
           </a>
           <div class="dropdown-divider"></div>
-          <!-- Absence Request Message -->
           <a href="#" class="dropdown-item">
-            <!-- Message Start -->
             <div class="media">
               <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
               <div class="media-body">
@@ -33,12 +31,11 @@
                 <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
               </div>
             </div>
-            <!-- Message End -->
           </a>
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
         </div>
-      </li> 
+      </li>  -->
 
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
@@ -47,17 +44,17 @@
           <span class="badge badge-danger navbar-badge">8</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">8 Notifications</span>
+          <span class="dropdown-item dropdown-header">24 Notifications</span>
           <div class="dropdown-divider"></div>
-          <!-- Absence Notifications -->
+          <!-- Comptes non actifs -->
           <a href="#" class="dropdown-item">
-            <i class="fas fa-user-clock mr-2"></i> New absence request
-            <span class="float-right text-muted text-sm">12 hours</span>
+            <i class="fas fa-user-clock mr-2"></i>Comptes non actifs
+            <span class="float-right text-muted text-sm"><%= user.nonActiveCompetesCount %></span>
           </a>
-          <!-- Other Notifications -->
+          <!-- Stagiaires avec fonctions -->
           <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
+            <i class="fas fa-users mr-2"></i>Stagiaires avec fonctions
+            <span class="float-right text-muted text-sm"><%= user.countStagiairesWithNonZeroAbsence %></span>
           </a>
         </div>
       </li>

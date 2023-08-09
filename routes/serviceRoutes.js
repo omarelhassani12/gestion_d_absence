@@ -6,11 +6,6 @@ const DashboardController = require('../controllers/serviceController');
 
 const serviceRoutes = express.Router();
 //for the admin 
-// serviceRoutes.get('/', (req, res) => {
-//   const user = req.session.user || null;
-//     res.render('dashboard' , { user, activeRoute: 'dashboard' ,req});
-//   });
-
 serviceRoutes.get('/', DashboardController.getDataForDashboard);
 
 serviceRoutes.get('/sign-in', (req, res) => {

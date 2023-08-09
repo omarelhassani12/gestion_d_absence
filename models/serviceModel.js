@@ -1,6 +1,6 @@
 const db = require('../config/database');
 
-const OverviewAdminModel = {
+const ServiceModel = {
   getStagiairesCount() {
     return new Promise((resolve, reject) => {
       const query = 'SELECT COUNT(*) AS StagairesCount FROM stagiaires';
@@ -123,8 +123,59 @@ const OverviewAdminModel = {
         });
       },
       
+    //for the navbar
+    getNonActiveCompetesCount() {
+        return new Promise((resolve, reject) => {
+          const query = 'SELECT COUNT(*) AS NonActiveCompetesCount FROM users WHERE role = 1 AND isApproved = 0';
+          db.query(query, (error, results) => {
+            if (error) {
+              console.error('Error in getNonActiveCompetesCount:', error);
+              reject(error);
+            } else {
+              if (results && results[0] && results[0].NonActiveCompetesCount !== undefined) {
+                const count = results[0].NonActiveCompetesCount;
+                resolve(count);
+              } else {
+                console.log('No valid result returned from the database');
+                resolve(0);
+              }
+            }
+          });
+        });
+    },
+    
+    
+    async getCountOfStagiairesWithNonZeroAbsenceHours() {
+        try {
+            const query = 'SELECT COUNT(DISTINCT stagiaire_id) AS StagiairesCount FROM absence WHERE IFNULL(first_session_attendance, 0) + IFNULL(second_session_attendance, 0) > 0';
+    
+            const result = await new Promise((resolve, reject) => {
+                db.query(query, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+    
+            console.log('Query Result:', result);
+            console.log('StagiairesCount:', result[0].StagiairesCount);
+    
+            if (result && result[0] && result[0].StagiairesCount !== undefined) {
+                const count = result[0].StagiairesCount;
+                return count;
+            } else {
+                return 0;
+            }
+        } catch (error) {
+            console.error('Error in getCountOfStagiairesWithNonZeroAbsenceHours:', error);
+            throw error;
+        }
+    }
+    
 
 
 };
 
-module.exports = OverviewAdminModel;
+module.exports = ServiceModel;

@@ -1,6 +1,6 @@
 
 const AbsenceModel = require('../models/absenceModel');
-const OverviewAdminModel = require('../models/serviceModel');
+const ServiceModel = require('../models/serviceModel');
 const StagiaireModel = require('../models/stagaireModel');
 
 const DashboardController = {
@@ -12,15 +12,17 @@ const DashboardController = {
             console.log("the group id : " +user.groupId);
             GroupID = user.groupId;
             //for the formateur
-            const totalStagiairesWithSameGroupId = await OverviewAdminModel.getStagiairesCountByGroupId(GroupID);
-            const totalAbsencesWithSameGroupId = await OverviewAdminModel.getAbsencesCountByGroupId(GroupID)
+            const totalStagiairesWithSameGroupId = await ServiceModel.getStagiairesCountByGroupId(GroupID);
+            const totalAbsencesWithSameGroupId = await ServiceModel.getAbsencesCountByGroupId(GroupID)
 
             console.log("the group id : " +user.groupId)
 
-            const totalStagiaires = await OverviewAdminModel.getStagiairesCount();
-            const totalFormateurs = await OverviewAdminModel.getUsersCountWithRole();
-            const totalAbsences = await OverviewAdminModel.getAbsencesCount();
-            const totalJustifiedAbsences = await OverviewAdminModel.getJustifiedAbsencesCount();
+            const totalStagiaires = await ServiceModel.getStagiairesCount();
+            const totalFormateurs = await ServiceModel.getUsersCountWithRole();
+            const totalAbsences = await ServiceModel.getAbsencesCount();
+            const totalJustifiedAbsences = await ServiceModel.getJustifiedAbsencesCount();
+            const nonActiveCompetesCount = await ServiceModel.getNonActiveCompetesCount();
+
 
             // Fetch total hours of absence for all stagiaires
             const totalHoursMap = await AbsenceModel.getTotalHoursOfAbsence();
@@ -53,12 +55,15 @@ const DashboardController = {
                 //for formateur
                 totalStagiairesWithSameGroupId,
                 totalAbsencesWithSameGroupId,
+                //for the navbar
+                nonActiveCompetesCount,
             });
         } catch (error) {
             console.error('An error occurred while fetching overview data:', error);
             res.status(500).json({ error: 'An error occurred while fetching overview data' });
         }
     },
+
 };
 
 module.exports = DashboardController;

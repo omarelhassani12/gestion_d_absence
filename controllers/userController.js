@@ -1,4 +1,5 @@
 const GroupModel = require('../models/groupModel');
+const ServiceModel = require('../models/serviceModel');
 const UserModel = require('../models/userModel');
 
 const UserController = {
@@ -104,52 +105,6 @@ const UserController = {
   },
 
  
-  // async login(req, res) {
-  //   try {
-  //     const { email, password } = req.body;
-  //     if (!email || !password) {
-  //       throw new Error('Email or password is missing');
-  //     }
-  
-  //     console.log('Received login request:', email, password);
-  
-  //     const user = await UserModel.findByEmailAndPassword(email, password);
-  //     console.log('Found user:', user);
-  
-  //     if (user) {
-  //       if (user.isApproved) {
-  
-  //         const groupId = await GroupModel.findGroupIdByUserId(user.id);
-  //       console.log("groupid", groupId);
-  //         req.session.user = {
-  //           id: user.id,
-  //           name: user.nom_complete,
-  //           email: user.email,
-  //           role: user.role,
-  //           groupId: groupId,
-  //         };
-  //         res.cookie(
-  //           'userid', user.id,
-  //           'userName', user.nom_complete,
-  //           'userEmail', user.email,
-  //           'userRole', user.role,
-  //           'userGroupId', groupId,
-  //         );
-  //         res.status(200).json(user);
-  //       } else {
-  //         // If user is found but isApproved is false, deny login
-  //         res.status(401).json({ error: 'User not approved for login' });
-  //       }
-  //     } else {
-  //       // If user is not found, deny login
-  //       res.status(401).json({ error: 'Invalid username or password' });
-  //     }
-  //   } catch (error) {
-  //     console.error('An error occurred while logging in:', error);
-  //     res.status(500).json({ error: 'An error occurred while logging in' });
-  //   }
-  // },
-  
   
   async login(req, res) {
     try {
@@ -159,7 +114,11 @@ const UserController = {
       }
   
       console.log('Received login request:', email, password);
-  
+      const nonActiveCompetesCount = await ServiceModel.getNonActiveCompetesCount();
+      const countStagiairesWithNonZeroAbsence = await ServiceModel.getCountOfStagiairesWithNonZeroAbsenceHours();
+
+      console.log('Received abs stagiaires:', countStagiairesWithNonZeroAbsence);
+ 
       const user = await UserModel.findByEmailAndPassword(email, password);
       console.log('Found user:', user);
   
@@ -182,7 +141,8 @@ const UserController = {
             role: user.role,
             groupId: groupId,
             groupName: groupName,
-            // Add other group data as needed
+            nonActiveCompetesCount: nonActiveCompetesCount,
+            countStagiairesWithNonZeroAbsence: countStagiairesWithNonZeroAbsence,
           };
   
           res.cookie(
@@ -192,6 +152,8 @@ const UserController = {
             'userRole', user.role,
             'userGroupId', groupId,
             'userGroupName', groupName,
+            'nonActiveCompetesCount', nonActiveCompetesCount,
+            'countStagiairesWithNonZeroAbsence', countStagiairesWithNonZeroAbsence,
           );
           res.status(200).json(user);
         } else {
