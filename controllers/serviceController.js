@@ -13,9 +13,10 @@ const DashboardController = {
             GroupID = user.groupId;
             //for the formateur
             const totalStagiairesWithSameGroupId = await ServiceModel.getStagiairesCountByGroupId(GroupID);
-            const totalAbsencesWithSameGroupId = await ServiceModel.getAbsencesCountByGroupId(GroupID)
+            const totalAbsencesWithSameGroupId = await ServiceModel.getAbsencesCountByGroupId(GroupID);
+            const totalJustifedAbsencesWithSameGroupId = await ServiceModel.getJustifiedAbsencesCountByGroupId(GroupID);
 
-            console.log("the group id : " +user.groupId)
+            console.log("the group id : " +user.groupId);
 
             const totalStagiaires = await ServiceModel.getStagiairesCount();
             const totalFormateurs = await ServiceModel.getUsersCountWithRole();
@@ -55,6 +56,7 @@ const DashboardController = {
                 //for formateur
                 totalStagiairesWithSameGroupId,
                 totalAbsencesWithSameGroupId,
+                totalJustifedAbsencesWithSameGroupId,
                 //for the navbar
                 nonActiveCompetesCount,
             });

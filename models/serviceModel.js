@@ -121,7 +121,27 @@ const ServiceModel = {
             }
           });
         });
-      },
+    },
+
+    getJustifiedAbsencesCountByGroupId(groupId) {
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT COUNT(*) AS JustifiedAbsencesCount FROM justified_absence WHERE stagiaire_id IN (SELECT id FROM stagiaires WHERE groupId = ?)';
+            db.query(query, [groupId], (error, results) => {
+                if (error) {
+                    console.error('Error in getJustifiedAbsencesCountByGroupId:', error);
+                    reject(error);
+                } else {
+                    if (results && results[0] && results[0].JustifiedAbsencesCount !== undefined) {
+                        const count = results[0].JustifiedAbsencesCount;
+                        resolve(count);
+                    } else {
+                        console.log('No valid result returned from the database');
+                        resolve(0);
+                    }
+                }
+            });
+        });
+    },    
       
     //for the navbar
     getNonActiveCompetesCount() {
