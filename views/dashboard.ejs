@@ -161,7 +161,7 @@
           <div class="col-6">
             <div class="card">
               <div class="card-header d-flex justify-content-center">
-                <h3 class="card-title">Top absences</h3>
+                <h3 class="card-title">Absences par jour</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -322,12 +322,45 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-<script>
 
-  
+
+<script>
+  // Fetch chart data from the server
+  async function fetchChartData() {
+    try {
+      const response = await fetch('/chart-data');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+      throw error;
+    }
+  }
+
+  // Function to create the absence chart
+  async function createAbsenceChart() {
+    const chartData = await fetchChartData();
+    const ctx = document.getElementById('absenceChart').getContext('2d');
+    
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chartData.map(item => item.date),
+        datasets: [
+          {
+            label: 'Total Absences',
+            data: chartData.map(item => item.totalAbsences),
+            backgroundColor: 'rgba(10, 100, 100, 0.5)',
+          },
+        ],
+      },
+    });
+  }
+
+  // Wait for the DOM to be ready before creating the chart
   document.addEventListener('DOMContentLoaded', () => {
-  createAbsenceChart();
-});
+    createAbsenceChart();
+  });
 </script>
 
 

@@ -2,16 +2,19 @@ const db = require('../config/database');
 
 const ChartModel = {
     async fetchAbsenceChartData() {
-        try {
-          const query = 'SELECT date, COUNT(*) AS totalAbsences FROM absence GROUP BY date';
-          const result = await db.query(query);
-          return result;
-        } catch (error) {
-          console.error('Error fetching absence data:', error);
-          throw error;
-        }
-      },
-
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT DATE_FORMAT(date, "%d/%m/%Y") AS formattedDate, COUNT(*) AS totalAbsences FROM absence GROUP BY formattedDate';
+            db.query(query, (error, results) => {
+                if (error) {
+                    console.error('Error fetching absence data:', error);
+                    reject(error);
+                } else {
+                    console.log("result inside model", results);
+                    resolve(results.map(item => ({ date: item.formattedDate, totalAbsences: item.totalAbsences })));
+                }
+            });
+        });
+    },
 };
 
 module.exports = ChartModel;
