@@ -89,7 +89,35 @@
           </div>
           <!-- ./col -->
         </div>
-
+        <!-- /.row (main row) -->
+        <div class="row">
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-center">
+                <h3 class="card-title">Total d'absences par jour</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <canvas id="absenceChart"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-center">
+                <h3 class="card-title">Total d'Absences par Mois</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <canvas id="absenceMonthChart"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- /.col -->
+        </div>
         <!-- /.row (main row) -->
         <div class="row">
           <div class="col-12">
@@ -157,34 +185,8 @@
           </div>
           <!-- /.col -->
         </div>
-        <div class="row">
-          <div class="col-6">
-            <div class="card">
-              <div class="card-header d-flex justify-content-center">
-                <h3 class="card-title">Total d'absences par jour</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <canvas id="absenceChart"></canvas>
-              </div>
-              <!-- /.card-body -->
-            </div>
-          </div>
-          <!-- /.col -->
-          <div class="col-6">
-            <div class="card">
-              <div class="card-header d-flex justify-content-center">
-                <h3 class="card-title">Total d'Absences par Mois</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <canvas id="absenceMonthChart"></canvas>
-              </div>
-              <!-- /.card-body -->
-            </div>
-          </div>
-          <!-- /.col -->
-        </div>
+        <!-- /.row (main row) -->
+        
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
@@ -333,10 +335,6 @@
 
 <%- include('partials/script') %>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script src="/scripts/chart.js"></script>
-
-
-
 </body>
 </html>
