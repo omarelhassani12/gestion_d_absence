@@ -104,6 +104,53 @@ const UserController = {
   },
 
  
+  // async login(req, res) {
+  //   try {
+  //     const { email, password } = req.body;
+  //     if (!email || !password) {
+  //       throw new Error('Email or password is missing');
+  //     }
+  
+  //     console.log('Received login request:', email, password);
+  
+  //     const user = await UserModel.findByEmailAndPassword(email, password);
+  //     console.log('Found user:', user);
+  
+  //     if (user) {
+  //       if (user.isApproved) {
+  
+  //         const groupId = await GroupModel.findGroupIdByUserId(user.id);
+  //       console.log("groupid", groupId);
+  //         req.session.user = {
+  //           id: user.id,
+  //           name: user.nom_complete,
+  //           email: user.email,
+  //           role: user.role,
+  //           groupId: groupId,
+  //         };
+  //         res.cookie(
+  //           'userid', user.id,
+  //           'userName', user.nom_complete,
+  //           'userEmail', user.email,
+  //           'userRole', user.role,
+  //           'userGroupId', groupId,
+  //         );
+  //         res.status(200).json(user);
+  //       } else {
+  //         // If user is found but isApproved is false, deny login
+  //         res.status(401).json({ error: 'User not approved for login' });
+  //       }
+  //     } else {
+  //       // If user is not found, deny login
+  //       res.status(401).json({ error: 'Invalid username or password' });
+  //     }
+  //   } catch (error) {
+  //     console.error('An error occurred while logging in:', error);
+  //     res.status(500).json({ error: 'An error occurred while logging in' });
+  //   }
+  // },
+  
+  
   async login(req, res) {
     try {
       const { email, password } = req.body;
@@ -119,21 +166,32 @@ const UserController = {
       if (user) {
         if (user.isApproved) {
   
-          const groupId = await GroupModel.findGroupIdByUserId(user.id);
-        console.log("groupid", groupId);
+          let groupId = null;
+          let groupName = null;
+          const groupData = await GroupModel.findGroupByUserId(user.id);
+  
+          if (groupData) {
+            groupId = groupData.id;
+            groupName = groupData.name;
+          }
+            
           req.session.user = {
             id: user.id,
             name: user.nom_complete,
             email: user.email,
             role: user.role,
             groupId: groupId,
+            groupName: groupName,
+            // Add other group data as needed
           };
+  
           res.cookie(
             'userid', user.id,
             'userName', user.nom_complete,
             'userEmail', user.email,
             'userRole', user.role,
             'userGroupId', groupId,
+            'userGroupName', groupName,
           );
           res.status(200).json(user);
         } else {
@@ -149,7 +207,7 @@ const UserController = {
       res.status(500).json({ error: 'An error occurred while logging in' });
     }
   },
-    
+   
 
   async logout(req, res) {
       try {

@@ -37,64 +37,56 @@
         <div class="row">
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-info">
+            <div class="small-box bg-danger">
               <div class="inner">
-                <h3>150</h3>
-
-                <p>Stagiaires</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-user-graduate"></i>
-              </div>
-              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>44</h3>
-
+                <h3><%= totalAbsences %></h3>
                 <p>Absences</p>
               </div>
               <div class="icon">
                 <i class="fas fa-calendar-times"></i>
               </div>
-              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
+          
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>53</h3>
-                <p>Utilisateur</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-user-check"></i>
-              </div>
-              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>65</h3>
-                <p>Absences Planifiées</p>
+                <h3><%= totalJustifiedAbsences %></h3>
+                <p>Absences Justifiées</p>
               </div>
               <div class="icon">
                 <i class="fas fa-calendar-check"></i>
               </div>
-              <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div> 
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3><%= totalStagiaires %></h3>
+                <p>Stagiaires</p>                
+              </div>
+              <div class="icon">
+                <i class="fas fa-user-graduate"></i>
+              </div>
             </div>
           </div>
-          
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3><%= totalFormateurs %></h3>
+                <p>Formateurs</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-user-check"></i>
+              </div>
+            </div>
+          </div>
           <!-- ./col -->
         </div>
 
@@ -102,68 +94,61 @@
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Absences du jour</h3>
+              <div class="card-header d-flex justify-content-center">
+                <h3 class="card-title">Top absences</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th>Prénom</th>
-                      <th>Nom</th>
-                      <th>Nombre d'heures d'absence</th>
-                      <th>Motif</th>
-                      <th>Action</th>
+                      <th class="text-center">CEF</th>
+                      <th class="text-center">Prenom</th>
+                      <th class="text-center">Nom</th>
+                      <th class="text-center">Total Hours</th>
+                      <th class="text-center">Note/10</th>
+                      <th class="text-center">Fonction</th>
                     </tr>
                   </thead>
-                  <tbody>
-                
-                    <tr>
-                      <td>John</td>
-                      <td>Doe</td>
-                      <td>8</td>
-                      <td>Maladie</td>
-                      <td>
-                        <a href="#" class="btn btn-info btn-sm" title="Détails">
-                          <i class="fas fa-info-circle"></i>
-                        </a>
-                        <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
-                          <i class="fas fa-trash-alt"></i>
-                        </a>
-                      </td>
-                    </tr>
-                
-                    <tr>
-                      <td>Jane</td>
-                      <td>Smith</td>
-                      <td>5</td>
-                      <td>Personnel</td>
-                     <td>
-                      <a href="#" class="btn btn-info btn-sm" title="Détails">
-                        <i class="fas fa-info-circle"></i>
-                      </a>
-                      <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
-                        <i class="fas fa-trash-alt"></i>
-                      </a>
-                    </td>
-                    </tr>
-                
-                    <tr>
-                      <td>Mike</td>
-                      <td>Johnson</td>
-                      <td>16</td>
-                      <td>Autre</td>
-                      <td>
-                        <a href="#" class="btn btn-info btn-sm" title="Détails">
-                          <i class="fas fa-info-circle"></i>
-                        </a>
-                        <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
-                          <i class="fas fa-trash-alt"></i>
-                        </a>
-                      </td>
-                    </tr>
-                                
+                  <tbody id="tableBody">
+                    <% for (const stagiaire of stagiaires) { %>
+                      <tr>
+                        <td class="text-center"><%= stagiaire.CEF %></td>
+                        <td class="text-center"><%= stagiaire.firstName %></td>
+                        <td class="text-center"><%= stagiaire.lastName %></td>
+                        <td class="text-center"><%= stagiaire.totalHours %></td>
+                        <td class="text-center">
+                          <% 
+                           const commule = stagiaire.totalHours / 5;
+                          const note = 10 - commule
+                           %>
+                          <%= note %></td>
+                        <td class="text-center">
+                          <% if (stagiaire.totalHours > 0 && stagiaire.totalHours <= 7.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Premier%20mise%20en%20garde">1er M.G</a>
+                          <% } else if (stagiaire.totalHours > 7.5 && stagiaire.totalHours <= 12.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Deuxième%20mise%20en%20garde">2eme M.G</a>
+                          <% } else if (stagiaire.totalHours > 12.5 && stagiaire.totalHours <= 17.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Premier%20avertissement">1er Aver</a>
+                          <% } else if (stagiaire.totalHours > 17.5 && stagiaire.totalHours <= 22.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Deuxième%20avertissement">2eme Aver</a>
+                          <% } else if (stagiaire.totalHours > 22.5 && stagiaire.totalHours <= 27.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Blame">Blame</a>
+                          <% } else if (stagiaire.totalHours > 27.5 && stagiaire.totalHours <= 32.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Exclusion">Exclue 2 j</a>                                            
+                          <% } else if (stagiaire.totalHours > 32.5 && stagiaire.totalHours <= 37.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Exclusion">Exclusion</a>
+                          <% } else if (stagiaire.totalHours > 37.5 && stagiaire.totalHours <= 52.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Urgent">Urgent 1</a>
+                          <% } else if (stagiaire.totalHours > 52.5 ) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Urgent">Urgent 2</a>
+                          <% } else { %>
+                            Aucune fonction
+                          <% }; %>
+                        </td>
+                        
+                      </tr>
+                    <% } %>
                   </tbody>
                 </table>
               </div>
@@ -177,15 +162,14 @@
     <!-- /.content -->
   </div>
   <%}else if (user.role == 1) { %>
-
-    <div class="content-wrapper">
+  <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-12 d-flex justify-content-between">
-              <h1 class="m-0">Gestion des Absences</h1>
-              <h2>Formateur</h2>
+              <h1 class="m-0">Formateur</h1>
+              <h2 class="bg-danger p-2"><%= user.groupName %></h2>
             </div>
           </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -197,127 +181,128 @@
         <div class="container-fluid">
           <!-- Small boxes (Stat box) -->
           <div class="row">
-            <div class="col-lg-6 col-12">
+            <div class="col-lg-4 col-md-6 col-12">
               <!-- small box -->
               <div class="small-box bg-info">
                 <div class="inner">
-                  <h3>150</h3>
-  
-                  <p>Stagiaires</p>
+                  <h3><%= totalStagiairesWithSameGroupId %></h3>
+                  <p>Stagiaires</p>                  
                 </div>
                 <div class="icon">
                   <i class="fas fa-user-graduate"></i>
                 </div>
-                <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
-  
+            
             <!-- ./col -->
-            <div class="col-lg-6 col-12">
+            <div class="col-lg-4 col-md-6 col-12">
               <!-- small box -->
-              <div class="small-box bg-warning">
+              <div class="small-box bg-danger">
                 <div class="inner">
-                  <h3>44</h3>
-  
+                  <h3><%= totalAbsencesWithSameGroupId %></h3>
                   <p>Absences</p>
                 </div>
                 <div class="icon">
                   <i class="fas fa-calendar-times"></i>
                 </div>
-                <a href="#" class="small-box-footer">Plus d'infos <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
-          
-          
             
             <!-- ./col -->
-          </div>
-  
-          <!-- /.row (main row) -->
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Absences du jour</h3>
+            <div class="col-lg-4 col-md-6 col-12">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3><%= totalAbsencesWithSameGroupId %></h3>
+                  <p>Absences justifie</p>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>Prénom</th>
-                        <th>Nom</th>
-                        <th>Nombre d'heures d'absence</th>
-                        <th>Motif</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                  
-                      <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>8</td>
-                        <td>Maladie</td>
-                        <td>
-                          <a href="#" class="btn btn-info btn-sm" title="Détails">
-                            <i class="fas fa-info-circle"></i>
-                          </a>
-                          <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
-                            <i class="fas fa-trash-alt"></i>
-                          </a>
-                        </td>
-                      </tr>
-                  
-                      <tr>
-                        <td>Jane</td>
-                        <td>Smith</td>
-                        <td>5</td>
-                        <td>Personnel</td>
-                       <td>
-                        <a href="#" class="btn btn-info btn-sm" title="Détails">
-                          <i class="fas fa-info-circle"></i>
-                        </a>
-                        <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
-                          <i class="fas fa-trash-alt"></i>
-                        </a>
-                      </td>
-                      </tr>
-                  
-                      <tr>
-                        <td>Mike</td>
-                        <td>Johnson</td>
-                        <td>16</td>
-                        <td>Autre</td>
-                        <td>
-                          <a href="#" class="btn btn-info btn-sm" title="Détails">
-                            <i class="fas fa-info-circle"></i>
-                          </a>
-                          <a href="#" class="btn btn-danger btn-sm" title="Supprimer">
-                            <i class="fas fa-trash-alt"></i>
-                          </a>
-                        </td>
-                      </tr>
-                                  
-                    </tbody>
-                  </table>
+                <div class="icon">
+                  <i class="fas fa-calendar-check"></i>
                 </div>
-                <!-- /.card-body -->
               </div>
             </div>
-            <!-- /.col -->
+            <!-- ./col -->
           </div>
+          
+         <!-- /.row (main row) -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header d-flex justify-content-center">
+                <h3 class="card-title">Top absences</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th class="text-center">CEF</th>
+                      <th class="text-center">Prenom</th>
+                      <th class="text-center">Nom</th>
+                      <th class="text-center">Total Hours</th>
+                      <th class="text-center">Note/10</th>
+                      <th class="text-center">Fonction</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableBody">
+                    <% for (const stagiaire of stagiaires) { %>
+                    <% if(user.groupId == stagiaire.groupId) { %>
+                      <tr>
+                        <td class="text-center"><%= stagiaire.CEF %></td>
+                        <td class="text-center"><%= stagiaire.firstName %></td>
+                        <td class="text-center"><%= stagiaire.lastName %></td>
+                        <td class="text-center"><%= stagiaire.totalHours %></td>
+                        <td class="text-center">
+                          <% 
+                           const commule = stagiaire.totalHours / 5;
+                          const note = 10 - commule
+                           %>
+                          <%= note %></td>
+                        <td class="text-center">
+                          <% if (stagiaire.totalHours > 0 && stagiaire.totalHours <= 7.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Premier%20mise%20en%20garde">1er M.G</a>
+                          <% } else if (stagiaire.totalHours > 7.5 && stagiaire.totalHours <= 12.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Deuxième%20mise%20en%20garde">2eme M.G</a>
+                          <% } else if (stagiaire.totalHours > 12.5 && stagiaire.totalHours <= 17.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Premier%20avertissement">1er Aver</a>
+                          <% } else if (stagiaire.totalHours > 17.5 && stagiaire.totalHours <= 22.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Deuxième%20avertissement">2eme Aver</a>
+                          <% } else if (stagiaire.totalHours > 22.5 && stagiaire.totalHours <= 27.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Blame">Blame</a>
+                          <% } else if (stagiaire.totalHours > 27.5 && stagiaire.totalHours <= 32.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Exclusion">Exclue 2 j</a>                                            
+                          <% } else if (stagiaire.totalHours > 32.5 && stagiaire.totalHours <= 37.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Exclusion">Exclusion</a>
+                          <% } else if (stagiaire.totalHours > 37.5 && stagiaire.totalHours <= 52.5) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Urgent">Urgent 1</a>
+                          <% } else if (stagiaire.totalHours > 52.5 ) { %>
+                            <a href="/pdf/<%= stagiaire.id %>/Urgent">Urgent 2</a>
+                          <% } else { %>
+                            Aucune fonction
+                          <% }; %>
+                        </td>
+                      </tr>
+                    <% } %>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- /.col -->
+        </div>
         </div><!-- /.container-fluid -->
       </section>
       <!-- /.content -->
-    </div>
-    <%}%>
+  </div>
+  <%}%>
   <!-- /.content-wrapper -->
-
-
 
 </div>
 <!-- ./wrapper -->
+
+
 <%- include('partials/script') %>
 </body>
 </html>

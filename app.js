@@ -108,7 +108,7 @@ app.use('/stagaire', StagaireRoutes);
 app.use('/group', GroupRoutes);
 app.use('/absence', AbsenceRoutes);
 app.use('/justified-absences', JustifiedAbsenceRoutes);
-app.use("/", pdfRoutes);
+app.use('/', pdfRoutes);
 
 
 

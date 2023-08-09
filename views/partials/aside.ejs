@@ -1,9 +1,5 @@
 <aside class="main-sidebar sidebar-light-primary elevation-1">
-    <!-- Brand Logo -->
-    <!-- <a href="index.html" class="brand-link">
-      <img src="./images/TIBI.png" alt="TABIBI" style="width: 200px; height: 70px;">
-    </a> -->
-  
+ 
     <!-- Barre latérale -->
     <div class="sidebar">
         <!-- Panneau utilisateur de la barre latérale (facultatif) -->
@@ -12,10 +8,11 @@
                 <img src="/images/avatar5.png" class="img-circle elevation-2" alt="Utilisateur">
             </div>
             <div class="info">
-                <a href="#" class="d-block">M.<%= user.name %></a>
+                <a href="#" class="d-block"><%= user.name %></a>
+                <% if(user.role == 1){ %>
+                <a href="#" class="d-block">Votre G : <b><%= user.groupName %></b></a>
+                <% } %>
             </div>
-            
-  
         </div>
   
         <!-- Formulaire de recherche dans la barre latérale -->

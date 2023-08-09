@@ -53,10 +53,10 @@ const GroupModel = {
     });
   },
 
-  findGroupIdByUserId(userId) {
+  async findGroupByUserId(userId) {
     return new Promise((resolve, reject) => {
       const query = `
-        SELECT id
+        SELECT *
         FROM groups
         WHERE user_id = ?
       `;
@@ -67,10 +67,10 @@ const GroupModel = {
         }
   
         if (results.length > 0) {
-          const groupId = results[0].id;
-          resolve(groupId);
+          const groupData = results[0]; // Assuming there's only one group per user
+          resolve(groupData);
         } else {
-          resolve(null); // User not found or no group ID
+          resolve(null); // User not found or no group data
         }
       });
     });
