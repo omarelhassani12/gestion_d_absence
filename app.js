@@ -7,8 +7,6 @@ const crypto = require('crypto');
 const connection = require('./config/database');
 const MySQLStore = require('express-mysql-session')(session); // Require express-mysql-session package
 
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });

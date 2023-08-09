@@ -33,8 +33,6 @@ const GroupModel = {
     });
   },
   
-
-  
   findById(id) {
     return new Promise((resolve, reject) => {
       const sql = `

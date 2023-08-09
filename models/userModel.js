@@ -72,6 +72,7 @@ const UserModel = {
       });
     });
   },
+  
   async update(id, updatedData) {
     return new Promise((resolve, reject) => {
       if (!updatedData) {

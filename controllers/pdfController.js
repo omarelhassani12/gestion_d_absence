@@ -4,8 +4,6 @@ const fs = require("fs");
 const { findStagiaireFromDatabase } = require("../models/pdfModel");
 const path = require("path");
 
-
-
 function generatePDFFromData(stagiaire,warningMessage) {
   const doc = new PDFDocument();
 
@@ -148,8 +146,6 @@ async function generatePDF(stagiaireId,warningMessage) {
     throw new Error("Error generating PDF: " + err.message);
   }
 }
-
-
 
 module.exports = {
   generatePDF,

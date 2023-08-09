@@ -82,21 +82,6 @@ const AbsenceModel = {
     });
   },
 
-  // async getTotalHoursOfAbsenceByStagiaire(stagiaireId) {
-  //   return new Promise((resolve, reject) => {
-  //     db.query(
-  //       'SELECT SUM((first_session_attendance + second_session_attendance) * 2.5) AS totalHours FROM absence WHERE stagiaire_id = ?',
-  //       [stagiaireId],
-  //       (error, results) => {
-  //         if (error) {
-  //           reject(error);
-  //         } else {
-  //           resolve(results[0].totalHours || 0);
-  //         }
-  //       }
-  //     );
-  //   });
-  // },
 
   async getTotalHoursOfAbsence() {
     return new Promise((resolve, reject) => {
@@ -356,5 +341,5 @@ startScheduler() {
 };
 
 // AbsenceModel.main();
-// AbsenceModel.startScheduler();
+AbsenceModel.startScheduler();
 module.exports = AbsenceModel;

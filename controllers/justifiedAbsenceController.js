@@ -20,7 +20,6 @@ const JustifiedAbsenceController = {
     }
   },
    
-
   getJustifiedAbsenceById(req, res) {
     const id = req.params.id;
 

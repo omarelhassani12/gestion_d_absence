@@ -382,7 +382,6 @@ async updateAbsence(req, res, next) {
   }
 },
 
- 
 
 };
 
