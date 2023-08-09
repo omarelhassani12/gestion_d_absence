@@ -161,11 +161,24 @@
           <div class="col-6">
             <div class="card">
               <div class="card-header d-flex justify-content-center">
-                <h3 class="card-title">Absences par jour</h3>
+                <h3 class="card-title">Total d'absences par jour</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <canvas id="absenceChart"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-center">
+                <h3 class="card-title">Total d'Absences par Mois</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <canvas id="absenceMonthChart"></canvas>
               </div>
               <!-- /.card-body -->
             </div>
@@ -321,69 +334,7 @@
 <%- include('partials/script') %>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
-
-
-<script>
-  // Fetch chart data from the server
-  async function fetchChartData() {
-    try {
-      const response = await fetch('/chart-data');
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-      throw error;
-    }
-  }
-
-  // Function to create the absence chart
-  async function createAbsenceChart() {
-    const chartData = await fetchChartData();
-    const ctx = document.getElementById('absenceChart').getContext('2d');
-    
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: chartData.map(item => item.date),
-        datasets: [
-          {
-            label: 'Total Absences',
-            data: chartData.map(item => item.totalAbsences),
-            backgroundColor: 'rgba(10, 100, 100, 0.5)',
-          },
-        ],
-      },
-    });
-  }
-
-  // Wait for the DOM to be ready before creating the chart
-  document.addEventListener('DOMContentLoaded', () => {
-    createAbsenceChart();
-  });
-</script>
-
-
-<!-- <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const ctx = document.getElementById("absenceChart").getContext("2d");
-    const data = {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May"], // X-axis labels
-      datasets: [
-        {
-          label: "Number of Absences",
-          data: [5, 10, 8, 12, 15], // Y-axis data
-          backgroundColor: "rgba(75, 192, 192, 0.6)", // Bar color
-        },
-      ],
-    };
-    const config = {
-      type: "bar", // Chart type
-      data: data,
-    };
-    const myChart = new Chart(ctx, config);
-  });
-</script> -->
+<script src="/scripts/chart.js"></script>
 
 
 
