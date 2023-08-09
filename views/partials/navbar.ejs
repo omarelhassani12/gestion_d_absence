@@ -41,18 +41,18 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
-          <span class="badge badge-danger navbar-badge">8</span>
+          <span class="badge badge-danger navbar-badge"><%=  Allnotfi = user.nonActiveCompetesCount + user.countStagiairesWithNonZeroAbsence %></span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">24 Notifications</span>
+          <span class="dropdown-item dropdown-header"><%= Allnotfi %> Notifications</span>
           <div class="dropdown-divider"></div>
           <!-- Comptes non actifs -->
-          <a href="#" class="dropdown-item">
+          <a href="/user" class="dropdown-item">
             <i class="fas fa-user-clock mr-2"></i>Comptes non actifs
             <span class="float-right text-muted text-sm"><%= user.nonActiveCompetesCount %></span>
           </a>
           <!-- Stagiaires avec fonctions -->
-          <a href="#" class="dropdown-item">
+          <a href="/absence/absences/function" class="dropdown-item">
             <i class="fas fa-users mr-2"></i>Stagiaires avec fonctions
             <span class="float-right text-muted text-sm"><%= user.countStagiairesWithNonZeroAbsence %></span>
           </a>
