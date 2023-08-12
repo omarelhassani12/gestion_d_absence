@@ -69,7 +69,7 @@
                                             </tr>
                                             <% } else { %>
                                                 <% stagiaires.forEach((stagiaire) => { %>
-                                                    <tr>
+                                                    <tr >
                                                         <td class="text-center"><%= stagiaire.CEF %></td>
                                                         <td class="text-center"><%= stagiaire.lastName %></td>
                                                         <td class="text-center"><%= stagiaire.firstName %></td>
@@ -87,7 +87,13 @@
                                                                 Non archivé encore
                                                             <% } %>
                                                         </td>
-                                                        <td class="text-center"><%= stagiaire.motif %></td>
+                                                        <td class="text-center">
+                                                            <% if (stagiaire.motif) { %>
+                                                                <%= stagiaire.motif %>
+                                                            <% } else { %>
+                                                                Non archivé encore
+                                                            <% } %>
+                                                        </td>
                                                         <td class="text-center">
                                                             <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= stagiaire.id %>')">
                                                                 <i class="fas fa-edit"></i>
