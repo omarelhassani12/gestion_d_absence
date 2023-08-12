@@ -21,6 +21,7 @@ const AbsenceRoutes = require('./routes/absenceRoutes');
 const JustifiedAbsenceRoutes = require('./routes/justifiedAbsenceRoutes');
 const pdfRoutes = require('./routes/pdfRoutes');
 const ChartRoutes = require('./routes/chartRoutes');
+const ArchivedStagiairesRoutes = require('./routes/archivedStagiaireRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -104,6 +105,7 @@ app.use('/auth', authRoutes);
 app.use('/', serviceRoutes);
 app.use('/user', UserRoutes);
 app.use('/stagaire', StagaireRoutes);
+app.use('/archived_stagiaires', ArchivedStagiairesRoutes);
 app.use('/group', GroupRoutes);
 app.use('/absence', AbsenceRoutes);
 app.use('/justified-absences', JustifiedAbsenceRoutes);

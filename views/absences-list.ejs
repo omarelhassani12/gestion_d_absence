@@ -94,6 +94,7 @@
                                           </thead>
                                           <tbody id="tableBody">
                                             <% for (const absence of absences) { %>
+                                            <% if (user.groupId == absence.stagiaire.groupId) { %>
                                               <tr>
                                                 <td class="text-center"><%= absence.stagiaire.CEF %></td>
                                                 <td class="text-center"><%= absence.stagiaire.firstName %></td>
@@ -102,6 +103,7 @@
                                                 <td class="text-center"><%= absence.date.toLocaleDateString('en-GB') %></td>
                                                 <td class="text-center"><%= absence.totalHours %></td>
                                               </tr>
+                                            <% } %>
                                             <% } %>
                                           </tbody>
                                     </table>

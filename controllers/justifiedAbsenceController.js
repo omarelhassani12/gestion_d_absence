@@ -2,9 +2,8 @@ const JustifiedAbsenceModel = require('../models/justifiedAbsenceModel');
 const StagiaireModel = require('../models/stagaireModel');
 
 const JustifiedAbsenceController = {
-  async getAllJustifiedAbsences(req, res, next) {
+  async getAllJustifiedAbsences(req, res) {
     try {
-      // Fetch all justified absences with associated Stagiaire information
       const justifiedAbsences = await JustifiedAbsenceModel.findAll();
   
       const user = req.session.user || null;

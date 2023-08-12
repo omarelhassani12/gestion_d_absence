@@ -55,7 +55,9 @@
                                                 <th class="text-center">CEF</th>
                                                 <th class="text-center">Nom</th>
                                                 <th class="text-center">Prénom</th>
-                                                <th class="text-center">N de Groupe</th>
+                                                <th class="text-center">N° de Groupe</th>
+                                                <th class="text-center">Date de Récupération</th>
+                                                <th class="text-center">Motif</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -63,30 +65,40 @@
                                         <tbody>
                                             <% if (!stagiaires || stagiaires.length === 0) { %>
                                             <tr>
-                                                <td colspan="5" style="text-align:center">No stagiaire records found.</td>
+                                                <td colspan="7" style="text-align:center">No stagiaire records found.</td>
                                             </tr>
                                             <% } else { %>
-                                            <% stagiaires.forEach((stagiaire) => { %>
-                                                <tr>
-                                                    <td class="text-center"><%= stagiaire.CEF %></td>
-                                                    <td class="text-center"><%= stagiaire.lastName %></td>
-                                                    <td class="text-center"><%= stagiaire.firstName %></td>
-                                                    <td class="text-center"><%= stagiaire.groupId != null && stagiaire.groupId != 0 ? 'group ' + stagiaire.groupId : 'No group' %></td>
-                                                    <td class="text-center">
-                                                      
-                                                        <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= stagiaire.id %>')">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        <form id="delete-form-<%= stagiaire.id %>" action="/stagiaires/<%= stagiaire.id %>" method="POST" style="display: inline;">
-                                                            <input type="hidden" name="_method" value="DELETE">
-                                                            <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= stagiaire.id %>')" id="delete-button-<%= stagiaire.id %>">
-                                                                <i class="fas fa-trash-alt"></i>
+                                                <% stagiaires.forEach((stagiaire) => { %>
+                                                    <tr>
+                                                        <td class="text-center"><%= stagiaire.CEF %></td>
+                                                        <td class="text-center"><%= stagiaire.lastName %></td>
+                                                        <td class="text-center"><%= stagiaire.firstName %></td>
+                                                        <td class="text-center">
+                                                            <% groups.forEach((group) => { %>
+                                                                <% if (stagiaire.groupId === group.id) { %>
+                                                                    <%= group.name %>
+                                                                <% } %>
+                                                            <% }) %>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <% if (stagiaire.retrieved_at) { %>
+                                                                <%= stagiaire.retrieved_at.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                                                            <% } else { %>
+                                                                Non archivé encore
+                                                            <% } %>
+                                                        </td>
+                                                        <td class="text-center"><%= stagiaire.motif %></td>
+                                                        <td class="text-center">
+                                                            <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= stagiaire.id %>')">
+                                                                <i class="fas fa-edit"></i>
                                                             </button>
-                                                        </form>
-
-                                                    </td>
-                                                </tr>
-                                            <% }) %>
+                                                            <button class="btn btn-danger archive-btn" data-toggle="modal" data-target="#archiveModal" data-stagiaire-id="<%= stagiaire.id %>">
+                                                                <i class="fas fa-archive"></i> 
+                                                            </button>                                                                                                                    
+                                                        </td>
+                                                    </tr>
+                                                <% }) %>
+                                                
                                             <% } %>
                                         </tbody>
                                         
@@ -153,26 +165,91 @@
     </div>
     
 
-    <!-- Modal delete -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- archive Modal-->
+    <div class="modal fade" id="archiveModal" tabindex="-1" role="dialog" aria-labelledby="modal-report" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Supprimer Stagiaire</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title" id="modal-title">Archiver Stagiaire</h5>
+                    <button type="button" class="btn btn-danger btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
                 </div>
-                <div class="modal-body">
-                    Voulez-vous vraiment supprimer ce stagiaire ?
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-danger">Supprimer</button>
-                </div>
+                <form id="archive-form" action="/archive_stagiaire" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="stagiaire_id" value="">
+                        <div class="mb-3">
+                            <label class="form-label">Date d'Archivage</label>
+                            <input type="date" class="form-control" name="Date_archivage" placeholder="Date d'Archivage" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Motif d'Archivage</label>
+                            <textarea class="form-control" name="motif" placeholder="Motif d'Archivage" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary" id="archive-button">Archiver Stagiaire</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+
+<script>
+    // When the modal is shown
+    $('#archiveModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var stagiaireId = button.data('stagiaire-id'); // Extract info from data-* attributes
+
+        var modal = $(this);
+        var form = modal.find('#archive-form');
+
+        // Set the stagiaire id in the form
+        form.find("input[name='stagiaire_id']").val(stagiaireId);
+    });
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#archive-form').on('submit', function (event) {
+            event.preventDefault();
+
+            var form = $(this);
+            var selectedStagiaireId = form.find("input[name='stagiaire_id']").val();
+            var selectedDate = form.find("input[name='Date_archivage']").val();
+            var selectedMotif = form.find("textarea[name='motif']").val();
+
+            // Create a data object to send with the request
+            var data = {
+                stagiaireId: selectedStagiaireId,
+                archived_at: selectedDate,
+                motif: selectedMotif
+            };
+
+            // Use AJAX to send the data to the server
+            $.ajax({
+                type: 'POST',
+                url: '/archived_stagiaires/' + selectedStagiaireId,
+                data: data,
+                success: function (response) {
+                    // Handle success response if needed
+                    console.log('Stagiaire archived successfully');
+                    // Close the modal
+                    $('#archiveModal').modal('hide');
+                    
+                    location.reload();
+                },
+                error: function (error) {
+                    // Handle error response if needed
+                    console.error('Error archiving stagiaire:', error);
+                }
+            });
+        });
+    });
+</script>
+
 
 
 

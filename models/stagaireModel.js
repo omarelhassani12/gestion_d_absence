@@ -45,7 +45,7 @@ const StagiaireModel = {
         reject(new Error('Stagiaire object is null or undefined'));
         return;
       }
-
+  
       db.query('INSERT INTO stagiaires SET ?', [stagiaire], (error, results) => {
         if (error) {
           reject(error);

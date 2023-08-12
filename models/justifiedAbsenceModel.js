@@ -4,7 +4,7 @@ const db = require('../config/database');
 const JustifiedAbsence = {
   findAll() {
     return new Promise((resolve, reject) => {
-      const query = 'SELECT justified_absence.*, stagiaires.CEF, stagiaires.firstName, stagiaires.lastName FROM justified_absence LEFT JOIN stagiaires ON justified_absence.stagiaire_id = stagiaires.id';
+      const query = 'SELECT justified_absence.*, stagiaires.CEF, stagiaires.firstName, stagiaires.lastName, stagiaires.groupId FROM justified_absence LEFT JOIN stagiaires ON justified_absence.stagiaire_id = stagiaires.id';
       db.query(query, (error, results) => {
         if (error) {
           reject(error);

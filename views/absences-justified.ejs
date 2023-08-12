@@ -78,6 +78,7 @@
                                       <% for (const justifiedAbsence of justifiedAbsences) { %>
                                         <% const endDate = new Date(justifiedAbsence.end_date); %>
                                         <% const today = new Date(); %>
+                                        <% if (user.groupId == justifiedAbsence.groupId) { %>
                                         <tr class="<%= endDate <= today ? 'table-danger' : 'table-success' %>">
                                           <td class="text-center"><%= justifiedAbsence.CEF %></td>
                                           <td class="text-center"><%= justifiedAbsence.firstName %></td>
@@ -90,6 +91,7 @@
                                             </a>
                                           </td>                                          
                                         </tr>
+                                      <% } %>
                                       <% } %>
                                     </tbody>
                                   </table>
