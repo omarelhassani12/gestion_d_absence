@@ -10,6 +10,11 @@
         .green-eye {
         color: green;
       }
+
+      .no-decoration {
+    text-decoration: none;
+    color: red !important;
+  }
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -55,7 +60,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            
                                 <div class="card-body">
                                   <table id="example1" class="table table-bordered table-striped">
                                     <thead>
@@ -81,30 +85,30 @@
                                             const note = 10 - commule
                                              %>
                                             <%= note %></td>
-                                          <td class="text-center">
-                                            <% if (stagiaire.totalHours > 0 && stagiaire.totalHours <= 7.5) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Premier%20mise%20en%20garde">1er M.G</a>
-                                            <% } else if (stagiaire.totalHours > 7.5 && stagiaire.totalHours <= 12.5) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Deuxième%20mise%20en%20garde">2eme M.G</a>
-                                            <% } else if (stagiaire.totalHours > 12.5 && stagiaire.totalHours <= 17.5) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Premier%20avertissement">1er Aver</a>
-                                            <% } else if (stagiaire.totalHours > 17.5 && stagiaire.totalHours <= 22.5) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Deuxième%20avertissement">2eme Aver</a>
-                                            <% } else if (stagiaire.totalHours > 22.5 && stagiaire.totalHours <= 27.5) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Blame">Blame</a>
-                                            <% } else if (stagiaire.totalHours > 27.5 && stagiaire.totalHours <= 32.5) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Exclusion">Exclue 2 j</a>                                            
-                                            <% } else if (stagiaire.totalHours > 32.5 && stagiaire.totalHours <= 37.5) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Exclusion">Exclusion</a>
-                                            <% } else if (stagiaire.totalHours > 37.5 && stagiaire.totalHours <= 52.5) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Urgent">Urgent 1</a>
-                                            <% } else if (stagiaire.totalHours > 52.5 ) { %>
-                                              <a href="/pdf/<%= stagiaire.id %>/Urgent">Urgent 2</a>
-                                            <% } else { %>
-                                              Aucune fonction
-                                            <% }; %>
-                                          </td>
-                                          
+                                            <td class="text-center">
+                                              <% if (stagiaire.totalHours > 0 && stagiaire.totalHours <= 7.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Premier%20mise%20en%20garde" class="no-decoration">1er M.G</a>
+                                              <% } else if (stagiaire.totalHours > 7.5 && stagiaire.totalHours <= 12.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Deuxième%20mise%20en%20garde" class="no-decoration">2eme M.G</a>
+                                              <% } else if (stagiaire.totalHours > 12.5 && stagiaire.totalHours <= 17.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Premier%20avertissement" class="no-decoration">1er Aver</a>
+                                              <% } else if (stagiaire.totalHours > 17.5 && stagiaire.totalHours <= 22.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Deuxième%20avertissement" class="no-decoration">2eme Aver</a>
+                                              <% } else if (stagiaire.totalHours > 22.5 && stagiaire.totalHours <= 27.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Blame" class="no-decoration">Blame</a>
+                                              <% } else if (stagiaire.totalHours > 27.5 && stagiaire.totalHours <= 32.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Exclusion" class="no-decoration">Exclue 2 j</a>
+                                              <% } else if (stagiaire.totalHours > 32.5 && stagiaire.totalHours <= 37.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Exclusion" class="no-decoration">Exclusion</a>
+                                              <% } else if (stagiaire.totalHours > 37.5 && stagiaire.totalHours <= 52.5) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Urgent" class="no-decoration">Urgent 1</a>
+                                              <% } else if (stagiaire.totalHours > 52.5 ) { %>
+                                                <a href="/pdf/<%= stagiaire.id %>/Urgent" class="no-decoration">Urgent 2</a>
+                                              <% } else { %>
+                                                Aucune fonction
+                                              <% }; %>
+                                            </td>
+                                            
                                         </tr>
                                       <% } %>
                                     </tbody>

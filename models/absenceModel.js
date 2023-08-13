@@ -341,5 +341,5 @@ startScheduler() {
 };
 
 // AbsenceModel.main();
-// AbsenceModel.startScheduler();
+AbsenceModel.startScheduler();
 module.exports = AbsenceModel;
