@@ -74,13 +74,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByPeriod('AM')">Filter AM</button>
-                                <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByPeriod('PM')">Filter PM</button>
-                                   -->
                                 <div class="card-body">
-                                  <% if (noDataFound) { %>
-                                    <p>No absences found for the selected date and period.</p>
-                                  <% } else { %>
+                                  
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
@@ -93,22 +88,24 @@
                                             </tr>
                                           </thead>
                                           <tbody id="tableBody">
-                                            <% for (const absence of absences) { %>
-                                            <% if (user.groupId == absence.stagiaire.groupId) { %>
+                                            <% if (absences.length === 0) { %>
                                               <tr>
-                                                <td class="text-center"><%= absence.stagiaire.CEF %></td>
-                                                <td class="text-center"><%= absence.stagiaire.firstName %></td>
-                                                <td class="text-center"><%= absence.stagiaire.lastName %></td>
-                                                <td class="text-center"><%= absence.period %></td>
-                                                <td class="text-center"><%= absence.date.toLocaleDateString('en-GB') %></td>
-                                                <td class="text-center"><%= absence.totalHours %></td>
+                                                <td colspan="6" class="text-center">No absences available for the selected date and period.</td>
                                               </tr>
-                                            <% } %>
+                                            <% } else { %>
+                                              <% for (const absence of absences) { %>
+                                                <tr>
+                                                  <td class="text-center"><%= absence.stagiaire.CEF %></td>
+                                                  <td class="text-center"><%= absence.stagiaire.firstName %></td>
+                                                  <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                                  <td class="text-center"><%= absence.period %></td>
+                                                  <td class="text-center"><%= new Date(absence.date).toLocaleDateString('en-GB') %></td>
+                                                  <td class="text-center"><%= absence.totalHours %></td>
+                                                </tr>
+                                              <% } %>
                                             <% } %>
                                           </tbody>
                                     </table>
-                                    <% } %>
-
                                 </div>
                             </div>
                         </div>
@@ -121,11 +118,6 @@
     </div>
     
     <%- include('partials/script') %>
-    
-    <!-- <script src="/scripts/script.js"></script> -->
-
-
-
 <script>
   function submitForm() {
     const dateSelect = document.getElementById('dateSelect');

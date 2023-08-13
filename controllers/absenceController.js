@@ -72,7 +72,10 @@ const AbsenceController = {
   async getAllAbsencesWithHoures(req, res, next) {
     try {
         const { dateSelect, periodSelect } = req.query;
-  
+
+        // Debugging: Log the received query parameters
+        console.log('Received dateSelect:', dateSelect);
+        console.log('Received periodSelect:', periodSelect);
        
     // If dateSelect and periodSelect are not provided, get the current date and AM period by default
     const currentDate = dateSelect || new Date().toISOString().split('T')[0];
@@ -80,6 +83,7 @@ const AbsenceController = {
 
     // Fetch the absences for the selected date and period using AbsenceModel's findAllByDateAndPeriod function
     const absences = await AbsenceModel.findAllByDateAndPeriod(currentDate, currentPeriod);
+    console.log('Fetched absences:', absences);
 
     // Fetch the unique dates from the database using AbsenceModel's findAllUniqueDates function
     const uniqueDates = await AbsenceModel.findAllUniqueDates();
@@ -109,7 +113,6 @@ const AbsenceController = {
             selectedDate: currentDate,
             selectedPeriod: currentPeriod,
             uniqueDates,
-            noDataFound: absences.length === 0,
         });
     } catch (error) {
         console.error('Error retrieving absences:', error);

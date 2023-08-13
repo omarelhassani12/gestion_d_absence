@@ -68,32 +68,29 @@
                                       </tr>
                                     </thead>
                                     <tbody id="tableBody">
-                                      <% function formatDate(dateString) {
-                                        const date = new Date(dateString);
-                                        const day = date.getDate().toString().padStart(2, '0');
-                                        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                                        const year = date.getFullYear();
-                                        return `${day}/${month}/${year}`;
-                                      } %>
-                                      <% for (const justifiedAbsence of justifiedAbsences) { %>
-                                        <% const endDate = new Date(justifiedAbsence.end_date); %>
-                                        <% const today = new Date(); %>
-                                        <% if (user.groupId == justifiedAbsence.groupId) { %>
-                                        <tr class="<%= endDate <= today ? 'table-danger' : 'table-success' %>">
-                                          <td class="text-center"><%= justifiedAbsence.CEF %></td>
-                                          <td class="text-center"><%= justifiedAbsence.firstName %></td>
-                                          <td class="text-center"><%= justifiedAbsence.lastName %></td>
-                                          <td class="text-center"><%= formatDate(justifiedAbsence.start_date) %></td>
-                                          <td class="text-center"><%= formatDate(justifiedAbsence.end_date) %></td>
-                                          <td class="text-center">
-                                            <a href="#" onclick="deleteAbsence('<%= justifiedAbsence.id %>')">
-                                              <i class="fas fa-trash-alt" style="color: red;"></i>
-                                            </a>
-                                          </td>                                          
-                                        </tr>
+                                      <% if (justifiedAbsences.length === 0) { %>
+                                          <tr>
+                                              <td colspan="6" class="text-center">No justified absences available.</td>
+                                          </tr>
+                                      <% } else { %>
+                                          <% for (const justifiedAbsence of justifiedAbsences) { %>
+                                              <% const endDate = new Date(justifiedAbsence.end_date); %>
+                                              <% const today = new Date(); %>
+                                              <tr class="<%= endDate <= today ? 'table-danger' : 'table-success' %>">
+                                                  <td class="text-center"><%= justifiedAbsence.CEF %></td>
+                                                  <td class="text-center"><%= justifiedAbsence.firstName %></td>
+                                                  <td class="text-center"><%= justifiedAbsence.lastName %></td>
+                                                  <td class="text-center"><%= justifiedAbsence.start_date.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
+                                                  <td class="text-center"><%= justifiedAbsence.end_date.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
+                                                  <td class="text-center">
+                                                      <a href="#" onclick="deleteAbsence('<%= justifiedAbsence.id %>')">
+                                                          <i class="fas fa-trash-alt" style="color: red;"></i>
+                                                      </a>
+                                                  </td>
+                                              </tr>
+                                          <% } %>
                                       <% } %>
-                                      <% } %>
-                                    </tbody>
+                                  </tbody>
                                   </table>
                                 </div>
                             </div>

@@ -1,3 +1,4 @@
+const { parseJSON } = require('date-fns');
 const JustifiedAbsenceModel = require('../models/justifiedAbsenceModel');
 const StagiaireModel = require('../models/stagaireModel');
 
@@ -7,7 +8,7 @@ const JustifiedAbsenceController = {
       const justifiedAbsences = await JustifiedAbsenceModel.findAll();
   
       const user = req.session.user || null;
-  
+      console.log(JSON.stringify(justifiedAbsences));
       res.render('absences-justified', {
         justifiedAbsences,
         user,
@@ -17,7 +18,7 @@ const JustifiedAbsenceController = {
       console.error('Error retrieving justified absences:', error);
       res.status(500).json({ error: 'Failed to fetch justified absences' });
     }
-  },
+  },  
    
   getJustifiedAbsenceById(req, res) {
     const id = req.params.id;

@@ -131,7 +131,7 @@ const AbsenceModel = {
   async findAllUniqueDates() {
     return new Promise((resolve, reject) => {
       db.query(
-        'SELECT DISTINCT date FROM absence', // Assuming the date column in the absence table is called "date"
+        'SELECT DISTINCT date FROM absence',
         (error, results) => {
           if (error) {
             reject(error);
@@ -341,5 +341,5 @@ startScheduler() {
 };
 
 // AbsenceModel.main();
-AbsenceModel.startScheduler();
+// AbsenceModel.startScheduler();
 module.exports = AbsenceModel;
