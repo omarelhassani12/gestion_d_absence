@@ -49,9 +49,9 @@
                                     <div class="row">
                                         <div class="col-sm-12 text-right">
                                           <div class="col-auto ms-auto d-print-none">
-                                           
-                                            
-                                            
+                                            <div class="d-flex justify-content-start">
+                                              <h6 class="text-danger text-bold">Hier (<%= new Date(yesterday).toLocaleDateString('fr-FR', { weekday: 'long' }) %>) : <%= new Date(yesterday).toLocaleDateString('fr-FR') %></h6>
+                                            </div>
                                           </div>
                                         </div>
                                     </div>
@@ -80,11 +80,12 @@
                                                 <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                 <td class="text-center"><%= absence.stagiaire.lastName %></td>
                                                 <td class="text-center"><%= absence.period %></td>
-                                                <td class="text-center"><%= new Date(absence.date).toLocaleDateString('en-GB') %></td><td class="text-center <%= absence.first_session_attendance === 1 ? 'bg-danger' : 'bg-success' %>">
-                                                    <!-- <%= absence.first_session_attendance === 1 ? 'Absent' : '' %> -->
-                                                  </td>
-                                                  <td class="text-center <%= absence.second_session_attendance === 1 ? 'bg-danger' : 'bg-success' %>">
-                                                    <!-- <%= absence.second_session_attendance === 1 ? 'Absent' : '' %> -->
+                                                <td class="text-center"><%= new Date(absence.date).toLocaleDateString('en-GB') %></td>
+                                                <td class="text-center <%= absence.first_session_attendance === 1 ?  'table-danger' : 'table-success'%>">
+                                                  <%= absence.first_session_attendance === 1 ? 'Absent' : 'Présent' %>
+                                                </td>
+                                                  <td class="text-center <%= absence.second_session_attendance === 1 ?  'table-danger' : 'table-success'%>">
+                                                    <%= absence.second_session_attendance === 1 ? 'Absent' : 'Présent' %>
                                                   </td>
                                               </tr>
                                             <% } %>

@@ -145,6 +145,7 @@ const AbsenceController = {
         user,
         groups,
         stagiaires,
+        yesterday,
       });
     } catch (error) {
       console.error('Error retrieving absence:', error);
