@@ -1,0 +1,124 @@
+<!-- absence.ejs -->
+<!DOCTYPE html>
+<html lang="fr">
+<%- include('partials/header') %>
+<head>
+    <style>
+        .red-eye {
+        color: red;
+      }
+        .green-eye {
+        color: green;
+      }
+        .bg-danger {
+        background: red;
+      }
+        .bg-succes {
+            background: green;
+      }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include('partials/navbar') %>
+        <%- include('partials/aside') %>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h6>Liste des Absences des Stagiaires</h6>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                                <li class="breadcrumb-item active">Absences</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-sm-12 text-right">
+                                          <div class="col-auto ms-auto d-print-none">
+                                           
+                                            
+                                            
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                  
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                              <th class="text-center">CEF</th>
+                                              <th class="text-center">Prenom</th>
+                                              <th class="text-center">Nom</th>
+                                              <th class="text-center">period</th>
+                                              <th class="text-center">date</th>
+                                              <th class="text-center">1er seance</th>
+                                              <th class="text-center">2eme seance</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody id="tableBody">
+                                          
+                                            <% for (const absence of absences) { %>
+                                            <% if(user.groupId == absence.stagiaire.groupId){ %>
+                                              
+                                              <tr>
+                                                <td class="text-center"><%= absence.stagiaire.CEF %></td>
+                                                <td class="text-center"><%= absence.stagiaire.firstName %></td>
+                                                <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                                <td class="text-center"><%= absence.period %></td>
+                                                <td class="text-center"><%= new Date(absence.date).toLocaleDateString('en-GB') %></td><td class="text-center <%= absence.first_session_attendance === 1 ? 'bg-danger' : 'bg-success' %>">
+                                                    <!-- <%= absence.first_session_attendance === 1 ? 'Absent' : '' %> -->
+                                                  </td>
+                                                  <td class="text-center <%= absence.second_session_attendance === 1 ? 'bg-danger' : 'bg-success' %>">
+                                                    <!-- <%= absence.second_session_attendance === 1 ? 'Absent' : '' %> -->
+                                                  </td>
+                                              </tr>
+                                            <% } %>
+                                            <% } %>
+                                          </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+        
+    </div>
+    
+    <%- include('partials/script') %>
+<script>
+  function submitForm() {
+    const dateSelect = document.getElementById('dateSelect');
+    const periodSelect = document.getElementById('periodSelect');
+    const selectedDate = dateSelect.value; // Make sure this line is correct
+    const selectedPeriod = periodSelect.value;
+
+    // Update the form action URL with the selected date and period
+    document.getElementById('absenceForm').action = `/absence/absences?dateSelect=${selectedDate}&periodSelect=${selectedPeriod}`;
+
+    // Submit the form
+    document.getElementById('absenceForm').submit();
+  }
+</script>
+
+</body>
+        
+</html>
+

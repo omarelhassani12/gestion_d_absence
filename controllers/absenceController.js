@@ -19,7 +19,7 @@ const AbsenceController = {
       }
   
       const user = req.session.user || null;
-      const stagiaires = await StagiaireModel.findAll(); // Fetch all stagiaires separately
+      const stagiaires = await StagiaireModel.findAll(); 
   
       // Get the selected date and period from the request query parameters
       const selectedDate = req.query.date;
@@ -118,8 +118,39 @@ const AbsenceController = {
         console.error('Error retrieving absences:', error);
         next(error);
     }
-},
+  },
 
+  async getYesterdayAbsenceForStagiaire(req, res, next) {
+    try {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1); // Subtract 1 day to get yesterday's date
+    
+      const absences = await AbsenceModel.findAllOfYesterday(yesterday);
+      const groups = await GroupModel.findAll();
+    
+      // Fetch the stagiaire information for each absence and calculate sum of absences
+    
+      for (const absence of absences) {
+        const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
+        absence.stagiaire = stagiaire;
+      }
+    
+      const user = req.session.user || null;
+      const stagiaires = await StagiaireModel.findAll();
+    
+      // Pass the absence, stagiaire information, and absence sums to the EJS template
+      res.render('absences-list-formateur', {
+        absences,
+        activeRoute: "absencesListFormateur",
+        user,
+        groups,
+        stagiaires,
+      });
+    } catch (error) {
+      console.error('Error retrieving absence:', error);
+      next(error);
+    }
+  },  
   
   async getAllAbsencesWithFunctions(req, res, next) {
     try {

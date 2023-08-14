@@ -79,21 +79,8 @@
                                           </tr>
                                         <% } %>
                                       </tbody>
-                                      <%}else if(user.role == 1){ %>
-                                        <tbody id="tableBody">
-                                          <% for (const stagiaire of stagiaires) { %>
-                                            <% if (  user.groupId == stagiaire.groupId) { %>
-                                            <tr>
-                                              <td class="text-center"><%= stagiaire.CEF %></td>
-                                              <td class="text-center"><%= stagiaire.firstName %></td>
-                                              <td class="text-center"><%= stagiaire.lastName %></td>
-                                              <td class="text-center"></td>
-                                              <td class="text-center"></td>
-                                            </tr>
-                                          <% } %>
-                                          <% } %>
-                                        </tbody>
-                                    <%} %>
+                                      <%} %>
+                                        
                                   </table>
                                   
                                 </div>

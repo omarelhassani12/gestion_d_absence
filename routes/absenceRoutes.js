@@ -5,6 +5,7 @@ const AbsenceRoutes = express.Router();
 
 AbsenceRoutes.get('/', AbsenceController.getAllAbsences);
 AbsenceRoutes.get('/absences', AbsenceController.getAllAbsencesWithHoures);
+AbsenceRoutes.get('/absences-list-formateur', AbsenceController.getYesterdayAbsenceForStagiaire);
 AbsenceRoutes.get('/absences/function', AbsenceController.getAllAbsencesWithFunctions);
 AbsenceRoutes.get('/absences/pvnd', AbsenceController.getAllAbsencesForPvND);
 AbsenceRoutes.get('/absences/pvm', AbsenceController.getAllAbsencesForPvM);

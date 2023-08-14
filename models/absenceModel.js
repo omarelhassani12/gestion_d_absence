@@ -21,6 +21,27 @@ const AbsenceModel = {
     });
   },
 
+  findAllOfYesterday() {
+    return new Promise((resolve, reject) => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1); // Subtract 1 day to get yesterday's date
+      const formattedYesterday = format(yesterday, 'yyyy-MM-dd');
+  
+      db.query(
+        'SELECT * FROM absence WHERE date = ?',
+        [formattedYesterday],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  },
+  
+
   findById(id) {
     return new Promise((resolve, reject) => {
       const sql = 'SELECT * FROM absence WHERE id = ?';
@@ -126,7 +147,6 @@ const AbsenceModel = {
       throw error;
     }
   },
-
 
   async findAllUniqueDates() {
     return new Promise((resolve, reject) => {
