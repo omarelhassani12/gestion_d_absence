@@ -164,6 +164,21 @@ const AbsenceModel = {
     });
   },
 
+  async getByStagiaireId(stagiaireId) {
+   return new Promise((resolve, reject) => {
+            const query = 'SELECT * FROM absence WHERE stagiaire_id = ?';
+            db.query(query, [stagiaireId], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+  },
+
+  
+
   async createAbsence(absenceDataArray) {
     try {
       for (const data of absenceDataArray) {

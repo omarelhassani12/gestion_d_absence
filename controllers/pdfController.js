@@ -1,7 +1,7 @@
 // controllers/pdfController.js
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
-const { findStagiaireFromDatabase } = require("../models/pdfModel");
+const { findStagiaireFromDatabase, create } = require("../models/pdfModel");
 const path = require("path");
 
 function generatePDFFromData(stagiaire,warningMessage) {
@@ -141,6 +141,15 @@ async function generatePDF(stagiaireId,warningMessage) {
     }
 
     const pdfFileName = generatePDFFromData(stagiaire,warningMessage);
+
+        // Update the pdf_downloads table with the download information
+        const currentDate = new Date();
+        await create({
+          stagiaire_id: stagiaireId,
+          pdf_type: warningMessage,
+          download_date: currentDate,
+        });
+
     return pdfFileName;
   } catch (err) {
     throw new Error("Error generating PDF: " + err.message);

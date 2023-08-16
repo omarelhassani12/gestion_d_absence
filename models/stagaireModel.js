@@ -86,6 +86,19 @@ const StagiaireModel = {
     });
   },
 
+  updateStatus(stagiaireId, newStatus){
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE stagiaires SET status = ? WHERE id = ?';
+        db.query(query, [newStatus, stagiaireId], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+  },
+
   insertList(stagiaireList) {
     return new Promise((resolve, reject) => {
       if (!stagiaireList || stagiaireList.length === 0) {

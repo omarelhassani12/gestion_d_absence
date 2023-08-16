@@ -2,8 +2,9 @@
 const xlsx = require('xlsx');
 const StagiaireModel = require('../models/stagaireModel');
 const GroupModel = require('../models/groupModel');
-const debug = require('debug')('app:controller');
 const multer = require('multer');
+const AbsenceModel = require('../models/absenceModel');
+const { getAllByStagiaireId } = require('../models/pdfModel');
 
 const upload = multer({ dest: 'uploads/' });
 
@@ -17,6 +18,48 @@ const StagaireController = {
     } catch (error) {
       console.error('An error occurred while fetching the stagiaires:', error);
       res.status(500).send('An error occurred while fetching the stagiaires');
+    }
+  },
+
+  async getStagiaireDetails(req, res) {
+    try {
+        const stagiaireId = req.params.id;
+
+        // Fetch the stagiaire details and absence data based on the stagiaireId
+        const stagiaireDetails = await StagiaireModel.findById(stagiaireId);
+        const absenceData = await AbsenceModel.getByStagiaireId(stagiaireId);
+        const pdfStagaire = await getAllByStagiaireId(stagiaireId);
+
+        console.log(absenceData);
+        pdfStagaire.forEach((pdf) => {
+
+        console.log("pdf " + pdf.pdf_type);
+        }); 
+
+        // Calculate the total absence hours for the stagiaire
+        let totalHours = 0;
+        for (const absence of absenceData) {
+            totalHours += (absence.first_session_attendance * 2.5 + absence.second_session_attendance * 2.5); // Assuming you have an 'hours' field in the absenceData
+        }
+
+        console.log("the total number of absent sessions" + totalHours)
+
+        const groups = await GroupModel.findAll();
+        const user = req.session.user || null;
+
+        // Render a new page (e.g., "stagiaire-details") and pass the fetched data
+        res.render('stagiaire-details', {
+            stagiaire: stagiaireDetails,
+            absence: absenceData,
+            totalHours: totalHours,
+            groups,
+            user,
+            activeRoute: "stagaire",
+            pdfStagaire,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred' });
     }
   },
 

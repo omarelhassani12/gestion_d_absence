@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <%- include('partials/navbar') %>
+        <%- include('partials/aside') %>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Stagiaires</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                                <li class="breadcrumb-item active">Stagiaires</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                               
+                                <!-- /.card-header -->
+                                <div class="container mt-5">
+                                    <div class="card">
+                                      <div class="card-header text-center">
+                                        Détails du Stagiaire
+                                    </div>
+                                      <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- Section des Données Personnelles -->
+                                                <div class="card">
+                                                  <div class="card-header text-center">
+                                                    Données Personnelles
+                                                  </div>
+                                                  <div class="card-body">
+                                                    <table class="table table-borderless">
+                                                      <tbody>
+                                                        <tr>
+                                                            <td><strong>CEF :</strong></td>
+                                                            <td><strong><%= stagiaire.CEF %></strong></td>
+                                                          </tr>
+                                                          <tr>
+                                                            <td><strong>Nom :</strong></td>
+                                                            <td><strong><%= stagiaire.lastName %></strong></td>
+                                                          </tr>
+                                                          <tr>
+                                                            <td><strong>Prénom :</strong></td>
+                                                            <td><strong><%= stagiaire.firstName %></strong></td>
+                                                          </tr>
+                                                          <tr>
+                                                            <td><strong>Groupe :</strong></td>
+                                                            <td>
+                                                              <% groups.forEach((group) => { %>
+                                                                <% if (stagiaire.groupId === group.id) { %>
+                                                                  <strong><%= group.name %></strong>
+                                                                <% } %>
+                                                              <% }) %>
+                                                            </td>
+                                                          </tr>
+                                                          
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              
+                                          <div class="col-md-6">
+                                            <!-- Absence Section -->
+                                            <div class="card">
+                                                <div class="card-header text-center">
+                                                  Informations sur les Absences
+                                                </div>
+                                                <div class="card-body">
+                                                  <p class="font-weight-bold">Total des Heures: <%= totalHours %> H</p>
+                                              
+                                                  <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                      <tr>
+                                                        <th scope="col">Type de PDF</th>
+                                                        <th scope="col">Date de Téléchargement</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% 
+                                                          function convertToLocalTime(utcDateStr) {
+                                                                const utcDate = new Date(utcDateStr);
+                                                                const localTime = new Date(utcDate.getTime());
+                                                                const options = { timeZone: 'Africa/Casablanca', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+                                                                return localTime.toLocaleString('fr-FR', options);
+                                                            }
+                                                        %>
+                                                      <% pdfStagaire.forEach((pdf) => { %>
+                                                        <tr>
+                                                          <td><%= pdf.pdf_type %></td>
+                                                          <td><%= convertToLocalTime(pdf.download_date) %></td>
+                                                        </tr>
+                                                      <% }); %>
+                                                    </tbody>
+                                                  </table>
+                                                </div>
+                                              </div>
+                                              
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <%- include('partials/script') %>
+    </div>
+    <!-- ./wrapper -->
+
+
+
+
+
+    
+</body>
+
+</html>

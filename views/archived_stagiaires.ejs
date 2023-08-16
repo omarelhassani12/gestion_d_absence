@@ -49,8 +49,9 @@
                                                 <th class="text-center">Nom</th>
                                                 <th class="text-center">Prénom</th>
                                                 <th class="text-center">N° de Groupe</th>
-                                                <th class="text-center">Archivé le</th>
                                                 <th class="text-center">Motif</th>
+                                                <th class="text-center">Archivé le</th>
+                                                <th class="text-center">Status</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -62,7 +63,7 @@
                                             </tr>
                                             <% } else { %>
                                             <% ArchivedStagiaires.forEach((ArchivedStagiaire) => { %>
-                                                <tr>
+                                                <tr class="<%= ArchivedStagiaire.action_type === 'archived' ? 'table-danger' : 'table-success' %>">
                                                     <td class="text-center"><%= ArchivedStagiaire.CEF %></td>
                                                     <td class="text-center"><%= ArchivedStagiaire.lastName %></td>
                                                     <td class="text-center"><%= ArchivedStagiaire.firstName %></td>
@@ -73,10 +74,11 @@
                                                             <% } %>
                                                         <% }) %>
                                                     </td>
-                                                    <td class="text-center"><%= ArchivedStagiaire.archived_at.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></td>
                                                     <td class="text-center"><%= ArchivedStagiaire.motif %></td>
+                                                    <td class="text-center"><%= ArchivedStagiaire.action_date.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
+                                                    <td class="text-center"><%= ArchivedStagiaire.action_type %></td>
                                                    <td class="text-center">
-                                                        <button class="btn btn-success insert-btn" data-toggle="modal" data-target="#retrieveModal" data-stagiaire-id="<%= ArchivedStagiaire.id %>">
+                                                        <button class="btn btn-success insert-btn" data-toggle="modal" data-target="#retrieveModal" data-stagiaire-id="<%= ArchivedStagiaire.stagiaire_id %>">
                                                             <i class="fas fa-plus-circle"></i> 
                                                         </button> 
                                                         <form id="delete-form-<%= ArchivedStagiaire.id %>" action="/archived_stagiaires/<%= ArchivedStagiaire.id %>" method="POST" style="display: inline;">
@@ -123,7 +125,7 @@
                     <input type="hidden" name="stagiaire_id" value="">
                     <div class="mb-3">
                         <label class="form-label">Date de Récupération</label>
-                        <input type="date" class="form-control" name="Date_retrievage" placeholder="Date de Récupération" required>
+                        <input type="date" class="form-control" name="restored_at" placeholder="Date de Récupération" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Motif de Récupération</label>
@@ -163,13 +165,13 @@ $(document).ready(function () {
 
         var form = $(this);
         var selectedStagiaireId = form.find("input[name='stagiaire_id']").val();
-        var selectedDate = form.find("input[name='Date_retrievage']").val();
+        var selectedDate = form.find("input[name='restored_at']").val();
         var selectedMotif = form.find("textarea[name='motif']").val();
 
         // Create a data object to send with the request
         var data = {
             stagiaireId: selectedStagiaireId,
-            retrieved_at: selectedDate,
+            restored_at: selectedDate,
             motif: selectedMotif
         };
 

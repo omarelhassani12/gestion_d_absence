@@ -10,6 +10,7 @@ StagaireRoutes.post('/update/:id', StagaireController.updateStagiaire); // Updat
 StagaireRoutes.delete('/:id', StagaireController.deleteStagiaire);
 StagaireRoutes.post('/upload', StagaireController.uploadStagiaireList);
 StagaireRoutes.get('/stagiaire-update/:id', StagaireController.getStagiaireById);
+StagaireRoutes.get('/get-stagiaire-details/:id', StagaireController.getStagiaireDetails);
 
 module.exports = StagaireRoutes;
 

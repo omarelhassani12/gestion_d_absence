@@ -31,6 +31,35 @@ function findStagiaireFromDatabase(stagiaireId) {
   });
 }
 
+function create(downloadInfo) {
+  return new Promise((resolve, reject) => {
+      const query = 'INSERT INTO pdf_downloads (stagiaire_id, pdf_type, download_date) VALUES (?, ?, ?)';
+      db.query(query, [downloadInfo.stagiaire_id, downloadInfo.pdf_type, downloadInfo.download_date], (error, results) => {
+          if (error) {
+              reject(error);
+          } else {
+              resolve(results.insertId);
+          }
+      });
+  });
+}
+
+function getAllByStagiaireId(stagiaireId) {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM pdf_downloads WHERE stagiaire_id = ?';
+    db.query(query, [stagiaireId], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+
+}
+
 module.exports = {
   findStagiaireFromDatabase,
+  create,
+  getAllByStagiaireId,
 };
