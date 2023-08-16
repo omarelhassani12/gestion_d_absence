@@ -70,12 +70,9 @@
                                                     <tr>
                                                         <td class="text-center"><%= group.name %></td>
                                                         <td class="text-center"><%= group.user_name  %></td>
-                                                        <td class="text-center"><%= new Date(group.created_at).toLocaleString() %></td>
-                                                        <td class="text-center"><%= new Date(group.updated_at).toLocaleString() %></td>
+                                                        <td class="text-center"><%=  new Date(group.created_at).toLocaleDateString('fr-FR') %></td>
+                                                        <td class="text-center"><%= new Date(group.updated_at).toLocaleDateString('fr-FR') %></td>
                                                         <td class="text-center">
-                                                            <!-- <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= group.id %>')">
-                                                                <i class="fas fa-edit"></i>
-                                                            </button> -->
                                                             <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= group.id %>')">
                                                                 <i class="fas fa-edit"></i>
                                                               </button>
