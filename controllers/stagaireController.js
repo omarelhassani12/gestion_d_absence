@@ -38,8 +38,10 @@ const StagaireController = {
 
         // Calculate the total absence hours for the stagiaire
         let totalHours = 0;
+        let totalSeance = 0;
         for (const absence of absenceData) {
-            totalHours += (absence.first_session_attendance * 2.5 + absence.second_session_attendance * 2.5); // Assuming you have an 'hours' field in the absenceData
+            totalHours += (absence.first_session_attendance * 2.5 + absence.second_session_attendance * 2.5); 
+            totalSeance += (absence.first_session_attendance + absence.second_session_attendance); 
         }
 
         console.log("the total number of absent sessions" + totalHours)
@@ -52,6 +54,7 @@ const StagaireController = {
             stagiaire: stagiaireDetails,
             absence: absenceData,
             totalHours: totalHours,
+            totalSeance: totalSeance,
             groups,
             user,
             activeRoute: "stagaire",

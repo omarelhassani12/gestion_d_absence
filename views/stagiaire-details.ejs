@@ -84,36 +84,126 @@
                                                   Informations sur les Absences
                                                 </div>
                                                 <div class="card-body">
-                                                  <p class="font-weight-bold">Total des Heures: <%= totalHours %> H</p>
-                                              
-                                                  <table class="table table-bordered">
-                                                    <thead class="thead-light">
-                                                      <tr>
-                                                        <th scope="col">Type de PDF</th>
-                                                        <th scope="col">Date de Téléchargement</th>
-                                                      </tr>
-                                                    </thead>
-                                                    <tbody>
+                                                  <div class="row d-flex justify-content-between">
+                                                    <p class="font-weight-bold">Total des Heures: <%= totalHours %> H</p>
+                                                    <p class="font-weight-bold">Total des Seances: <%= totalSeance %> S</p>
+                                                  </div>
+                                                  <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                      <thead class="thead-light">
+                                                        <tr>
+                                                          <th scope="col">Type de PDF</th>
+                                                          <th scope="col">Date de Téléchargement</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
                                                         <% 
                                                           function convertToLocalTime(utcDateStr) {
-                                                                const utcDate = new Date(utcDateStr);
-                                                                const localTime = new Date(utcDate.getTime());
-                                                                const options = { timeZone: 'Africa/Casablanca', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-                                                                return localTime.toLocaleString('fr-FR', options);
-                                                            }
+                                                            const utcDate = new Date(utcDateStr);
+                                                            const localTime = new Date(utcDate.getTime());
+                                                            const options = { timeZone: 'Africa/Casablanca', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+                                                            return localTime.toLocaleString('fr-FR', options);
+                                                          }
                                                         %>
-                                                      <% pdfStagaire.forEach((pdf) => { %>
-                                                        <tr>
-                                                          <td><%= pdf.pdf_type %></td>
-                                                          <td><%= convertToLocalTime(pdf.download_date) %></td>
-                                                        </tr>
-                                                      <% }); %>
-                                                    </tbody>
-                                                  </table>
+                                                        <% pdfStagaire.forEach((pdf) => { %>
+                                                          <tr>
+                                                            <td><%= pdf.pdf_type %></td>
+                                                            <td><%= convertToLocalTime(pdf.download_date) %></td>
+                                                          </tr>
+                                                        <% }); %>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
                                                 </div>
                                               </div>
                                               
                                             </div>
+                                            <!-- //end s s -->
+                                            <div class="row col-md-12">
+                                              <!-- Absence Section for Matin -->
+                                              <div class="col-md-6">
+                                                <div class="card">
+                                                  <div class="card-header text-center">
+                                                    Informations sur les Absences du matin
+                                                  </div>
+                                                  <div class="card-body">                                              
+                                                    <table class="table table-bordered">
+                                                      <thead class="thead-light">
+                                                        <tr>
+                                                          <th scope="col">Date d'Absence</th>
+                                                          <th scope="col">Jour de la Semaine</th>
+                                                          <th scope="col">1er</th>
+                                                          <th scope="col">2eme</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <% absence.forEach((absence) => { %>
+                                                          <% if(absence.period === 'AM' && (absence.first_session_attendance === 1 || absence.second_session_attendance === 1)){%>
+                                                            <tr>
+                                                              <td><%= new Date(absence.date).toLocaleDateString('fr-FR') %></td>
+                                                              <td><%= new Date(absence.date).toLocaleDateString('fr-FR', { weekday: 'long' }) %></td>
+                                                              <% if(absence.first_session_attendance) { %>
+                                                                <td>Absent</td>
+                                                              <% } else { %>
+                                                                <td></td>
+                                                              <% } %>
+                                                              <% if(absence.second_session_attendance) { %>
+                                                                <td>Absent</td>
+                                                              <% } else { %>
+                                                                <td></td>
+                                                              <% } %>
+                                                            </tr>
+                                                          <% } %>
+                                                        <% }); %>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <!-- end Absence Section for Matin  -->
+                                              <!-- Absence Section for Après-midi -->
+                                              <div class="col-md-6">
+                                                <div class="card">
+                                                  <div class="card-header text-center">
+                                                    Informations sur les Absences d'après-midi
+                                                  </div>
+                                                  <div class="card-body">                                              
+                                                    <table class="table table-bordered">
+                                                      <thead class="thead-light">
+                                                        <tr>
+                                                          <th scope="col">Date d'Absence</th>
+                                                          <th scope="col">Jour de la Semaine</th>
+                                                          <th scope="col">1er</th>
+                                                          <th scope="col">2eme</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <% absence.forEach((absence) => { %>
+                                                          <% if(absence.period === 'PM' && (absence.first_session_attendance === 1 || absence.second_session_attendance === 1)){%>
+                                                            <tr>
+                                                              <td><%=  new Date(absence.date).toLocaleDateString('fr-FR') %></td>
+                                                              <td><%= new Date(absence.date).toLocaleDateString('fr-FR', { weekday: 'long' }) %></td>
+                                                              <% if(absence.first_session_attendance) { %>
+                                                                <td>Absent</td>
+                                                              <% } else { %>
+                                                                <td></td>
+                                                              <% } %>
+                                                              <% if(absence.second_session_attendance) { %>
+                                                                <td>Absent</td>
+                                                              <% } else { %>
+                                                                <td></td>
+                                                              <% } %>
+                                                            </tr>
+                                                        <% } %>
+                                                        <% }); %>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <!-- End Absence Section for Après-midi -->                                              
+                                            </div>
+                                            
                                         </div>
                                       </div>
                                     </div>
