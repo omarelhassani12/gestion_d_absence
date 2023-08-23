@@ -69,11 +69,12 @@
                                         <th class="text-center">Nom</th>
                                         <th class="text-center">Total Hours</th>
                                         <th class="text-center">Note/10</th>
-                                        <th class="text-center">Fonction</th>
+                                        <th class="text-center">Sanction</th>
                                       </tr>
                                     </thead>
                                     <tbody id="tableBody">
                                       <% for (const stagiaire of stagiaires) { %>
+                                        <% if(stagiaire.status == "active"){ %>
                                         <tr>
                                           <td class="text-center"><%= stagiaire.CEF %></td>
                                           <td class="text-center"><%= stagiaire.firstName %></td>
@@ -105,11 +106,12 @@
                                               <% } else if (stagiaire.totalHours > 52.5 ) { %>
                                                 <a href="/pdf/<%= stagiaire.id %>/Urgent" class="no-decoration">Urgent 2</a>
                                               <% } else { %>
-                                                Aucune fonction
+                                                Aucune sanction
                                               <% }; %>
                                             </td>
                                             
                                         </tr>
+                                      <% } %>
                                       <% } %>
                                     </tbody>
                                   </table>

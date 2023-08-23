@@ -74,6 +74,7 @@
                                           <% if(user.role == 0){ %>
                                           <tbody id="tableBody">
                                             <% for (const absence of absences) { %>
+                                              <% if(absence.stagiaire.status == "active"){ %>
                                               <tr>
                                                 <% const today = new Date() %>
                                                 <td class="text-center"><%= absence.stagiaire.CEF %></td>
@@ -172,12 +173,14 @@
                                               </td>
                                               </tr>
                                             <% } %>
+                                            <% } %>
                                           </tbody>
                                           <%}else if(user.role == 1){ %>
                                             <tbody id="tableBody">
                                               <% for (const absence of absences) { %>
                                               <% if (  user.groupId == absence.stagiaire.groupId) { %>
-                                                
+                                                <% if(absence.stagiaire.status == "active"){ %>
+
                                                 <tr>
                                                   <% const today = new Date() %>
                                                   <td class="text-center"><%= absence.stagiaire.CEF %></td>
@@ -270,6 +273,7 @@
                                                     </div>
                                                 </td>
                                                 </tr>
+                                              <% } %>
                                               <% } %>
                                               <% } %>
                                             </tbody>
