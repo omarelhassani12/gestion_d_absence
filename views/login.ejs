@@ -56,7 +56,7 @@
         <div class="container-fluid h-custom">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-9 col-lg-6 col-xl-6">
-                    <img src="./images/background.jpg" class="img-fluid" alt="Image de fond">
+                    <img src="./images/logo-sansbg.png" class="img-fluid" alt="Image de fond" width="1000">
                 </div>
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                     <form id="loginForm">
@@ -209,7 +209,7 @@ async function loginUser(event) {
               } else if (role === 1) {
                 // Redirect to the formateur page
                 console.log('Navigating to formateur-page...');
-                window.location.href = '/'; // Replace with the actual URL for the formateur dashboard
+                window.location.href = '/absence'; // Replace with the actual URL for the formateur dashboard
               } else {
                 // Handle other roles or scenarios
                 console.log('Unknown role or scenario...');

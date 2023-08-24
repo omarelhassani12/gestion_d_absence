@@ -46,12 +46,8 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-center">CEF</th>
-                                                <th class="text-center">Pernom</th>
                                                 <th class="text-center">Nom</th>
-                                                <th class="text-center"></th>
-                                                <th class="text-center"></th>
-                                                <th class="text-center"></th>
-                                                <th class="text-center"></th>
+                                                <th class="text-center">Pernom</th>
                                             </tr>
                                         </thead>
 
@@ -61,15 +57,15 @@
                                                     <td colspan="7" style="text-align:center">Aucun stagaire trouvé.</td>
                                                 </tr>
                                             <% } else { %>
-                                                <% if(stagiaire.status == "active"){ %>
                                                 <% stagaires.forEach((stagaire) => { %>
+                                                    <% if(stagaire.status == "active"){ %>
                                                     <tr>
                                                         <td class="text-center"><%= stagaire.CEF %></td>
-                                                        <td class="text-center"><%= stagaire.firstName  %></td>
                                                         <td class="text-center"><%= stagaire.lastName  %></td>                                                     
+                                                        <td class="text-center"><%= stagaire.firstName  %></td>
                                                     </tr>
+                                                    <% } %>
                                                 <% }) %>
-                                            <% } %>
                                             <% } %>
                                         </tbody>
                                     </table>

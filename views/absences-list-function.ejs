@@ -65,8 +65,9 @@
                                     <thead>
                                       <tr>
                                         <th class="text-center">CEF</th>
-                                        <th class="text-center">Prenom</th>
                                         <th class="text-center">Nom</th>
+                                        <th class="text-center">Prenom</th>
+                                        <th class="text-center">Groupe</th>
                                         <th class="text-center">Total Hours</th>
                                         <th class="text-center">Note/10</th>
                                         <th class="text-center">Sanction</th>
@@ -77,9 +78,15 @@
                                         <% if(stagiaire.status == "active"){ %>
                                         <tr>
                                           <td class="text-center"><%= stagiaire.CEF %></td>
-                                          <td class="text-center"><%= stagiaire.firstName %></td>
                                           <td class="text-center"><%= stagiaire.lastName %></td>
-                                          <td class="text-center"><%= stagiaire.totalHours %></td>
+                                          <td class="text-center"><%= stagiaire.firstName %></td>
+                                          <td class="text-center">
+                                            <% groups.forEach((group) => { %>
+                                                <% if (stagiaire.groupId === group.id) { %>
+                                                    <%= group.name %>
+                                                <% } %>
+                                            <% }) %>
+                                        </td>                                          <td class="text-center"><%= stagiaire.totalHours %></td>
                                           <td class="text-center">
                                             <% 
                                              const commule = stagiaire.totalHours / 5;

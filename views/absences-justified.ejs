@@ -60,11 +60,11 @@
                                     <thead>
                                       <tr>
                                         <th class="text-center">CEF</th>
-                                        <th class="text-center">Prenom</th>
                                         <th class="text-center">Nom</th>
-                                        <th class="text-center">Start Date</th>
-                                        <th class="text-center">End Date</th>
-                                        <th class="text-center">Action</th>
+                                        <th class="text-center">Prenom</th>
+                                        <th class="text-center">Date Debut</th>
+                                        <th class="text-center">Date fin</th>
+                                        <th class="text-center">Supprimer</th>
                                       </tr>
                                     </thead>
                                     <tbody id="tableBody">
@@ -78,8 +78,8 @@
                                               <% const today = new Date(); %>
                                               <tr class="<%= endDate <= today ? 'table-danger' : 'table-success' %>">
                                                   <td class="text-center"><%= justifiedAbsence.CEF %></td>
-                                                  <td class="text-center"><%= justifiedAbsence.firstName %></td>
                                                   <td class="text-center"><%= justifiedAbsence.lastName %></td>
+                                                  <td class="text-center"><%= justifiedAbsence.firstName %></td>
                                                   <td class="text-center"><%= justifiedAbsence.start_date.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
                                                   <td class="text-center"><%= justifiedAbsence.end_date.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
                                                   <td class="text-center">

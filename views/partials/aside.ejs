@@ -1,5 +1,10 @@
 <aside class="main-sidebar sidebar-light-primary elevation-1">
  
+    <!-- Logo de la marque -->
+    <a href="/" class="brand-link">
+      <img src="/images/logo-sansbg.png" alt="OFPPT"style="width: 250px; height: 70px;">
+      <!-- <span class="brand-text font-weight-bolder">DR. HANAA DRAA</span> -->
+    </a>
     <!-- Barre latérale -->
     <div class="sidebar">
         <!-- Panneau utilisateur de la barre latérale (facultatif) -->
@@ -85,7 +90,7 @@
                             <a href="/absence" class="nav-link <%= activeRoute === 'absences' ? 'active' : '' %>">
                               <i class="nav-icon fas fa-calendar-times"></i>
                               <p>
-                                Liste des absences
+                                Listes des absences
                               </p>
                             </a>
                           </li>
@@ -93,7 +98,7 @@
                             <a href="/absence/absences" class="nav-link <%= activeRoute === 'absencesList' ? 'active' : '' %>">
                                 <i class="nav-icon fas fa-filter"></i>
                                 <p>
-                                Les liste spécifique
+                                Listes spécifiques
                               </p>
                             </a>
                           </li>
@@ -101,7 +106,7 @@
                             <a href="/absence/absences/function" class="nav-link <%= activeRoute === 'absencesListFunction' ? 'active' : '' %>">
                               <i class="nav-icon fas fa-calendar"></i>
                               <p>
-                                Les liste avec fonction
+                                Listes avec sanctions
                               </p>
                             </a>
                           </li>
@@ -109,7 +114,7 @@
                             <a href="/justified-absences" class="nav-link <%= activeRoute === 'absencesJustified' ? 'active' : '' %>">
                                 <i class="nav-icon fas fa-calendar-check"></i>
                               <p>
-                                Les absence justifie
+                                Absences justifiées
                               </p>
                             </a>
                           </li>
@@ -184,14 +189,6 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
   
-                <li class="nav-item">
-                    <a href="/" class="nav-link <%= activeRoute === 'dashboard' ? 'active' : '' %>">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Tableau de bord
-                        </p>
-                    </a>
-                </li>
                 <li class="nav-item has-treeview <%= activeRoute.includes('absence') ? 'menu-open' : '' %>">
                   <a href="#" class="nav-link <%= activeRoute.includes('absence') ? 'active' : '' %>">
                     <i class="nav-icon fas fa-calendar"></i>
