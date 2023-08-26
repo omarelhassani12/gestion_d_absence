@@ -194,9 +194,7 @@
             </nav>
         <% } else if (user.role == 1) { %>
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                data-accordion="false">
-  
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item has-treeview <%= activeRoute.includes('absence') ? 'menu-open' : '' %>">
                   <a href="#" class="nav-link <%= activeRoute.includes('absence') ? 'active' : '' %>">
                     <i class="nav-icon fas fa-calendar"></i>
@@ -231,7 +229,7 @@
                       </a>
                     </li>
                   </ul>
-              </li>
+                </li>
                 <li class="nav-item">
                   <a href="/group/group-details" class="nav-link <%= activeRoute === 'groupsDetails' ? 'active' : '' %>">
                     <i class="nav-icon fas fa-filter"></i>
@@ -240,7 +238,6 @@
                     </p>
                   </a>
                 </li>
-               
             </ul>
         </nav>
         <% } %>
