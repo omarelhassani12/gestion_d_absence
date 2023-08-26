@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Groupes</h1>
+                            <h1>Groupes et Formateur</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -34,13 +34,8 @@
                                         <div class="col-sm-12 text-right">
                                             <div class="col-auto ms-auto d-print-none">
                                                 <div class="d-flex justify-content-end">
-                                                    <!-- <label for="excel-file" class="btn btn-success d-none d-sm-inline-block">
-                                                        Insérer une liste
-                                                    </label>
-                                                    <input type="file" id="excel-file" accept=".xlsx, .xls" style="display: none" /> -->
-
                                                     <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report" id="new-group-button">
-                                                        Nouveau Groupe
+                                                        nouveau formateur de groupe
                                                     </a>
                                                 </div>
                                             </div>
@@ -52,6 +47,7 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
+                                                <th class="text-center">Nom de Formateur</th>
                                                 <th class="text-center">Nom de groupe</th>
                                                 <th class="text-center">Date de création</th>
                                                 <th class="text-center">Date de modification</th>
@@ -65,25 +61,28 @@
                                                     <td colspan="6" style="text-align:center">Aucun groupe trouvé.</td>
                                                 </tr>
                                             <% } else { %>
-                                                <% groups.forEach((group) => { %>
+                                                <% groups.forEach(group => { %>
                                                     <tr>
-                                                        <td class="text-center"><%= group.name %></td>
-                                                        <td class="text-center"><%=  new Date(group.created_at).toLocaleDateString('fr-FR') %></td>
-                                                        <td class="text-center"><%= new Date(group.updated_at).toLocaleDateString('fr-FR') %></td>
-                                                        <td class="text-center">
-                                                            <button class="btn btn-success update-btn" onclick="goToUpdatePage('<%= group.id %>')">
-                                                                <i class="fas fa-edit"></i>
-                                                              </button>
-                                                              
-                                                            <form id="delete-form-<%= group.id %>" action="/group/<%= group.id %>" method="POST" style="display: inline;">
-                                                                <input type="hidden" name="_method" value="DELETE">
-                                                                <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= group.id %>')" id="delete-button-<%= group.id %>">
-                                                                    <i class="fas fa-trash-alt"></i>
-                                                                </button>
-                                                            </form>
-                                                        </td>
+                                                      <td class="text-center"><%= group.user_name %></td>
+                                                      <td class="text-center"><%= group.group_name %></td>
+                                                      <td class="text-center"><%= new Date(group.created_at).toLocaleDateString('fr-FR') %></td>
+                                                      <td class="text-center"><%= new Date(group.updated_at).toLocaleDateString('fr-FR') %></td>
+                                                      <td class="text-center">
+                                                        <button class="btn btn-success update-btn" data-bs-toggle="modal" data-bs-target="#modal-update" data-group-id="<%= group.id %>">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                                      
+                                                        <form id="delete-form-<%= group.id %>" action="/group-formateur/<%= group.id %>" method="POST" style="display: inline;">
+                                                          <input type="hidden" name="_method" value="DELETE">
+                                                          <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= group.id %>')" id="delete-button-<%= group.id %>">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                          </button>
+                                                        </form>
+                                                      </td>
                                                     </tr>
-                                                <% }) %>
+                                                  <% }) %>
+                                                  
+                                                  
                                             <% } %>
                                         </tbody>
                                     </table>
@@ -107,15 +106,19 @@
                     <h5 class="modal-title" id="modal-title">Nouveau Groupe</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="create-group-form" action="/group" method="POST">
+                <form id="create-group-form" action="/group-formateur" method="POST">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Nom</label>
-                            <input type="text" class="form-control" name="name" placeholder="Nom" required>
+                            <label class="form-label">Groupe</label>
+                            <select class="form-control" name="group_id" required>
+                                <% allGroups.forEach(function(allGroup) { %>
+                                        <option value="<%= allGroup.id %>"><%= allGroup.name %></option>
+                                <% }) %>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Formateur</label>
-                            <select class="form-control" name="user_id" required> <!-- Change 'formateur' to 'user_id' -->
+                            <select class="form-control" name="user_id" required>
                                 <% users.forEach(function(user) { %>
                                     <% if (user.role === 1) { %>
                                         <option value="<%= user.id %>"><%= user.nom_complete %></option>
@@ -155,78 +158,91 @@
         </div>
     </div>
 
+    <!-- Modal update -->
+    <div class="modal fade" id="modal-update" tabindex="-1" role="dialog" aria-labelledby="modal-title-update" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title-update">Modifier le Groupe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="update-group-form" action="" method="POST">
+                <input type="hidden" id="update-group-id" name="groupId" value="">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nouveau Groupe</label>
+                        <select class="form-control" name="group_id" required>
+                            <% allGroups.forEach(function(allGroup) { %>
+                                <option value="<%= allGroup.id %>"><%= allGroup.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nouveau Formateur</label>
+                        <select class="form-control" name="user_id" required>
+                            <% users.forEach(function(user) { %>
+                                <% if (user.role === 1) { %>
+                                    <option value="<%= user.id %>"><%= user.nom_complete %></option>
+                                <% } %>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary" id="update-group-button">Modifier Groupe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
 
-    <!-- Ajouter un nouveau groupe -->
+
+
+    <!-- Ajouter un nouveau staffgroupe -->
     <script>
-
-    $('#modal-report').on('hidden.bs.modal', function() {
-        $('#create-group-form')[0].reset();
-    });
-
+        $('#modal-report').on('hidden.bs.modal', function() {
+            $('#create-group-form')[0].reset();
+        });
+    
         $('#create-group-form').on('submit', function(event) {
             event.preventDefault();
-
+    
             var form = $(this);
             var url = form.attr('action');
             var formData = form.serialize();
-
+    
             $.ajax({
                 url: url,
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-        console.log('Groupe créé avec succès');
-
-        // Obtenir les données du groupe créé
-        var createdGroup = response.group;
-
-        // Ajouter les données du nouveau groupe au tableau
-        var tableBody = $('#example1 tbody');
-        var newRow = '<tr>' +
-            '<td class="text-center">' + createdGroup.name + '</td>' +
-            '<td class="text-center">' + createdGroup.user_name + '</td>' +
-            '<td class="text-center">' + new Date(createdGroup.created_at).toLocaleString() + '</td>' +
-            '<td class="text-center">' + new Date(createdGroup.updated_at).toLocaleString() + '</td>' +
-            '<td class="text-center">' +
-            '<button class="btn btn-success update-btn" onclick="goToUpdatePage(' + createdGroup.id + ')">' +
-            '<i class="fas fa-edit"></i>' +
-            '</button>' +
-            '<form id="delete-form-' + createdGroup.id + '" action="/group/' + createdGroup.id + '" method="POST" style="display: inline;">' +
-            '<input type="hidden" name="_method" value="DELETE">' +
-            '<button class="btn btn-danger delete-btn" onclick="confirmDelete(event, \'' + createdGroup.id + '\')" id="delete-button-' + createdGroup.id + '">' +
-            '<i class="fas fa-trash-alt"></i>' +
-            '</button>' +
-            '</form>' +
-            '</td>' +
-            '</tr>';
-
-        tableBody.append(newRow);
-
-        // Fermer la modal
-        $('#modal-report').modal('hide');
-
-        // Refresh the page
-        location.reload();
-    },
-    error: function(xhr, status, error) {
+                    console.log('Groupe créé avec succès');
+                    $('#modal-update').modal('hide');
+                    
+                    // Reload the page after creating a new group
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
                     console.error('Une erreur s\'est produite lors de la création du groupe :', error);
                 },
                 complete: function() {
                     // Réinitialiser le formulaire
                     form[0].reset();
-
+    
                     // Fermer la modal
                     $('#modal-report').modal('hide');
                 }
             });
         });
-
+    
         // Clear the form when the modal is completely hidden
         $('#modal-report').on('hidden.bs.modal', function() {
             $('#create-group-form')[0].reset();
         });
     </script>
-    <!-- Supprimer un groupe -->
+    
+    <!-- Supprimer un staffgroupe -->
     <script>
         // Fonction de confirmation de suppression
         function confirmDelete(event, groupId) {
@@ -242,7 +258,7 @@
             // Mettre à jour l'événement de clic du bouton de confirmation
             confirmButton.onclick = function() {
                 // Effectuer l'opération de suppression
-                fetch(`/group/${groupId}`, {
+                fetch(`/group-formateur/${groupId}`, {
                     method: 'DELETE'
                 })
                     .then(response => response.json())
@@ -250,7 +266,7 @@
                         if (data.success) {
                             // Groupe supprimé avec succès
                             alert('Groupe supprimé avec succès');
-                            window.location.href = window.location.href; // Recharger la page
+                            location.reload(); // Recharger la page
                         } else {
                             // Erreur lors de la suppression du groupe
                             console.error('Une erreur est survenue lors de la suppression du groupe : ' + data.error);
@@ -275,12 +291,57 @@
             };
         }
     </script>
-    <!-- Mettre à jour un groupe -->
+
+    <!-- Modifier un staffgroupe -->
     <script>
-        function goToUpdatePage(groupId) {
-            window.location.href = `/group/update/${groupId}`;
-        }
+        $(document).ready(function() {
+            $('#modal-update').on('show.bs.modal', function (event) {
+                console.log('Modal show event triggered');
+                var button = $(event.relatedTarget);
+                var groupId = button.data('group-id');
+                console.log('Group ID:', groupId);
+                $('#update-group-id').val(groupId);
+            });
+    
+            
+            $('#update-group-form').on('submit', function(event) {
+            event.preventDefault();
+    
+            var form = $(this);
+            var groupId = $('#update-group-id').val(); // Get the groupId from the hidden input
+            var url = `/group-formateur/update/${groupId}`; // Construct the URL
+            var formData = form.serialize();
+    
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                data: formData,
+                success: function(response) {
+                    console.log('Group updated successfully');
+                    $('#modal-update').modal('hide');
+                    reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error('An error occurred while updating the group:', error);
+                },
+                complete: function() {
+                    form[0].reset();
+                }
+            });
+        });
+    
+            $('#modal-update').on('hidden.bs.modal', function() {
+                $('#update-group-form')[0].reset();
+            });
+    
+        });
     </script>
+    
+
+
+
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

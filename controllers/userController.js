@@ -123,22 +123,22 @@ const UserController = {
       if (user) {
         if (user.isApproved) {
   
-          let groupId = null;
-          let groupName = null;
-          const groupData = await GroupModel.findGroupByUserId(user.id);
+          // let groupId = null;
+          // let groupName = null;
+          // const groupData = await GroupModel.findGroupByUserId(user.id);
   
-          if (groupData) {
-            groupId = groupData.id;
-            groupName = groupData.name;
-          }
+          // if (groupData) {
+          //   groupId = groupData.id;
+          //   groupName = groupData.name;
+          // }
             
           req.session.user = {
             id: user.id,
             name: user.nom_complete,
             email: user.email,
             role: user.role,
-            groupId: groupId,
-            groupName: groupName,
+            // groupId: groupId,
+            // groupName: groupName,
             nonActiveCompetesCount: nonActiveCompetesCount,
             countStagiairesWithNonZeroAbsence: countStagiairesWithNonZeroAbsence,
           };
@@ -148,8 +148,8 @@ const UserController = {
             'userName', user.nom_complete,
             'userEmail', user.email,
             'userRole', user.role,
-            'userGroupId', groupId,
-            'userGroupName', groupName,
+            // 'userGroupId', groupId,
+            // 'userGroupName', groupName,
             'nonActiveCompetesCount', nonActiveCompetesCount,
             'countStagiairesWithNonZeroAbsence', countStagiairesWithNonZeroAbsence,
           );
