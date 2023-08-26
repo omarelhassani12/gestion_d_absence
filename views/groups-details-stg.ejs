@@ -28,13 +28,13 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12">
-                            <div class="card" >
+                            <div class="card">
                                 <div class="card-header text-center">
                                     Liste des Formateurs
                                 </div>
-                                <div class="card-body" >
-                                    <% if (!groupWithFormateurs.formateurs || groupWithFormateurs.formateurs.length === 0) { %>
-                                        <p class="text-center">Aucun Formateur trouvé.</p>
+                                <div class="card-body">
+                                    <% if (!groupWithFormateurs || !groupWithFormateurs.formateurs || groupWithFormateurs.formateurs.length === 0) { %>
+                                        <p class="text-center text-danger">Aucun Formateur trouvé.</p>
                                     <% } else { %>
                                         <ul>
                                             <% groupWithFormateurs.formateurs.forEach((Formateur) => { %>
@@ -44,6 +44,7 @@
                                     <% } %>
                                 </div>
                             </div>
+                            
 
 
                             <div class="card">

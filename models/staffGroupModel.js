@@ -58,7 +58,7 @@ const StaffGroupModel = {
   findByGroupIdWithFormateurs(id) {
     return new Promise((resolve, reject) => {
         const sql = `
-            SELECT staff_group.*, users.nom_complete AS name
+            SELECT staff_group.*, users.nom_complete AS formateur_name
             FROM staff_group
             LEFT JOIN users ON staff_group.user_id = users.id
             WHERE staff_group.group_id = ?
@@ -69,19 +69,8 @@ const StaffGroupModel = {
             } else {
                 const groupInfo = results[0];
                 if (groupInfo) {
-                    const usersSql = `
-                        SELECT users.nom_complete AS formateur_name
-                        FROM users
-                        WHERE users.id IN (SELECT user_id FROM staff_group WHERE group_id = ?)
-                    `;
-                    db.query(usersSql, [id], (usersError, usersResults) => {
-                        if (usersError) {
-                            reject(usersError);
-                        } else {
-                            groupInfo.formateurs = usersResults;
-                            resolve(groupInfo);
-                        }
-                    });
+                    groupInfo.formateurs = results.map(row => ({ formateur_name: row.formateur_name }));
+                    resolve(groupInfo);
                 } else {
                     resolve(null); // Group not found
                 }
@@ -89,6 +78,7 @@ const StaffGroupModel = {
         });
     });
   },
+
 
   async findGroupByUserId(userId) {
     return new Promise((resolve, reject) => {
