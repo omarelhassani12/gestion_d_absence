@@ -49,15 +49,7 @@
                               formateurs
                           </p>
                       </a>
-                  </li>
-                  <li class="nav-item">
-                      <a href="/group-formateur" class="nav-link <%= activeRoute === 'staffGroups' ? 'active' : '' %>">
-                          <i class="nav-icon fas fa-users"></i>
-                          <p>
-                              formateurs et groups
-                          </p>
-                      </a>
-                  </li>
+                  </li>                
                   <li class="nav-item has-treeview <%= activeRoute.includes('stagaire') ? 'menu-open' : '' %>">
                         <a href="#" class="nav-link <%= activeRoute.includes('stagaire') ? 'active' : '' %>">
                           <i class="nav-icon fas fa-folder"></i>
@@ -179,13 +171,21 @@
                                   listes des Groupes
                               </p>
                           </a>
-                      </li>
+                        </li>
                         <li class="nav-item">
                           <a href="/group/group-details" class="nav-link <%= activeRoute === 'groupsDetails' ? 'active' : '' %>">
                             <i class="nav-icon fas fa-filter"></i>
                             <p>
                               groupes & details
                             </p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/group-formateur" class="nav-link <%= activeRoute === 'staffgroups' ? 'active' : '' %>">
+                              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                              <p>
+                                  Formateurs et Groupes
+                              </p>
                           </a>
                         </li>
                       </ul>

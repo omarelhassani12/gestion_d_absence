@@ -13,7 +13,7 @@ const StaffGroupController = {
         GroupModel.findAll()
       ]);
   
-      res.render('group-staffs', { groups, users, allGroups, activeRoute: 'staffGroups', user });
+      res.render('group-staffs', { groups, users, allGroups, activeRoute: 'staffgroups', user });
     } catch (error) {
       console.error('Error fetching groups:', error);
       res.status(500).json({ error: 'Failed to fetch groups' });
