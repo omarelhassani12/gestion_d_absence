@@ -20,7 +20,21 @@ const StaffGroupController = {
     }
   },
   
-  
+  async findGroupByIdWithFormateurs(req, res) {
+    const groupId = req.params.groupId;
+
+    try {
+        const groupWithFormateurs = await StaffGroupModel.findByGroupIdWithFormateurs(groupId);
+
+        if (groupWithFormateurs) {
+            res.status(200).json({ group: groupWithFormateurs });
+        } else {
+            res.status(404).json({ error: 'Group not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+},
 
   async getGroupsByFormateurId(req, res) {
     const userId = req.params.userId;

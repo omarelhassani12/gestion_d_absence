@@ -1,4 +1,5 @@
 const GroupModel = require('../models/groupModel');
+const StaffGroupModel = require('../models/staffGroupModel');
 const StagiaireModel = require('../models/stagaireModel');
 const UserModel = require('../models/userModel');
 
@@ -30,18 +31,27 @@ const GroupController = {
 
   async getGroupDetails(req, res) {
     try {
-      const groupId = req.params.id; 
-      const stagaires = await StagiaireModel.findAllByGroupId(groupId); 
-      const group = await GroupModel.findById(groupId); 
+        const groupId = req.params.id;
+        const stagaires = await StagiaireModel.findAllByGroupId(groupId);
+        const group = await GroupModel.findById(groupId);
+        const groupWithFormateurs = await StaffGroupModel.findByGroupIdWithFormateurs(groupId);
 
-      if (!stagaires) {
-        return res.status(404).send('stagaires not found');
-      }
-      const user = req.session.user || null;
-      res.render('groups-details-stg', { stagaires ,group, activeRoute: 'groupsDetails',user});
+        if (!stagaires) {
+            return res.status(404).send('stagiaires not found');
+        }
+        
+        const user = req.session.user || null;
+        
+        res.render('groups-details-stg', {
+            stagaires,
+            group,
+            activeRoute: 'groupsDetails',
+            user,
+            groupWithFormateurs 
+        });
     } catch (error) {
-      console.error('Error getting group details:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error getting group details:', error);
+        res.status(500).send('Internal Server Error');
     }
   },
 

@@ -15,20 +15,6 @@ const GroupModel = {
       );
     });
   },
-  // findAll() {
-  //   return new Promise((resolve, reject) => {
-  //     db.query(
-  //       'SELECT groups.*, users.nom_complete AS user_name FROM groups LEFT JOIN users ON groups.user_id = users.id',
-  //       (error, results) => {
-  //         if (error) {
-  //           reject(error);
-  //         } else {
-  //           resolve(results);
-  //         }
-  //       }
-  //     );
-  //   });
-  // },
 
   async findByFormateurId(userId) {
     return new Promise((resolve, reject) => {
@@ -50,9 +36,8 @@ const GroupModel = {
   findById(id) {
     return new Promise((resolve, reject) => {
       const sql = `
-        SELECT groups.*, users.nom_complete AS formateur_name
+        SELECT *
         FROM groups
-        LEFT JOIN users ON groups.user_id = users.id
         WHERE groups.id = ?
       `;
       db.query(sql, [id], (error, results) => {

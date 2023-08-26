@@ -28,6 +28,24 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12">
+                            <div class="card" >
+                                <div class="card-header text-center">
+                                    Liste des Formateurs
+                                </div>
+                                <div class="card-body" >
+                                    <% if (!groupWithFormateurs.formateurs || groupWithFormateurs.formateurs.length === 0) { %>
+                                        <p class="text-center">Aucun Formateur trouvé.</p>
+                                    <% } else { %>
+                                        <ul>
+                                            <% groupWithFormateurs.formateurs.forEach((Formateur) => { %>
+                                                <li><%= Formateur.formateur_name %></li>
+                                            <% }) %>
+                                        </ul>
+                                    <% } %>
+                                </div>
+                            </div>
+
+
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row">
@@ -41,6 +59,7 @@
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
+                               
                                 <div class="card-body">
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
@@ -70,6 +89,10 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                
+                                
+                                
                             </div>
                         </div>
                     </div>

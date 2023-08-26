@@ -20,4 +20,7 @@ StaffGroupRoutes.put('/update/:groupId', StaffGroupController.updateGroup);
 // Delete group by ID
 StaffGroupRoutes.delete('/:groupId', StaffGroupController.deleteGroup);
 
+// Get group by ID with formateurs
+StaffGroupRoutes.get('/details/:groupId', StaffGroupController.findGroupByIdWithFormateurs);
+
 module.exports = StaffGroupRoutes;
