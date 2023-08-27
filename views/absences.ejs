@@ -80,7 +80,7 @@
                                               <th class="text-center">CEF</th>
                                               <th class="text-center">Prenom</th>
                                               <th class="text-center">Nom</th>
-                                              <th class="text-center">Groupe</th>
+                                              <!-- <th class="text-center">Groupe</th> -->
                                               <th class="text-center">Period</th>
                                               <th class="text-center"  id="seance1Header">1er seance</th>
                                               <th class="text-center"  id="seance2Header">2eme seance</th>
@@ -202,6 +202,7 @@
                                                   <td class="text-center"><%= absence.stagiaire.CEF %></td>
                                                   <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                   <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                                  <!-- <td class="text-center"><%=// groups.find(group => group.id === absence.stagiaire.groupId)?.name || 'N/A' %></td> -->
                                                   <td class="text-center" data-period="<%= absence.period %>"><%= absence.period %></td>
                                                   <%
                                                   // Helper function to get justified absence by stagiaire ID
