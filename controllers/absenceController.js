@@ -4,9 +4,72 @@ const StagiaireModel = require('../models/stagaireModel');
 const PDFDocument = require('pdfkit');
 const path = require('path');
 const JustifiedAbsence = require('../models/justifiedAbsenceModel');
+const StaffGroupModel = require('../models/staffGroupModel');
 
 const AbsenceController = {
 
+  // async getAllAbsences(req, res, next) {
+  //   try {
+  //     const absences = await AbsenceModel.findAll();
+  //     const groups = await GroupModel.findAll();
+  
+  //     // Fetch the stagiaire information for each absence
+  //     for (const absence of absences) {
+  //       const stagiaire = await StagiaireModel.findById(absence.stagiaire_id);
+  //       absence.stagiaire = stagiaire;
+  //     }
+  
+  //     const user = req.session.user || null;
+  //     const stagiaires = await StagiaireModel.findAll(); 
+  
+  //     // Get the selected date and period from the request query parameters
+  //     const selectedDate = req.query.date;
+  //     const selectedPeriod = req.query.period;
+  
+  //     // Fetch justified absences for all stagiaires and store them in a Map for easy lookup
+  //     const justifiedAbsencesMap = new Map();
+  //     const justifiedAbsences = await JustifiedAbsence.findAll();
+  //     for (const justifiedAbsence of justifiedAbsences) {
+  //       if (!justifiedAbsencesMap.has(justifiedAbsence.stagiaire_id)) {
+  //         justifiedAbsencesMap.set(justifiedAbsence.stagiaire_id, []);
+  //       }
+  //       justifiedAbsencesMap.get(justifiedAbsence.stagiaire_id).push(justifiedAbsence);
+  //     }
+  
+  //     // Check if each absence is justified or not and set a flag accordingly
+  //     for (const absence of absences) {
+  //       const stagiaireJustifiedAbsences = justifiedAbsencesMap.get(absence.stagiaire_id) || [];
+  //       const isJustified = stagiaireJustifiedAbsences.some(
+  //         (justifiedAbsence) =>
+  //           justifiedAbsence.start_date <= selectedDate && justifiedAbsence.end_date >= selectedDate
+  //       );
+  //       absence.is_justified = isJustified ? 1 : 0;
+  //     }
+  
+  //     if (selectedDate && selectedPeriod) {
+  //       const absencesByDateAndPeriod = absences.filter(
+  //         (absence) => absence.date === selectedDate && absence.period === selectedPeriod
+  //       );
+  
+  //       res.render('absences', {
+  //         absences: absencesByDateAndPeriod,
+  //         justifiedAbsences, // Pass justified absences to the view
+  //         activeRoute: 'absences',
+  //         user,
+  //         stagiaires,
+  //         groups,
+  //       });
+  //     } else {
+  //       // If not, render the view with all absences
+  //       res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups, justifiedAbsences });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error retrieving absences:', error);
+  //     next(error); // Make sure to call `next(error)` to pass the error to the error-handling middleware
+  //   }
+  // },  
+ 
+ 
   async getAllAbsences(req, res, next) {
     try {
       const absences = await AbsenceModel.findAll();
@@ -44,23 +107,46 @@ const AbsenceController = {
         );
         absence.is_justified = isJustified ? 1 : 0;
       }
+
+        // Fetch groupIds and groupNames before rendering
+      let groupIds = [];
+      let groupNames = [];
+      const groupData = await StaffGroupModel.findByUserIdWithGroups(user.id);
+
+      if (groupData && groupData.length > 0) {
+        groupIds = groupData.map(group => group.group_id);
+        groupNames = groupData.map(group => group.group_name);
+      }
+
   
       if (selectedDate && selectedPeriod) {
         const absencesByDateAndPeriod = absences.filter(
           (absence) => absence.date === selectedDate && absence.period === selectedPeriod
         );
-  
+        console.log('User Object:', user);
         res.render('absences', {
           absences: absencesByDateAndPeriod,
-          justifiedAbsences, // Pass justified absences to the view
+          justifiedAbsences,
           activeRoute: 'absences',
           user,
           stagiaires,
           groups,
+          groupIds: groupIds,
+          groupNames: groupNames
         });
+        
       } else {
         // If not, render the view with all absences
-        res.render('absences', { absences, activeRoute: 'absences', user, stagiaires, groups, justifiedAbsences });
+        res.render('absences', { 
+          absences,
+          activeRoute: 'absences',
+          user, 
+          stagiaires, 
+          groups, 
+          justifiedAbsences,
+          groupIds: groupIds,
+          groupNames: groupNames,
+        });
       }
     } catch (error) {
       console.error('Error retrieving absences:', error);

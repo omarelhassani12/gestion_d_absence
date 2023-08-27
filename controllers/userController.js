@@ -1,5 +1,6 @@
 const GroupModel = require('../models/groupModel');
 const ServiceModel = require('../models/serviceModel');
+const StaffGroupModel = require('../models/staffGroupModel');
 const UserModel = require('../models/userModel');
 
 const UserController = {
@@ -123,36 +124,39 @@ const UserController = {
       if (user) {
         if (user.isApproved) {
   
-          // let groupId = null;
-          // let groupName = null;
-          // const groupData = await GroupModel.findGroupByUserId(user.id);
-  
-          // if (groupData) {
-          //   groupId = groupData.id;
-          //   groupName = groupData.name;
-          // }
-            
+          let groupIds = []; // Array to store group IDs
+          let groupNames = []; // Array to store group names
+          const groupData = await StaffGroupModel.findByUserIdWithGroups(user.id);
+          
+          console.log(groupData);
+          
+          if (groupData && groupData.length > 0) {
+            groupIds = groupData.map(group => group.group_id);
+            groupNames = groupData.map(group => group.group_name);
+          }
+          
           req.session.user = {
             id: user.id,
             name: user.nom_complete,
             email: user.email,
             role: user.role,
-            // groupId: groupId,
-            // groupName: groupName,
+            groupIds: groupIds,
+            groupNames: groupNames,
             nonActiveCompetesCount: nonActiveCompetesCount,
             countStagiairesWithNonZeroAbsence: countStagiairesWithNonZeroAbsence,
           };
-  
+          
           res.cookie(
             'userid', user.id,
             'userName', user.nom_complete,
             'userEmail', user.email,
             'userRole', user.role,
-            // 'userGroupId', groupId,
-            // 'userGroupName', groupName,
+            'userGroupIds', groupIds.join(','), 
+            'userGroupNames', groupNames.join(','), 
             'nonActiveCompetesCount', nonActiveCompetesCount,
             'countStagiairesWithNonZeroAbsence', countStagiairesWithNonZeroAbsence,
           );
+          
           res.status(200).json(user);
         } else {
           // If user is found but isApproved is false, deny login

@@ -54,6 +54,21 @@
                                                   <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByPeriod('PM')">Filter PM</button>
                                                 </div>
                                               </div>
+                                              
+                                              <div class="d-flex align-items-start">
+                                                <% if (user.role == 1) { %>
+                                                  <div id="groupButtonsContainer">
+                                                    <% for (let i = 0; i < groupIds.length; i++) { %>
+                                                      <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByGroup('<%= groupIds[i] %>')">
+                                                        Filter <%= groupNames[i] %>
+                                                      </button>
+                                                    <% } %>
+                                                  </div>
+                                                <% } %>
+                                              </div>
+
+                                              
+
                                             </div>
                                         </div>
                                     </div>
@@ -65,6 +80,7 @@
                                               <th class="text-center">CEF</th>
                                               <th class="text-center">Prenom</th>
                                               <th class="text-center">Nom</th>
+                                              <th class="text-center">Groupe</th>
                                               <th class="text-center">Period</th>
                                               <th class="text-center"  id="seance1Header">1er seance</th>
                                               <th class="text-center"  id="seance2Header">2eme seance</th>
@@ -178,14 +194,15 @@
                                           <%}else if(user.role == 1){ %>
                                             <tbody id="tableBody">
                                               <% for (const absence of absences) { %>
-                                              <% if (  user.groupId == absence.stagiaire.groupId) { %>
-                                                <% if(absence.stagiaire.status == "active"){ %>
+                                                <% if (user.groupIds.includes(absence.stagiaire.groupId)) { %>
+                                                  <% if(absence.stagiaire.status == "active"){ %>
 
-                                                <tr>
+                                                <tr class="absence-row" data-group-name="<%= absence.stagiaire.groupId %>">
                                                   <% const today = new Date() %>
                                                   <td class="text-center"><%= absence.stagiaire.CEF %></td>
                                                   <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                   <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                                  <td class="text-center"><%= groups.find(group => group.id === absence.stagiaire.groupId)?.name || 'N/A' %></td>
                                                   <td class="text-center" data-period="<%= absence.period %>"><%= absence.period %></td>
                                                   <%
                                                   // Helper function to get justified absence by stagiaire ID
@@ -206,72 +223,72 @@
                                                   }
                                                   %>
                                                  <% const isEndDateValid = isJustifiedEndDateValid(absence.stagiaire.id); %>
-                                                <td class="text-center"> 
-                                                  <div class="form-check">
-                                                    <input
-                                                      type="checkbox"
-                                                      class="form-check-input attendance-checkbox first-session-checkbox"
-                                                      id="1er-seance-<%= absence.stagiaire.id %>-<%= absence.period %>"
-                                                      <% if (absence.first_session_attendance == 1) { %>checked<% } %>
-                                                      data-student-id="<%= absence.id %>"
-                                                      <% if (isEndDateValid) { %>disabled<% } %>
-                                                    >
-                                                    <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>-<%= absence.period %>">
-                                                      <% if (absence.first_session_attendance === 1) { %>
-                                                        Absent  
-                                                      <% } else { if (isEndDateValid) { %>
-                                                        Absence justifiée
-                                                      <% } else { %>
-                                                        Présent  
-                                                      <% } %> 
-                                                      <% } %>   
-                                                    </label>
-                                                  </div>
-                                                </td>
-                                                <td class="text-center">
-                                                  <div class="form-check">
-                                                    <input
-                                                      type="checkbox"
-                                                      class="form-check-input attendance-checkbox second-session-checkbox "
-                                                      id="2eme-seance-<%= absence.stagiaire.id %>-<%= absence.period %>"
-                                                      <% if (absence.second_session_attendance == 1) { %>checked<% } %>
-                                                      data-student-id="<%= absence.id %>"
-                                                      <% if (isEndDateValid) { %>disabled<% } %>
-                                                    >
-                                                    <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>-<%= absence.period %>">
-                                                      <% if (absence.second_session_attendance === 1) { %>
-                                                        Absent
-                                                      <% } else { if (isEndDateValid) { %>
-                                                        Absence justifiée
-                                                      <% } else { %>
-                                                        Présent  
-                                                      <% } %>    
-                                                      <% } %>    
-                                                    </label>
-                                                  </div>
-                                                </td>
-                                                <td class="text-center">
+                                                  <td class="text-center"> 
                                                     <div class="form-check">
                                                       <input
                                                         type="checkbox"
-                                                        class="form-check-input is-justified-checkbox"
-                                                        id="justified-seance-<%= absence.stagiaire.id %>"
-                                                        <% if (absence.is_justified == 1 || isEndDateValid) { %>checked<% } %>
-                                                        data-absence-id="<%= absence.id %>"
-                                                        data-stagiaire-id="<%= absence.stagiaire.id %>"
-                                                        data-justified-checkbox
+                                                        class="form-check-input attendance-checkbox first-session-checkbox"
+                                                        id="1er-seance-<%= absence.stagiaire.id %>-<%= absence.period %>"
+                                                        <% if (absence.first_session_attendance == 1) { %>checked<% } %>
+                                                        data-student-id="<%= absence.id %>"
                                                         <% if (isEndDateValid) { %>disabled<% } %>
-  
                                                       >
-                                                      <label class="form-check-label" for="justified-seance-<%= absence.stagiaire.id %>">
-                                                        <% if (absence.is_justified === 1 || isEndDateValid) { %>
-                                                          Oui
+                                                      <label class="form-check-label" for="1er-seance-<%= absence.stagiaire.id %>-<%= absence.period %>">
+                                                        <% if (absence.first_session_attendance === 1) { %>
+                                                          Absent  
+                                                        <% } else { if (isEndDateValid) { %>
+                                                          Absence justifiée
                                                         <% } else { %>
-                                                          Non
-                                                        <% } %>
+                                                          Présent  
+                                                        <% } %> 
+                                                        <% } %>   
                                                       </label>
                                                     </div>
-                                                </td>
+                                                  </td>
+                                                  <td class="text-center">
+                                                    <div class="form-check">
+                                                      <input
+                                                        type="checkbox"
+                                                        class="form-check-input attendance-checkbox second-session-checkbox "
+                                                        id="2eme-seance-<%= absence.stagiaire.id %>-<%= absence.period %>"
+                                                        <% if (absence.second_session_attendance == 1) { %>checked<% } %>
+                                                        data-student-id="<%= absence.id %>"
+                                                        <% if (isEndDateValid) { %>disabled<% } %>
+                                                      >
+                                                      <label class="form-check-label" for="2eme-seance-<%= absence.stagiaire.id %>-<%= absence.period %>">
+                                                        <% if (absence.second_session_attendance === 1) { %>
+                                                          Absent
+                                                        <% } else { if (isEndDateValid) { %>
+                                                          Absence justifiée
+                                                        <% } else { %>
+                                                          Présent  
+                                                        <% } %>    
+                                                        <% } %>    
+                                                      </label>
+                                                    </div>
+                                                  </td>
+                                                  <td class="text-center">
+                                                      <div class="form-check">
+                                                        <input
+                                                          type="checkbox"
+                                                          class="form-check-input is-justified-checkbox"
+                                                          id="justified-seance-<%= absence.stagiaire.id %>"
+                                                          <% if (absence.is_justified == 1 || isEndDateValid) { %>checked<% } %>
+                                                          data-absence-id="<%= absence.id %>"
+                                                          data-stagiaire-id="<%= absence.stagiaire.id %>"
+                                                          data-justified-checkbox
+                                                          <% if (isEndDateValid) { %>disabled<% } %>
+    
+                                                        >
+                                                        <label class="form-check-label" for="justified-seance-<%= absence.stagiaire.id %>">
+                                                          <% if (absence.is_justified === 1 || isEndDateValid) { %>
+                                                            Oui
+                                                          <% } else { %>
+                                                            Non
+                                                          <% } %>
+                                                        </label>
+                                                      </div>
+                                                  </td>
                                                 </tr>
                                               <% } %>
                                               <% } %>
@@ -294,38 +311,47 @@
     </div>
    
    
-<!-- Add a modal for choosing justified absence duration -->
-<div class="modal" id="justifiedAbsenceModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Choisir la durée de l'absence justifiée</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <label for="startDate">Date de début :</label>
-        <input class="form-control" type="date" id="startDate">
-        <label for="endDate">Date de fin :</label>
-        <input class="form-control" type="date" id="endDate">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="saveJustifiedAbsence()">Enregistrer</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+    <!-- Add a modal for choosing justified absence duration -->
+    <div class="modal" id="justifiedAbsenceModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Choisir la durée de l'absence justifiée</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <label for="startDate">Date de début :</label>
+            <input class="form-control" type="date" id="startDate">
+            <label for="endDate">Date de fin :</label>
+            <input class="form-control" type="date" id="endDate">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="saveJustifiedAbsence()">Enregistrer</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
 
 
 
-
-
-
-
-
-
-
+    <script>
+      function filterByGroup(groupId) {
+        console.log("Filtering for group:", groupId);
+    
+        const rows = document.querySelectorAll('.absence-row');
+        
+        rows.forEach(row => {
+          const groupName = row.getAttribute('data-group-name');
+          if (groupName === groupId) {
+            row.style.display = 'table-row';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+    </script>
 
 
 
