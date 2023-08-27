@@ -56,7 +56,7 @@
                                               </div>
                                               
                                               <div class="d-flex align-items-start">
-                                                <% if (user.role == 1) { %>
+                                                <% //if (user.role == 1) { %>
                                                   <div id="groupButtonsContainer">
                                                     <% for (let i = 0; i < groupIds.length; i++) { %>
                                                       <button class="btn btn-primary d-none d-sm-inline-block" onclick="filterByGroup('<%= groupIds[i] %>')">
@@ -64,7 +64,7 @@
                                                       </button>
                                                     <% } %>
                                                   </div>
-                                                <% } %>
+                                                <%// } %>
                                               </div>
 
                                               
@@ -91,7 +91,7 @@
                                           <tbody id="tableBody">
                                             <% for (const absence of absences) { %>
                                               <% if(absence.stagiaire.status == "active"){ %>
-                                              <tr>
+                                              <tr class="absence-row" data-group-name="<%= absence.stagiaire.groupId %>">
                                                 <% const today = new Date() %>
                                                 <td class="text-center"><%= absence.stagiaire.CEF %></td>
                                                 <td class="text-center"><%= absence.stagiaire.firstName %></td>

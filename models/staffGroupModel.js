@@ -78,25 +78,7 @@ const StaffGroupModel = {
         });
     });
   },
-
-  // findByUserIdWithGroups(user_id) {
-  //   return new Promise((resolve, reject) => {
-  //     const sql = `
-  //     SELECT staff_group.*, groups.name AS group_name
-  //     FROM staff_group
-  //     LEFT JOIN groups ON staff_group.group_id = groups.id
-  //     WHERE staff_group.user_id = ?
-  //     `;
-  //     db.query(sql, [user_id], (error, results) => {
-  //       if (error) {
-  //         reject(error);
-  //       } else {
-  //         const groupInfo = results.map(row => ({ formateur_name: row.formateur_name }));
-  //         resolve(groupInfo);
-  //       }
-  //     });
-  //   });
-  // },  
+ 
   findByUserIdWithGroups(user_id) {
     return new Promise((resolve, reject) => {
         const sql = `
@@ -114,8 +96,25 @@ const StaffGroupModel = {
             }
         });
     });
-},
+  },
 
+  findByAllWithGroups() {
+    return new Promise((resolve, reject) => {
+        const sql = `
+          SELECT groups.name AS group_name, staff_group.*
+          FROM staff_group
+          LEFT JOIN groups ON staff_group.group_id = groups.id
+          GROUP BY group_name
+        `;
+        db.query(sql, (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results); // Return the whole result set
+            }
+        });
+    });
+  },
 
 
   async findGroupByUserId(userId) {
