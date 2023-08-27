@@ -90,26 +90,24 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <% if (!groups || groups.length === 0) { %>
+                                    <% if (!groupWithFormateursForFomateurs || groupWithFormateursForFomateurs.length === 0) { %>
                                         <div>
                                             <h1 style="text-align:center">Aucun groupe trouvé.</h1>
                                         </div>
                                     <% } else { %>
                                       
-                                        <% groups.forEach((group) => { %>
-                                            <% if (user && user.id === group.user_id) { %> 
+                                        <% groupWithFormateursForFomateurs.forEach((groupWithFormateursForFomateur) => { %>
                                                 <div class="col-sm-3 ">
-                                                    <a href="/group-formateur/details/<%= group.id %>" class="card-link">
+                                                    <a href="/group/groups-details-stg/<%= groupWithFormateursForFomateur.group_id %>" class="card-link">
                                                       <div class="card">
                                                         <div class="card-body">
-                                                          <h3 class="text-center"><%= group.name %></h3>
+                                                          <h3 class="text-center"><%= groupWithFormateursForFomateur.group_name %></h3>
                                                           <hr>
-                                                          <h5 class="text-center"><%= group.user_name %></h5>
+                                                          <h5 class="text-center"><%= groupWithFormateursForFomateur.formateur_name %></h5>
                                                         </div>
                                                       </div>
                                                     </a>
                                                 </div>
-                                            <% } %>
                                         <% }) %>
                                     <% } %>
                                 </div>

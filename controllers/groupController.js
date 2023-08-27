@@ -16,16 +16,27 @@ const GroupController = {
       });
   },
 
-  getAllGroupsForGroupsDetails(req, res, next) {
-    Promise.all([GroupModel.findAll(), UserModel.findByRole(1)])
-      .then(([groups, users]) => {
+  async getAllGroupsForGroupsDetails(req, res, next) {
+    try {
+        const [groups, users] = await Promise.all([GroupModel.findAll(), UserModel.findByRole(1)]);
         const user = req.session.user || null;
-        res.render('groups-details.ejs', { groups, users, activeRoute: 'groupsDetails',user });
-      })
-      .catch(error => {
+
+        console.log(user.role);
+
+        // Fetch data only if user's role is 1
+        let groupWithFormateursForFomateurs;
+        try {
+            groupWithFormateursForFomateurs = await StaffGroupModel.findByUserIdWithGroups(user.id);
+            console.log("this is for formateur", groupWithFormateursForFomateurs);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+
+        res.render('groups-details.ejs', { groups, users, activeRoute: 'groupsDetails', user ,groupWithFormateursForFomateurs});
+    } catch (error) {
         console.error('Error retrieving groups:', error);
         next(error);
-      });
+    }
   },
 
 

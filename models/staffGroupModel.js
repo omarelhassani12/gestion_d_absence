@@ -79,6 +79,44 @@ const StaffGroupModel = {
     });
   },
 
+  // findByUserIdWithGroups(user_id) {
+  //   return new Promise((resolve, reject) => {
+  //     const sql = `
+  //     SELECT staff_group.*, groups.name AS group_name
+  //     FROM staff_group
+  //     LEFT JOIN groups ON staff_group.group_id = groups.id
+  //     WHERE staff_group.user_id = ?
+  //     `;
+  //     db.query(sql, [user_id], (error, results) => {
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         const groupInfo = results.map(row => ({ formateur_name: row.formateur_name }));
+  //         resolve(groupInfo);
+  //       }
+  //     });
+  //   });
+  // },  
+  findByUserIdWithGroups(user_id) {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT staff_group.*, groups.name AS group_name, users.nom_complete AS formateur_name
+            FROM staff_group
+            LEFT JOIN groups ON staff_group.group_id = groups.id
+            LEFT JOIN users ON staff_group.user_id = users.id
+            WHERE staff_group.user_id = ?
+        `;
+        db.query(sql, [user_id], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results); // Return the whole result set
+            }
+        });
+    });
+},
+
+
 
   async findGroupByUserId(userId) {
     return new Promise((resolve, reject) => {
