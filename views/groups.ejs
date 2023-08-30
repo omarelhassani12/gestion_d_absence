@@ -113,18 +113,7 @@
                             <label class="form-label">Nom</label>
                             <input type="text" class="form-control" name="name" placeholder="Nom" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Formateur</label>
-                            <select class="form-control" name="user_id" required> <!-- Change 'formateur' to 'user_id' -->
-                                <% users.forEach(function(user) { %>
-                                    <% if (user.role === 1) { %>
-                                        <option value="<%= user.id %>"><%= user.nom_complete %></option>
-                                    <% } %>
-                                <% }) %>
-                            </select>
-                        </div>
                     </div>
-                    
                     <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary" id="create-group-button">Créer Groupe</button>
@@ -184,7 +173,6 @@
         var tableBody = $('#example1 tbody');
         var newRow = '<tr>' +
             '<td class="text-center">' + createdGroup.name + '</td>' +
-            '<td class="text-center">' + createdGroup.user_name + '</td>' +
             '<td class="text-center">' + new Date(createdGroup.created_at).toLocaleString() + '</td>' +
             '<td class="text-center">' + new Date(createdGroup.updated_at).toLocaleString() + '</td>' +
             '<td class="text-center">' +

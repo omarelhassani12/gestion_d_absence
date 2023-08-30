@@ -80,8 +80,8 @@
                                         <thead>
                                             <tr>
                                               <th class="text-center">CEF</th>
-                                              <th class="text-center">Prenom</th>
                                               <th class="text-center">Nom</th>
+                                              <th class="text-center">Prenom</th>
                                               <th class="text-center">period</th>
                                               <th class="text-center">date</th>
                                               <th class="text-center">Total Hours</th>
@@ -96,8 +96,8 @@
                                               <% for (const absence of absences) { %>
                                                 <tr>
                                                   <td class="text-center"><%= absence.stagiaire.CEF %></td>
-                                                  <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                   <td class="text-center"><%= absence.stagiaire.lastName %></td>
+                                                  <td class="text-center"><%= absence.stagiaire.firstName %></td>
                                                   <td class="text-center"><%= absence.period %></td>
                                                   <td class="text-center"><%= new Date(absence.date).toLocaleDateString('en-GB') %></td>
                                                   <td class="text-center"><%= absence.totalHours %></td>

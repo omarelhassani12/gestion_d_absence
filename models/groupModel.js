@@ -83,8 +83,8 @@ const GroupModel = {
       const created_at = new Date().toISOString(); // Use ISO 8601 format for created_at
   
       db.query(
-        'INSERT INTO groups (name, created_at, user_id) VALUES (?, ?, ?)',
-        [group.name, created_at, group.user_id],
+        'INSERT INTO groups (name, created_at) VALUES (?, ?)',
+        [group.name, created_at],
         (error, results) => {
           if (error) {
             reject(error);
@@ -106,19 +106,9 @@ const GroupModel = {
   
       // Get the current timestamp for updated_at
       updatedData.updated_at = new Date().toISOString();
-  
-      // Check if the user_id exists in the users table
-      db.query('SELECT id FROM users WHERE id = ?', [updatedData.user_id], (error, results) => {
-        if (error) {
-          reject(error);
-        } else if (results.length === 0) {
-          // User with the specified user_id doesn't exist in the users table
-          reject(new Error('User with the specified user_id does not exist'));
-        } else {
-          // Perform the update if the user_id exists
           db.query(
-            'UPDATE groups SET name = ?, created_at = ?, updated_at = ?, user_id = ? WHERE id = ?',
-            [updatedData.name, updatedData.created_at, updatedData.updated_at, updatedData.user_id, id],
+            'UPDATE groups SET name = ?, updated_at = ?WHERE id = ?',
+            [updatedData.name, updatedData.updated_at, id],
             (error, results) => {
               if (error) {
                 reject(error);
@@ -127,8 +117,6 @@ const GroupModel = {
               }
             }
           );
-        }
-      });
     });
   },
   

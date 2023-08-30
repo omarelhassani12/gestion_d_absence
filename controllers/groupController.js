@@ -86,9 +86,9 @@ const GroupController = {
 
 
   createGroup(req, res, next) {
-    const { name, user_id } = req.body;
+    const { name} = req.body;
 
-    const group = { name, user_id };
+    const group = { name};
 
     GroupModel.create(group)
       .then(groupId => {
@@ -104,9 +104,9 @@ const GroupController = {
 
   updateGroup(req, res, next) {
     const { id } = req.params;
-    const { name, new_formateur } = req.body; // Add new_formateur here
+    const { name } = req.body; // Add new_formateur here
 
-    const updatedData = { name, user_id: new_formateur }; // Include new_formateur in the updatedData
+    const updatedData = { name}; // Include new_formateur in the updatedData
 
     GroupModel.update(id, updatedData)
       .then(success => {

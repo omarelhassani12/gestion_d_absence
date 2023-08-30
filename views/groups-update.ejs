@@ -31,30 +31,15 @@
                             <div class="card">
                                 <div class="card-body">
                                     <form id="update-form" action="/group/update/<%= group.id %>" method="POST">
-                                    <!-- Existing code... -->
                                     <div class="mb-3">
                                         <label class="form-label">Nom</label>
                                         <input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="<%= group.name %>">
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Actuel formateur</label>
-                                        <input type="text" class="form-control" id="formateur" name="formateur" disabled value="<%= group.formateur_name %>">
-                                    
-                                        <label class="form-label">Nouveau formateur</label>
-                                        <select class="form-control" name="new_formateur">
-                                        <% users.forEach(function(user) { %>
-                                            <% if (user.role === 1) { %>
-                                            <option value="<%= user.id %>"><%= user.nom_complete %></option>
-                                            <% } %>
-                                        <% }) %>
-                                        </select>
-                                    </div>
-                                    <!-- Existing code... -->
                                         <div class="modal-footer d-flex justify-content-between">
                                           <a href="/group" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
                                           <button type="submit" class="btn btn-primary" id="update-group-btn">Update</button>
                                         </div>
-                                      </form>
+                                    </form>
                                       
                                 </div>
                             </div>
@@ -79,23 +64,6 @@
               console.log('group:', group);
               // Set the form inputs with the group data
               document.getElementById('name').value = group.name;
-      
-              // Display the name of the current formateur
-              const currentFormateurElement = document.getElementById('current-formateur');
-              currentFormateurElement.textContent = group.formateur_name; // Update this line to use the correct property
-      
-              // Update the select options for new formateur
-              const selectFormateur = document.querySelector('select[name="new_formateur"]');
-              selectFormateur.innerHTML = '';
-              group.users.forEach(function(user) {
-                if (user.role === 1) {
-                  const option = document.createElement('option');
-                  option.value = user.id;
-                  option.textContent = user.nom_complete;
-                  selectFormateur.appendChild(option);
-                }
-              });
-              selectFormateur.value = group.formateur;
             })
             .catch(error => {
               console.error('Error:', error);
