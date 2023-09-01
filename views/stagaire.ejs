@@ -55,6 +55,8 @@
                                                 <th class="text-center">CEF</th>
                                                 <th class="text-center">Nom</th>
                                                 <th class="text-center">Prénom</th>
+                                                <th class="text-center">Numero de tele</th>
+                                                <th class="text-center">Justification</th>
                                                 <th class="text-center">N° de Groupe</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
@@ -73,6 +75,8 @@
                                                         <td class="text-center"><%= stagiaire.CEF %></td>
                                                         <td class="text-center"><%= stagiaire.lastName %></td>
                                                         <td class="text-center"><%= stagiaire.firstName %></td>
+                                                        <td class="text-center"><%= stagiaire.phone_number %></td>
+                                                        <td class="text-center"><%= stagiaire.justification %></td>
                                                         <td class="text-center">
                                                             <% groups.forEach((group) => { %>
                                                                 <% if (stagiaire.groupId === group.id) { %>
@@ -130,19 +134,27 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">CEF</label>
-                            <input type="text" class="form-control" name="CEF" placeholder="CEF">
+                            <input type="text" class="form-control" name="CEF" placeholder="CEF" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Prénom</label>
-                            <input type="text" class="form-control" name="firstName" placeholder="Prénom">
+                            <label class="form-label">Prénom</label> 
+                            <input type="text" class="form-control" name="firstName" placeholder="Prénom" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Nom</label>
-                            <input type="text" class="form-control" name="lastName" placeholder="Nom">
+                            <input type="text" class="form-control" name="lastName" placeholder="Nom" required>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Numéro de téléphone</label>
+                            <input type="text" class="form-control" name="phone_number" placeholder="Numéro de téléphone">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Justification</label>
+                            <textarea class="form-control" name="justification" placeholder="Justification"></textarea>
+                        </div>                        
+                        <div class="mb-3">
                             <label class="form-label">Sélectionner un groupe</label>
-                            <select class="form-control" name="groupId" id="group-select">
+                            <select class="form-control" name="groupId" id="group-select" required>
                                 <option value="" disabled selected>Select a group</option>
                                 <% groups.forEach((group) => { %>
                                 <option value="<%= group.id %>"><%= group.name %></option>
@@ -280,72 +292,41 @@
 
 <!-- //add new stagiaire -->
 <script>
-$('#create-stagiaire-form').on('submit', function(event) {
-    event.preventDefault();
-
-    var form = $(this);
-    var url = form.attr('action');
-    var formData = form.serialize();
-
-    $.ajax({
-        url: url,
-        type: 'POST',
-        data: formData,
-        success: function(response) {
-            console.log('Stagiaire created successfully');
-
-            // Close the modal
-            $('#modal-report').modal('hide');
-
-            // Get the created stagiaire data
-            // var createdStagiaire = response.stagiaire;
-            var createdStagiaire = response;
-
-            // Append the new stagiaire data to the table
-            var tableBody = $('#example1 tbody');
-            var newRow = '<tr>' +
-                '<td>' + createdStagiaire.CEF + '</td>' +
-                '<td>' + createdStagiaire.lastName + '</td>' +
-                '<td>' + createdStagiaire.firstName + '</td>' +
-                '<td>' + (createdStagiaire.groupId !== 0 ? 'group ' + createdStagiaire.groupId : 'No group') + '</td>' +
-                '<td>' +
-                '<button class="btn btn-success update-btn" onclick="goToUpdatePage(' + createdStagiaire.id + ')">' +
-                '<i class="fas fa-edit"></i>' +
-                '</button>' +
-                '<form id="delete-form-' + createdStagiaire.id + '" action="/stagiaires/' + createdStagiaire.id + '" method="POST" style="display: inline;">' +
-                '<input type="hidden" name="_method" value="DELETE">' +
-                '<button class="btn btn-danger delete-btn" onclick="confirmDelete(event, \'' + createdStagiaire.id + '\')" id="delete-button-' + createdStagiaire.id + '">' +
-                '<i class="fas fa-trash-alt"></i>' +
-                '</button>' +
-                '</form>' +
-                '</td>' +
-                '</tr>';
-
-            tableBody.append(newRow);
-
-            // Reset the form
-            form[0].reset();
-
-            // Show the newly created stagiaire data temporarily
-            var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                'Stagiaire created successfully!' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-                '</div>');
-
-            $('.content-header').after(alertDiv);
-
-            // Auto-hide the alert after 3 seconds
-            setTimeout(function() {
-                alertDiv.alert('close');
-            }, 3000);
-        },
-        error: function(xhr, status, error) {
-            console.error('An error occurred while creating the stagiaire:', error);
-        }
+    $('#create-stagiaire-form').on('submit', function(event) {
+        event.preventDefault();
+    
+        var form = $(this);
+        var url = form.attr('action');
+        var formData = form.serialize();
+    
+        console.log('Form submitted');
+        console.log('formData:', formData);
+    
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                // Check the status code and response content to handle success or error
+                if (response.message) {
+                    console.log('Stagiaire created successfully:', response.message);
+                    window.location.reload(); // Reload the window
+                } else if (response.error === 'CEF already exists') {
+                    alert('CEF is already taken. Please choose a different CEF.'); // Display alert
+                    // Handle duplicate CEF error
+                } else {
+                    console.error('An error occurred while creating the stagiaire.');
+                    // Handle other errors
+                }
+            },
+            error: function(xhr, status, error) {
+                    alert('CEF is already taken. Please choose a different CEF.'); // Display alert
+                    // Handle duplicate CEF error
+            }
+        });
     });
-});
 </script>
-
 
 <!-- //delete stagiaire -->
 <script>

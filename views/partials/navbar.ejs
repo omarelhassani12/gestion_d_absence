@@ -9,8 +9,8 @@
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
-      <% if (user.role != 1) { %>
-      <!-- Notifications Dropdown Menu -->
+    <% if (user && user.role == 0) { %>
+        <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
               <i class="far fa-bell"></i>

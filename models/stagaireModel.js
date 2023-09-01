@@ -39,22 +39,47 @@ const StagiaireModel = {
     });
   },
 
+  // create(stagiaire) {
+  //   return new Promise((resolve, reject) => {
+  //       if (!stagiaire) {
+  //           reject(new Error('Stagiaire object is null or undefined'));
+  //           return;
+  //       }
+  //        db.query('INSERT INTO stagiaires SET ?', [stagiaire], (error, results) => {
+  //             if (error) {
+  //              reject(error);
+  //            } else {
+  //               resolve({ success: 'Stagiaire created successfully' }); // Return a success object
+  //           }
+  //       });
+  //   });
+  // },
+
   create(stagiaire) {
     return new Promise((resolve, reject) => {
-      if (!stagiaire) {
-        reject(new Error('Stagiaire object is null or undefined'));
-        return;
-      }
-  
-      db.query('INSERT INTO stagiaires SET ?', [stagiaire], (error, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(results.insertId);
+        if (!stagiaire) {
+            reject(new Error('Stagiaire object is null or undefined'));
+            return;
         }
-      });
+
+        const sql = 'INSERT INTO stagiaires SET ?';
+
+        db.query(sql, [stagiaire], (error, results) => {
+            if (error) {
+              if (error.code === 'ER_DUP_ENTRY') {
+                // For duplicate entry error (CEF already exists)
+                reject('CEF already exists');
+            }else {
+                    // For other server errors
+                    reject('Internal server error');
+                }
+            } else {
+                // For successful insertion
+                resolve('Stagiaire created successfully');
+            }
+        });
     });
-  },
+},
 
   update(id, updatedData) {
     return new Promise((resolve, reject) => {

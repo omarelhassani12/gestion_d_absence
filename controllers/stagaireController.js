@@ -85,27 +85,28 @@ const StagaireController = {
 
   async createStagaire(req, res) {
     try {
-      const stagiaireData = req.body;
-      if (!stagiaireData) {
-        throw new Error('Stagiaire data is null or undefined');
-      }
-  
-      const createdStagiaire = await StagiaireModel.create(stagiaireData);
-  
-      if (!createdStagiaire) {
-        throw new Error('Failed to create the stagiaire');
-      }
-  
-      const groups = await GroupModel.findAll();
-  
-      const stagiairesArray = Array.isArray(createdStagiaire) ? createdStagiaire : [createdStagiaire];
-  
-      res.render('stagaire', { stagiaires: stagiairesArray, groups: groups, success: true });
+        const stagiaireData = req.body;
+        if (!stagiaireData) {
+            throw new Error('Stagiaire data is null or undefined');
+        }
+
+        try {
+            const result = await StagiaireModel.create(stagiaireData);
+            res.status(201).json({ message: result }); // Success response
+        } catch (error) {
+            if (error === 'CEF already exists') {
+                res.status(400).json({ error: 'CEF already exists' }); // Duplicate CEF response
+            } else {
+                console.error('An error occurred while creating the stagiaire:', error);
+                res.status(500).json({ error: 'Internal server error' }); // Other server errors
+            }
+        }
     } catch (error) {
-      console.error('An error occurred while creating the stagiaire:', error);
-      res.status(500).send('An error occurred while creating the stagiaire');
+        console.error('An error occurred while creating the stagiaire:', error);
+        res.status(500).send('An error occurred while creating the stagiaire');
     }
-  },
+},
+
 
 
   async updateStagiaire(req, res) {
@@ -125,9 +126,7 @@ const StagaireController = {
       console.error('An error occurred while updating the stagiaire:', error);
       res.status(500).send('An error occurred while updating the stagiaire');
     }
-  }
-  
-,  
+  },  
   
   async deleteStagiaire(req, res) {
     try {

@@ -5,5 +5,6 @@ const ArchivedStagiairesActionController = require('../controllers/archivedStagi
 ArchivedStagiairesActionRoutes.get('/', ArchivedStagiairesActionController.getAll);
 ArchivedStagiairesActionRoutes.post('/:id', ArchivedStagiairesActionController.archiveStagire);
 ArchivedStagiairesActionRoutes.post('/retrieve/:id', ArchivedStagiairesActionController.retrieveStagire);
+ArchivedStagiairesActionRoutes.post('/delete/:id', ArchivedStagiairesActionController.delete);
 
 module.exports = ArchivedStagiairesActionRoutes;

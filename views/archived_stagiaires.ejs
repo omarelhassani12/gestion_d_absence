@@ -83,7 +83,7 @@
                                                         </button> 
                                                         <form id="delete-form-<%= ArchivedStagiaire.id %>" action="/archived_stagiaires/<%= ArchivedStagiaire.id %>" method="POST" style="display: inline;">
                                                             <input type="hidden" name="_method" value="DELETE">
-                                                            <button class="btn btn-danger delete-btn" onclick="confirmDelete(event, '<%= ArchivedStagiaire.id %>')" id="delete-button-<%= ArchivedStagiaire.id %>">
+                                                            <button type="button" class="btn btn-danger" onclick="confirmDelete(event, '<%= ArchivedStagiaire.id %>')">
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         </form>
@@ -216,7 +216,7 @@ $(document).ready(function () {
                      </div>
                     <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                        <button type="button" class="btn btn-danger">Supprimer</button>
+                        <button type="button" class="btn btn-danger" id="confirm-delete-button">Supprimer</button>
                     </div>
                 </div>
             </div>
@@ -281,66 +281,44 @@ $(document).ready(function () {
                 };
             }
         </script>    
-<!-- //delete stagiaire -->
-<script>
-    //delete function
-    function confirmDelete(event, stagiaireId) {
-        event.preventDefault(); // Prevent form submission
-
-        // Get the modal element
-        var modal = document.getElementById('exampleModalCenter');
-
-        // Get the buttons in the modal
-        var confirmButton = modal.querySelector('.btn-danger');
-        var closeButton = modal.querySelector('.btn-secondary');
-
-        // Update the confirm button's click event
-        confirmButton.onclick = function() {
-            // Perform the delete operation
-            fetch(`/archived_stagiaires/${stagiaireId}`, {
-                method: 'DELETE'
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Stagiaire deleted successfully
-                        var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-                            'Stagiaire deleted successfully!' +
-                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-                            '</div>');
-
-                        $('.content-header').after(alertDiv);
-
-                        // Auto-hide the alert after 3 seconds
-                        setTimeout(function() {
-                            alertDiv.alert('close');
-                        }, 3000);
-
-                        window.location.href = window.location.href; // Reload the page
-                    } else {
-                        // Error deleting stagiaire
-                        console.error('An error occurred while deleting the stagiaire: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    console.error('An error occurred while deleting the stagiaire');
-                });
-
-            // Close the modal
-            $(modal).modal('hide');
-        };
-
-        // Show the modal
-        $(modal).modal('show');
-
-        // Update the close button's click event
-        closeButton.onclick = function() {
-            // Close the modal
-            $(modal).modal('hide');
-        };
-    }
-</script>
+        <!-- //delete stagiaire -->
+        <script>
+            function confirmDelete(event, stagiaireId) {
+                event.preventDefault();
+        
+                var modal = document.getElementById('exampleModalCenter');
+                var confirmButton = modal.querySelector('#confirm-delete-button');
+        
+                // Update the confirm button's click event
+                confirmButton.onclick = function() {
+                    fetch(`/archived_stagiaires/delete/${stagiaireId}`, {
+                        method: 'POST', // Use POST method to match your route
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message or update UI
+                            console.log('Stagiaire deleted successfully');
+                            // Reload the page or update the UI as needed
+                            window.location.reload();
+                        } else {
+                            // Handle error
+                            console.error('An error occurred while deleting the stagiaire');
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        console.error('An error occurred while deleting the stagiaire');
+                    });
+        
+                    // Close the modal
+                    $(modal).modal('hide');
+                };
+        
+                // Show the modal
+                $(modal).modal('show');
+            }
+        </script>
 
 
 
