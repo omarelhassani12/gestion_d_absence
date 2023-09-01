@@ -44,6 +44,14 @@
                                           <input type="text" class="form-control" id="update-lastname" name="lastName" value="<%= stagiaire.lastName %>" >
                                         </div>
                                         <div class="mb-3">
+                                          <label for="update-phone_number" class="form-label">Phone Number</label>
+                                          <input type="text" class="form-control" id="update-phone_number" name="phone_number" value="<%= stagiaire.phone_number %>" >
+                                      </div>
+                                      <div class="mb-3">
+                                          <label for="update-justification" class="form-label">Justification</label>
+                                          <input type="text" class="form-control" id="update-justification" name="justification" value="<%= stagiaire.justification %>" >
+                                      </div>
+                                        <div class="mb-3">
                                           <label class="form-label">Sélectionner un groupe</label>
                                           <select class="form-control" name="groupId" id="group-select">
                                             <option value="" disabled selected>Select a group</option>
@@ -86,6 +94,8 @@
             document.getElementById('update-cef').value = stagiaire.CEF;
             document.getElementById('update-firstname').value = stagiaire.firstName;
             document.getElementById('update-lastname').value = stagiaire.lastName;
+            document.getElementById('update-phone_number').value = stagiaire.lastName;
+            document.getElementById('update-justification').value = stagiaire.lastName;
             document.getElementById('update-groupid').value = stagiaire.groupId;
           })
           .catch(error => {
