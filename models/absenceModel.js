@@ -366,12 +366,7 @@ async main() {
     console.error('Failed to insert absences:', error);
   }
 },
-  // Schedule the main function to run every day at midnight (00:00)
-// startScheduler() {
-//   cron.schedule('0 0 * * *', () => {
-//     this.main();
-//   });
-// },
+
 startScheduler() {
   // Schedule the task to run at 01:00 AM every day
   cron.schedule('0 1 * * *', () => {
