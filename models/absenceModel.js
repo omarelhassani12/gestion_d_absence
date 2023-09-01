@@ -367,14 +367,22 @@ async main() {
   }
 },
   // Schedule the main function to run every day at midnight (00:00)
+// startScheduler() {
+//   cron.schedule('0 0 * * *', () => {
+//     this.main();
+//   });
+// },
 startScheduler() {
-  cron.schedule('0 0 * * *', () => {
+  // Schedule the task to run at 01:00 AM every day
+  cron.schedule('0 1 * * *', () => {
     this.main();
   });
 },
 
+
+
 };
 
 // AbsenceModel.main();
-AbsenceModel.startScheduler();
+// AbsenceModel.startScheduler();
 module.exports = AbsenceModel;

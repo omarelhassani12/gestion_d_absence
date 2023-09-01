@@ -23,6 +23,7 @@ const pdfRoutes = require('./routes/pdfRoutes');
 const ChartRoutes = require('./routes/chartRoutes');
 const ArchivedStagiairesActionRoutes = require('./routes/archivedStagiaireActionRoutes');
 const StaffGroupRoutes = require('./routes/staffGroupRoutes');
+const AbsenceModel = require('./models/absenceModel');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -115,6 +116,7 @@ app.use(ChartRoutes);
 app.use('/group-formateur', StaffGroupRoutes);
 
 
+AbsenceModel.startScheduler();
 
 // Start the server
 app.listen(config.port, () => {

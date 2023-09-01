@@ -39,22 +39,6 @@ const StagiaireModel = {
     });
   },
 
-  // create(stagiaire) {
-  //   return new Promise((resolve, reject) => {
-  //       if (!stagiaire) {
-  //           reject(new Error('Stagiaire object is null or undefined'));
-  //           return;
-  //       }
-  //        db.query('INSERT INTO stagiaires SET ?', [stagiaire], (error, results) => {
-  //             if (error) {
-  //              reject(error);
-  //            } else {
-  //               resolve({ success: 'Stagiaire created successfully' }); // Return a success object
-  //           }
-  //       });
-  //   });
-  // },
-
   create(stagiaire) {
     return new Promise((resolve, reject) => {
         if (!stagiaire) {
@@ -79,7 +63,7 @@ const StagiaireModel = {
             }
         });
     });
-},
+  },
 
   update(id, updatedData) {
     return new Promise((resolve, reject) => {
