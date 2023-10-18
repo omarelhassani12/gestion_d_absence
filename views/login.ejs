@@ -116,62 +116,7 @@
             }
         });
     </script>
-    <!-- <script>
-      // Function to handle user login
-async function loginUser(event) {
-  event.preventDefault(); // Prevent form submission
-
-  const email = document.getElementById('form3Example3').value;
-  const password = document.getElementById('form3Example4').value;
-
-  // Prepare the login data to be sent in the request body
-  const loginData = {
-    email: email, // Use 'email' instead of 'username'
-    password: password,
-  };
-
-  try {
-    const response = await fetch('/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(loginData),
-    });
-
-    if (response.ok) {
-      // Successful login
-      const data = await response.json();
-      const role = data.role;
-      console.log('Received role:', role);
-      
-      if (role === 0) {
-        // Redirect to the admin dashboard page
-        console.log('Navigating to dashboard...');
-        
-        window.location.href = '/';
-      } else if (role === 1) {
-        // Redirect to the formateur page (adjust the URL if needed)
-        console.log('Navigating to formateur-page...');
-        window.location.href = '/';
-      } else {
-          // Handle other roles or scenarios
-          console.log('Unknown role or scenario...');
-        }
-    } else {
-      // Failed login
-      alert('Invalid email or password. Please try again.');
-    }
-    } catch (error) {
-        console.error('Error occurred during login:', error);
-    }
-    }
-
-    // Add an event listener to the login form
-    document.getElementById('loginForm').addEventListener('submit', loginUser);
-
-    </script> -->
-
+    
 
     <script>
         // Function to handle user login

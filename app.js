@@ -116,7 +116,7 @@ app.use(ChartRoutes);
 app.use('/group-formateur', StaffGroupRoutes);
 
 
-AbsenceModel.startScheduler();
+// AbsenceModel.startScheduler();
 
 // Start the server
 app.listen(config.port, () => {

@@ -1,6 +1,7 @@
 const db = require('../config/database');
 const { format } = require('date-fns');
-const cron = require('node-cron');
+// const cron = require('node-cron');
+const schedule = require('node-schedule');
 
 const AbsenceModel = {
  
@@ -177,8 +178,6 @@ const AbsenceModel = {
         });
   },
 
-  
-
   async createAbsence(absenceDataArray) {
     try {
       for (const data of absenceDataArray) {
@@ -273,7 +272,6 @@ const AbsenceModel = {
     });
   },
  
-
   async updateAbsence(id, sessionNumber, updatedAttendance, is_justified) {
     try {
       // Check if updatedAttendance is null or undefined
@@ -318,8 +316,7 @@ const AbsenceModel = {
     }
   },
   
-
-  fetchStagiaires(db) {
+  fetchStagiaires() {
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM stagiaires';
       db.query(query, (error, results) => {
@@ -332,52 +329,77 @@ const AbsenceModel = {
     });
   },
 
-  insertAbsencesForToday(db, stagiaires) {
+   // Insert absences for today
+   async insertAbsencesForToday(stagiaires) {
     const currentDate = format(new Date(), 'yyyy-MM-dd');
 
     return new Promise((resolve, reject) => {
-      // Create an array to hold the values for all stagiaires
-      const values = stagiaires.flatMap((stagiaire) => [
-        [stagiaire.id, currentDate, "AM", 0, 0],
-        [stagiaire.id, currentDate, "PM", 0, 0],
-      ]);
-
-      // Create the SQL query with multiple placeholders for each stagiaire
-      const insertQuery = 'INSERT IGNORE INTO absence (stagiaire_id, date, period, first_session_attendance, second_session_attendance) VALUES ?';
-
-      // Execute the query using the database connection
-      db.query(insertQuery, [values], (error, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
+      const values = [];
+      stagiaires.forEach((stagiaire) => {
+        // Add two entries for each stagiaire for AM and PM
+        values.push([stagiaire.id, currentDate, 'AM', 0, 0]);
+        values.push([stagiaire.id, currentDate, 'PM', 0, 0]);
       });
+
+      if (values.length === 0) {
+        // If there are no values to insert, resolve immediately
+        resolve();
+      } else {
+        // Create the SQL query with multiple placeholders for each stagiaire
+        const placeholders = new Array(stagiaires.length * 2)
+          .fill('(?, ?, ?, ?, ?)')
+          .join(', ');
+        const insertQuery = `
+          INSERT IGNORE INTO absence (stagiaire_id, date, period, first_session_attendance, second_session_attendance)
+          VALUES ${placeholders}
+        `;
+
+        // Flatten the values array for execution
+        const flatValues = values.reduce((acc, val) => acc.concat(val), []);
+
+        // Execute the query using the database connection
+        db.query(insertQuery, flatValues, (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
+      }
     });
   },
 
+  // Script for inserting absences for today
+  async main() {
+    try {
+      const stagiaires = await this.fetchStagiaires();
+      await this.insertAbsencesForToday(stagiaires);
+      console.log('Absences inserted successfully.');
+    } catch (error) {
+      console.error('Failed to insert absences:', error);
+    }
+  },
 
-async main() {
-  try {
-    const stagiaires = await AbsenceModel.fetchStagiaires(db);
-    await AbsenceModel.insertAbsencesForToday(db, stagiaires);
-    console.log('Absences inserted successfully.');
-  } catch (error) {
-    console.error('Failed to insert absences:', error);
+  // // Start the scheduler
+  // startScheduler() {
+  //   // Schedule the task to run at 19:10 every day
+  //   const job = schedule.scheduleJob('10 19 * * *', () => {
+  //     this.main(); // Call the main method using "this"
+  //   });
+  // },
+  startScheduler() {
+    // Schedule the task to run at 02:00 AM every day
+    const job = schedule.scheduleJob('0 2 * * *', () => {
+      this.main(); // Call the main method using "this"
+    });
   }
-},
-
-startScheduler() {
-  // Schedule the task to run at 01:00 AM every day
-  cron.schedule('0 1 * * *', () => {
-    this.main();
-  });
-},
+  
+  
 
 
 
 };
 
 // AbsenceModel.main();
-// AbsenceModel.startScheduler();
+AbsenceModel.startScheduler();
 module.exports = AbsenceModel;
